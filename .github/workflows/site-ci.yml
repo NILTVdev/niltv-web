@@ -1,0 +1,32 @@
+name: Site CI
+
+# The same build and guards deploy.ps1 runs, minus the upload, on every pull
+# request. Catches a change that would break the next deploy (page generation,
+# the 63-card marquee, the prod sweep guard, a baked dev reference) before it
+# lands. Runs under PowerShell 7 on a Linux runner; main and release are not
+# re-checked after the merge because they carry the tree the PR already checked.
+on:
+  pull_request:
+
+concurrency:
+  group: site-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Prod check (stage, generate, sweep, guards, no upload)
+        shell: pwsh
+        run: ./deploy.ps1 -Env prod -Check
+      - name: Dev check (generate against the dev API, marquee guard)
+        shell: pwsh
+        run: ./deploy.ps1 -Env dev -Check

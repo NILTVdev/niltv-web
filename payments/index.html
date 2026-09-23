@@ -1,0 +1,1973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Athlete Payments | NIL TV</title>
+<meta name="description" content="NIL TV athletes: open your Stripe account for payouts, receipts, and tax forms.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://dev.dkdfgvugisb3v.amplifyapp.com/payments/">
+<meta property="og:title" content="Athlete Payments | NIL TV">
+<meta property="og:description" content="NIL TV athletes: open your Stripe account for payouts, receipts, and tax forms.">
+<meta property="og:url" content="https://dev.dkdfgvugisb3v.amplifyapp.com/payments/">
+<meta property="og:image" content="https://dev.dkdfgvugisb3v.amplifyapp.com/assets/img/og-card.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NIL TV">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#060608">
+<link rel="preconnect" href="https://d1nm1d2txb83wa.cloudfront.net" crossorigin>
+<link rel="dns-prefetch" href="https://d1nm1d2txb83wa.cloudfront.net">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="/assets/img/favicon.png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<style>
+:root{
+  --bg:#060608;
+  --surface:#17171c;
+  --surface-hi:#212127;
+  --text:#f5f5f7;
+  --dim:#a8a8b3;
+  --gold:#d9b25b;
+  --gold-bright:#f0c96b;
+  --red:#e0334a;
+  --border:rgba(255,255,255,0.09);
+  --radius:14px;
+  --gutter:4vw;
+  --artwork-bg-color:#0c0c10;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+/* kill the mobile browsers' translucent tap-highlight flash (blue on
+   Android); keyboard :focus-visible outlines are unaffected */
+html{-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  font-size:13px;
+  line-height:1.5;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+ul{list-style:none}
+
+/* ---------- NAV : one thin translucent blur bar ---------- */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:56px;
+  display:flex;align-items:center;gap:32px;
+  padding:0 var(--gutter);
+  background:transparent;
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  transition:background .35s ease,border-color .35s ease;
+  border-bottom:1px solid transparent;
+}
+.nav.scrolled{
+  background:rgba(6,6,8,0.92);
+  border-bottom-color:var(--border);
+}
+.nav-logo img{height:26px;width:auto}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{
+  font-size:13px;font-weight:500;color:var(--dim);
+  letter-spacing:.02em;
+  transition:color .2s;
+}
+.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:22px}
+
+.nav-icon{
+  width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--dim);transition:color .2s;
+}
+.nav-icon:hover{color:var(--text)}
+.nav-icon svg{width:17px;height:17px}
+.nav-profile{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--surface-hi);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:14px;color:var(--dim);
+}
+
+/* ---------- HERO ambient video (decision 2: the vertical reel itself,
+   center-cropped wide as a muted loop; the still poster sits under it as
+   the instant fallback - no bespoke key art, no ingest delay) ---------- */
+.hero-video{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center 22%;
+}
+.hero-slide[data-crop="portrait"] .hero-video{object-position:center 16%;}
+
+/* ---------- THEATER (decision 6: dim the world, spotlight the portrait
+   frame, let the reel's own poster glow into the black) ---------- */
+.theater{position:fixed;inset:0;z-index:300;display:none;background:rgba(3,3,5,.92);}
+.theater.open{display:block;}
+.theater-glow{
+  position:absolute;inset:0;background-size:cover;background-position:center;
+  filter:blur(80px) saturate(1.35);opacity:.30;transform:scale(1.3);
+}
+.theater-dim{position:absolute;inset:0;background:rgba(3,3,5,.5);}
+.theater-stage{position:relative;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.theater-frame{
+  position:relative;height:min(82vh,820px);aspect-ratio:9/16;background:#000;
+  box-shadow:0 40px 120px rgba(0,0,0,.85);cursor:pointer;
+}
+.theater-frame video{width:100%;height:100%;object-fit:contain;background:#000;display:block;}
+/* title lives UNDER the video (9/2) - it no longer rides the frame,
+   so the control bar fading away leaves nothing looking orphaned */
+.theater-lt{
+  margin-top:14px;max-width:min(92vw,900px);text-align:center;pointer-events:none;
+}
+.theater-lt .k{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-bright);font-weight:700;}
+.theater-lt .t{font-size:15px;font-weight:700;color:#fff;margin-top:4px;line-height:1.35;}
+.theater-x{
+  position:fixed;top:22px;right:26px;z-index:310;width:44px;height:44px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.3);background:rgba(0,0,0,.4);color:#fff;
+  font-size:18px;cursor:pointer;font-family:inherit;
+}
+.theater-x:hover{background:var(--gold);color:#060608;border-color:var(--gold);}
+@media (max-width:640px){
+  /* portrait: as tall as the viewport allows, width follows the video's
+     aspect so the overlay hugs the picture; landscape flips below */
+  .theater-frame{height:84%;width:auto;max-width:100%;aspect-ratio:9/16;}
+  .theater-lt{padding:0 14px}
+}
+@media (max-width:900px){
+  /* channel billboards on phones (9/2): tight vertical rhythm - the
+     hero video caps at 44vh and the copy stack loses its air so the
+     content grid peeks above the fold */
+  .hero-sm.hero-bleed .hreel{max-height:44vh}
+  .hero-sm.hero-bleed .hreel .hero-video{max-height:44vh}
+  .hero-sm.hero-bleed .hero-copy{margin-top:10px;padding-bottom:0}
+  .hero-sm.hero-bleed .chan-back{margin-bottom:4px}
+  .hero-sm.hero-bleed .hero-title{min-height:0;margin:6px 0 2px}
+  .hero-sm.hero-bleed .hero-dek{min-height:0;margin:2px 0 10px}
+  .hero-sm.hero-bleed .hero-ctas{margin-top:0}
+  .hero-sm.hero-bleed .hero-slide{padding-bottom:6px}
+  .hero-sm.hero-bleed{margin-bottom:0}
+  .hero-bleed + .shelves{padding-top:0;margin-top:4px}
+  .hero-bleed + .shelves .shelf:first-child{padding-top:6px;margin-top:0}
+}
+
+/* ---------- HERO : full-bleed billboard ---------- */
+.hero{
+  position:relative;
+  height:90vh;min-height:560px;
+  background:var(--artwork-bg-color);
+  overflow:hidden;
+}
+.hero-slide{
+  position:absolute;inset:0;
+  opacity:0;transition:opacity 1.1s ease;
+  background:var(--artwork-bg-color);
+}
+.hero-slide.on{opacity:1}
+.hero-art{
+  position:absolute;inset:0;
+  background-size:cover;
+  background-position:center 22%;
+}
+.hero-slide[data-crop="portrait"] .hero-art{background-position:center 18%}
+.hero-scrim{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to top, var(--bg) 0%, rgba(6,6,8,0.86) 12%, rgba(6,6,8,0.35) 38%, rgba(6,6,8,0) 62%),
+    linear-gradient(to right, rgba(6,6,8,0.72) 0%, rgba(6,6,8,0.28) 42%, rgba(6,6,8,0) 68%);
+}
+.hero-copy{
+  position:absolute;left:var(--gutter);right:var(--gutter);
+  bottom:16vh;max-width:640px;z-index:5;
+}
+.hero-kicker{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:600;font-size:15px;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--gold);
+  margin-bottom:14px;
+}
+.live-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--red);color:#fff;
+  font-family:'Inter',sans-serif;
+  font-weight:700;font-size:10px;letter-spacing:.14em;
+  padding:3px 9px;border-radius:4px;text-transform:uppercase;
+}
+.live-pill::before{
+  content:"";width:6px;height:6px;border-radius:50%;background:#fff;
+  animation:pulse 1.6s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.hero-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;text-transform:uppercase;
+  font-size:clamp(52px,7vw,96px);
+  line-height:.92;letter-spacing:.005em;
+  margin-bottom:16px;
+}
+/* slide 1: the title fills its column (8/29) */
+.v-wide .hero-copy{max-width:44%}
+.v-wide .hero-title{font-size:clamp(44px,7.2vw,100px)}
+.hero-dek{
+  font-size:16px;color:var(--dim);font-weight:400;
+  max-width:480px;margin-bottom:28px;
+}
+.hero-ctas{display:flex;gap:14px;align-items:center}
+.btn{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:'Inter',sans-serif;font-weight:700;font-size:14px;
+  padding:13px 30px;border-radius:999px;
+  cursor:pointer;border:none;transition:transform .18s,background .18s,border-color .18s;
+}
+.btn-gold{background:var(--gold);color:#060608}
+.btn-gold:hover{background:var(--gold-bright);transform:scale(1.03)}
+.btn-ghost{
+  background:rgba(245,245,247,0.08);color:var(--text);
+  border:1px solid var(--border);
+  backdrop-filter:blur(8px);
+}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.28)}
+.btn svg{width:14px;height:14px}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:200;background:var(--gold);color:#060608;
+  font-weight:700;padding:10px 18px;border-radius:0 0 10px 0}
+.skip-link:focus{left:0}
+.hero-progress{
+  position:absolute;left:var(--gutter);bottom:9vh;z-index:6;
+  display:flex;gap:8px;
+}
+.hero-dot{
+  width:34px;height:3px;border-radius:2px;
+  background:rgba(255,255,255,0.18);
+  overflow:hidden;cursor:pointer;border:none;padding:0;
+}
+.hero-dot span{
+  display:block;height:100%;width:0;
+  background:var(--gold);border-radius:2px;
+}
+.hero-dot.on span{width:100%}
+@keyframes fill{from{width:0}to{width:100%}}
+
+/* ---------- SHELVES ---------- */
+.shelves{position:relative;z-index:8;margin-top:-7vh}
+.shelf{padding:0 0 12px 0}
+.shelf-head{
+  display:flex;align-items:baseline;gap:16px;
+  padding:0 var(--gutter);margin-bottom:14px;
+}
+.shelf-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:19px;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--gold);
+}
+.shelf-title.gold{color:var(--gold)}
+.shelf-sub{font-size:13px;color:var(--dim)}
+.shelf-all{
+  margin-left:auto;font-size:13px;font-weight:600;color:var(--dim);
+  transition:color .2s;white-space:nowrap;
+}
+.shelf-all:hover{color:var(--gold-bright)}
+.rail{
+  display:flex;gap:14px;
+  overflow-x:auto;
+  /* full-bleed: every rail rests and scrolls from the viewport's left edge,
+     so resting and swiped rails always share the same start point */
+  padding:14px 0 16px 0;
+  scroll-snap-type:x mandatory;
+  scrollbar-width:none;
+}
+.rail.wrapped{padding-left:var(--gutter);padding-right:var(--gutter)}
+.rail::-webkit-scrollbar{display:none}
+.rail > *{scroll-snap-align:start;flex-shrink:0}
+
+/* card base : one radius token everywhere */
+.card{
+  position:relative;border-radius:20px;
+  overflow:hidden;background:var(--artwork-bg-color);
+  border:1px solid rgba(255,255,255,0.08);
+  transition:transform .28s ease,box-shadow .28s ease;
+  display:block;
+}
+.card:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 0 1px var(--gold),0 18px 44px rgba(0,0,0,0.55);
+  z-index:3;
+}
+.card img{width:100%;height:100%;object-fit:cover}
+
+/* NOW STREAMING : 16:9 lockups, titles in the artwork */
+.card-wide{
+  width:clamp(240px,calc((100vw - 2*var(--gutter) - 5*14px)/6*2),340px);
+  aspect-ratio:16/9;
+}
+.card-wide .art-title{
+  position:absolute;left:0;right:0;bottom:0;
+  padding:34px 14px 12px 14px;
+  background:linear-gradient(to top,rgba(6,6,8,0.88),rgba(6,6,8,0));
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:17px;line-height:1.05;
+  text-transform:uppercase;letter-spacing:.03em;
+}
+.chan-tag{
+  position:absolute;top:10px;left:10px;
+  font-size:10px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text);
+  background:rgba(6,6,8,0.62);
+  backdrop-filter:blur(6px);
+  padding:4px 8px;border-radius:6px;
+  border:1px solid var(--border);
+}
+.tile-tag{
+  position:absolute;bottom:10px;left:10px;
+  font-size:10px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;
+  background:rgba(6,6,8,0.72);color:var(--gold-bright);
+  padding:4px 9px;border-radius:6px;
+  border:1px solid rgba(217,178,91,0.35);
+}
+.card-wide .tile-tag{bottom:auto;top:10px;left:auto;right:10px}
+/* card badges (Just Added / New Episode / Season 1 Champion...) are OFF for
+   now (8/31): cards show only the duration pill. The chan-tag labels
+   on Trending + Original Series are a different class and stay. Delete
+   this one rule to restore every badge - the markup still carries them. */
+.tile-tag{display:none}
+.card-reel .tile-tag{bottom:auto;top:10px;left:10px}
+.card-wide::before{content:"";position:absolute;left:50%;top:50%;width:44px;height:44px;margin:-22px 0 0 -22px;
+  border-radius:50%;background:rgba(6,6,8,.6);border:1px solid rgba(245,245,247,.4);
+  opacity:0;transition:opacity .22s;z-index:2}
+.card-wide::after{content:"";position:absolute;left:50%;top:50%;margin:-7px 0 0 -4px;
+  border-left:12px solid #f5f5f7;border-top:7px solid transparent;border-bottom:7px solid transparent;
+  opacity:0;transition:opacity .22s;z-index:3}
+.card-wide:hover::before,.card-wide:hover::after{opacity:1}
+
+/* THE REELS : signature 9:16 band, tallest shelf */
+.shelf-reels{
+  background:linear-gradient(to bottom,rgba(23,23,28,0) 0%,rgba(23,23,28,0.55) 18%,rgba(23,23,28,0.55) 82%,rgba(23,23,28,0) 100%);
+  padding-top:24px;padding-bottom:46px;
+}
+.card-reel{width:clamp(178px,16vw,236px);aspect-ratio:9/16}
+.card-reel .dur{
+  position:absolute;top:10px;right:10px;
+  font-size:10px;font-weight:700;
+  background:rgba(6,6,8,0.7);color:var(--text);
+  padding:3px 7px;border-radius:5px;
+}
+.reel-caption{
+  margin-top:9px;
+  font-size:13px;color:var(--dim);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:clamp(178px,16vw,236px);
+}
+.reel-caption b{color:var(--text);font-weight:600}
+.reel-cell{flex-shrink:0;scroll-snap-align:start}
+
+/* TOP 10 : ranked 2:3 posters, giant gold numerals */
+.rank-cell{
+  display:flex;align-items:flex-end;
+  flex-shrink:0;scroll-snap-align:start;
+}
+.rank-num{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;
+  font-size:clamp(64px,9vw,120px);
+  line-height:.78;
+  color:var(--gold);
+  letter-spacing:-.02em;
+  margin-right:-16px;margin-bottom:6px;
+  position:relative;z-index:2;
+  text-shadow:0 4px 24px rgba(6,6,8,0.9);
+}
+.card-poster{width:clamp(140px,12vw,178px);aspect-ratio:2/3}
+
+/* CHANNELS : brand-tile row */
+.chan-tile{
+  flex:1 1 0;min-width:230px;aspect-ratio:16/9;
+  border-radius:20px;
+  background:transparent;
+  border:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .28s ease,box-shadow .28s ease;
+  flex-shrink:0;scroll-snap-align:start;
+  position:relative;overflow:hidden;
+}
+.chan-tile::after{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(46% 62% at 50% 50%,rgba(217,178,91,0.30),rgba(217,178,91,0.08) 55%,rgba(217,178,91,0) 75%);
+  opacity:0;transition:opacity .3s;
+}
+.chan-tile img{position:relative;z-index:1}
+.chan-tile:hover{
+  transform:scale(1.05);
+}
+.chan-tile:hover::after{opacity:1}
+/* every logo gets the SAME box - a fraction of the 16:9 tile - and is
+   contained in it, so squarer marks (College Station, Salt City, Gold
+   Salem) can never clip against the tile's overflow:hidden */
+.chan-tile img{width:88%;height:76%;object-fit:contain}
+
+/* promo banner (unused) */
+.promo-wrap{padding:8px var(--gutter) 90px var(--gutter)}
+.promo{
+  position:relative;border-radius:var(--radius);overflow:hidden;
+  aspect-ratio:3/1;min-height:240px;
+  background:
+    radial-gradient(90% 160% at 82% 30%,rgba(217,178,91,0.16),rgba(217,178,91,0) 55%),
+    linear-gradient(100deg,#0c0c10 0%,var(--surface) 55%,#212127 100%);
+  border:1px solid var(--border);
+  display:flex;align-items:center;
+}
+.promo-copy{padding:0 5%;max-width:560px}
+.promo-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;text-transform:uppercase;
+  font-size:clamp(42px,4.6vw,72px);
+  line-height:.9;margin-bottom:12px;
+}
+.promo-lines{font-size:15px;color:var(--dim);margin-bottom:24px}
+.promo-lines strong{color:var(--text);font-weight:700}
+.promo-art{
+  position:absolute;right:4%;top:50%;transform:translateY(-50%);
+  height:68%;display:flex;align-items:center;
+}
+.promo-art img{height:100%;width:auto;object-fit:contain;filter:drop-shadow(0 12px 34px rgba(0,0,0,0.6))}
+
+/* FOOTER : credits roll */
+.footer{
+  padding:130px var(--gutter) 60px var(--gutter);
+  text-align:center;
+  border-top:1px solid var(--border);
+}
+.footer-logo{height:64px;width:auto;margin:0 auto 14px}
+.footer-logo-link{display:inline-block;line-height:0}
+.footer-tag{
+  font-family:'Barlow Condensed',sans-serif;
+  /* one line at every width: tracking + size scale with the brand column */
+  font-weight:600;font-size:clamp(11px,1.05vw,14px);letter-spacing:.16em;white-space:nowrap;
+  text-transform:uppercase;color:var(--gold);
+  margin-bottom:40px;
+}
+.footer-links{
+  display:flex;justify-content:center;flex-wrap:wrap;
+  gap:14px 30px;margin-bottom:36px;
+}
+.footer-links a{font-size:13px;color:var(--dim);transition:color .2s}
+.footer-links a:hover{color:var(--text)}
+.footer-legal{font-size:12px;color:rgba(168,168,179,0.55)}
+
+/* ---------- responsive ---------- */
+@media(max-width:900px){
+  .nav-links{display:none}
+  .hero-copy{bottom:14vh}
+}
+@media(max-width:640px){
+  :root{--gutter:5vw}
+  .hero{height:82vh}
+  .hero-art{background-position:center top}
+  .hero-title{font-size:clamp(44px,13vw,64px)}
+  .hero-dek{font-size:14px}
+  .btn{padding:11px 22px;font-size:13px}
+  .card-wide{width:72vw}
+  .card-reel{width:36vw}
+  .reel-caption{max-width:36vw}
+  .card-poster{width:34vw}
+  .rank-num{margin-right:-10px}
+  .chan-tile{width:40vw}
+  /* chan-cell/cap mobile sizing lives AFTER their base rules (source order
+     beats media queries at equal specificity) - see the block below them */
+  .promo{aspect-ratio:auto;padding:40px 0}
+  .promo-art{display:none}
+  .footer{padding-top:90px}
+}
+
+/* wide slide: video offset right so the title never sits on it; its left
+   edge fades into the dark copy zone (Netflix billboard hand-off) */
+.v-wide .hero-art{filter:blur(90px) saturate(1.5) brightness(.4);transform:scale(1.5)}
+.v-wide .hero-video{left:auto;right:0;width:74%;object-position:center;
+  -webkit-mask-image:linear-gradient(to right,transparent 0,rgba(0,0,0,.2) 8%,rgba(0,0,0,.55) 16%,rgba(0,0,0,.85) 22%,#000 30%);
+  mask-image:linear-gradient(to right,transparent 0,rgba(0,0,0,.2) 8%,rgba(0,0,0,.55) 16%,rgba(0,0,0,.85) 22%,#000 30%)}
+@media (max-width:900px){
+  .v-wide .hero-video{left:0;width:100%;-webkit-mask-image:none;mask-image:none}
+}
+
+.hero-echo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;
+  filter:blur(64px) saturate(1.6) brightness(.45);transform:scale(1.18)}
+/* bleed slides: the echo is a vivid edge-to-edge backdrop (matches the
+   Welcome slide's baked blur-fill), not a faint glow */
+.hero-slide.bleed .hero-echo{filter:blur(26px) saturate(1.1) brightness(.58);transform:scale(1.12)}
+.hero-slide.bleed .hglow{filter:blur(34px) saturate(1.1) brightness(.55);transform:scale(1.15)}
+/* bleed slides: the reel is a full-height square-cornered block that melts
+   into the blur, like the Welcome slide's baked composition */
+.hero-slide.bleed .hreel{top:0;bottom:0;border-radius:0;box-shadow:none}
+/* the homepage hero fades into the page instead of hard-cutting at its
+   bottom edge; desktop only - the stacked mobile hero ends in CTAs that
+   must not dim (8/31) */
+@media (min-width:701px){
+  .hero:not(.hero-sm)::after, .hero-bleed::after{content:"";position:absolute;left:0;right:0;bottom:0;height:130px;
+    background:linear-gradient(180deg,rgba(6,6,8,0),var(--bg) 94%);z-index:3;pointer-events:none}
+  .hero:not(.hero-sm) + .shelves{padding-top:30px}
+}
+.hero-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:8;width:46px;height:46px;
+  border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(6,6,8,.45);color:var(--text);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,color .2s}
+.hero-arrow:hover{background:var(--gold);color:#060608;border-color:var(--gold)}
+.hero-arrow.prev{left:16px}.hero-arrow.next{right:16px}
+.hero-arrow svg{width:18px;height:18px}
+@media (prefers-reduced-motion: reduce){.hero-echo{display:none}}
+/* ===== billboard components (homepage slides, variant pages, vertical pages) ===== */
+.hglow{position:absolute;inset:0;background-size:cover;background-position:center;
+  filter:blur(80px) saturate(1.6) brightness(.5);transform:scale(1.45)}
+.hreel{position:absolute;z-index:2;top:7vh;bottom:10vh;right:24%;aspect-ratio:9/16;
+  background:#000;border-radius:14px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.65)}
+.hreel .hero-video{object-position:center}
+/* horizontal draft slides (9/1, billboard pass): the video is truly
+   full-bleed - it spans the whole hero - and a layered gradient scrim on
+   top carries it into the page ground behind the copy. The earlier alpha
+   mask faded into the blurred echo, which on dark footage read as a hard
+   seam (review note: "the cut here is too harsh"); a scrim blends toward one
+   consistent black instead, so there is no edge to see. */
+.hero-slide.hz .hreel{top:0;bottom:0;right:0;left:0;width:100%;aspect-ratio:auto;
+  transform:none;border-radius:0;box-shadow:none;overflow:hidden}
+.hero-slide.hz .hreel .hero-video{object-fit:cover;object-position:center}
+.hero-slide.hz .hreel::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;
+  background:
+    linear-gradient(90deg, rgba(6,6,8,.97) 0%, rgba(6,6,8,.88) 24%, rgba(6,6,8,.45) 46%, rgba(6,6,8,0) 68%),
+    linear-gradient(0deg, rgba(6,6,8,.82) 0%, rgba(6,6,8,0) 26%)}
+/* the echo layer is invisible behind a full-bleed video - hide it so it
+   never paints (slideVideo also skips loading it on hz slides) */
+.hero-slide.hz .hero-echo,.hero-slide.hz .hglow{display:none}
+@media (max-width:900px){
+  .hero-slide.hz .hreel{width:100%;aspect-ratio:16/9}
+  .hero-slide.hz .hreel::after{display:none}
+}
+.vslide .hero-copy{max-width:36%}
+.hero-title.logo-title{margin:2px 0 20px;line-height:0}
+.hero-logo{width:auto;max-width:100%;
+  filter:drop-shadow(0 14px 34px rgba(0,0,0,.78)) drop-shadow(0 0 32px rgba(217,178,91,.22))}
+.hl-nilstar{height:clamp(76px,9vw,128px)}
+.hero-meta{display:flex;align-items:center;gap:10px;margin:12px 0 10px;font-size:13px;color:var(--dim)}
+.hero-meta .rate{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--dim);
+  border:1px solid rgba(255,255,255,.28);padding:1px 7px;border-radius:3px}
+.hero-meta .sep{opacity:.5}
+.cta-ic{width:46px;height:46px;border-radius:50%;border:1px solid var(--border);
+  background:rgba(245,245,247,.08);backdrop-filter:blur(8px);color:var(--text);
+  display:inline-flex;align-items:center;justify-content:center;transition:border-color .2s,color .2s}
+.cta-ic:hover{border-color:var(--gold);color:var(--gold)}
+.cta-ic svg{width:18px;height:18px}
+.chan-back{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:10px;transition:color .2s}
+.chan-back:hover{color:var(--gold)}
+.shelf-title a{display:block}
+.shelf-title a:hover .shelf-logo{opacity:.85}
+.hero-progress{left:50%;transform:translateX(-50%)}
+/* theater: landscape videos take a wide stage */
+.theater-frame.land{aspect-ratio:16/9;width:min(92vw,1500px);height:auto;max-height:86vh}
+@media (max-width:640px){.theater-frame.land{width:100%;height:auto;aspect-ratio:16/9;align-self:center}}
+/* ---- custom theater controls (9/2): native controls are OFF - they
+   fought the frame's click-to-toggle and un-paused the video. Click pauses,
+   gold center play/pause, YouTube-style mute + volume slider, seekable
+   progress with a 0:00 / 9:50 readout. */
+.theater-frame{cursor:pointer}
+.tp-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;
+  width:72px;height:72px;border-radius:50%;border:0;background:var(--gold);color:#060608;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 8px 30px rgba(0,0,0,.5);transition:opacity .22s,transform .22s}
+.tp-center:hover{background:var(--gold-bright)}
+.tp-center svg{width:30px;height:30px}
+.theater-frame.playing .tp-center{opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(1.12)}
+.theater-frame.playing.show-ui .tp-center{opacity:.94;pointer-events:auto;transform:translate(-50%,-50%)}
+/* fresh open: the bar responds to hover but the center button waits for
+   the first pause (rule order beats the show-ui rule above) */
+.theater-frame.playing.virgin .tp-center{opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(1.12)}
+.tp-bar{position:absolute;left:0;right:0;bottom:0;z-index:6;padding:26px 14px 10px;
+  background:linear-gradient(to top,rgba(3,3,5,.85),transparent);opacity:0;transition:opacity .22s;pointer-events:none}
+.theater-frame:not(.playing) .tp-bar,.theater-frame.show-ui .tp-bar{opacity:1;pointer-events:auto}
+.tp-progress{position:relative;height:4px;border-radius:2px;background:rgba(255,255,255,.25);cursor:pointer;transition:height .15s}
+.tp-progress:hover,.tp-progress.drag{height:6px}
+.tp-fill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:2px;background:var(--gold)}
+.tp-knob{position:absolute;top:50%;left:0;width:12px;height:12px;border-radius:50%;background:var(--gold-bright);
+  transform:translate(-50%,-50%);opacity:0;transition:opacity .15s}
+.tp-progress:hover .tp-knob,.tp-progress.drag .tp-knob{opacity:1}
+.tp-row{display:flex;align-items:center;gap:10px;margin-top:8px}
+.tp-mute{width:34px;height:34px;border-radius:50%;border:0;background:transparent;color:#fff;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto;padding:0}
+.tp-mute:hover{color:var(--gold-bright)}
+.tp-mute svg{width:20px;height:20px}
+.tp-vol{-webkit-appearance:none;appearance:none;width:0;opacity:0;height:3px;border-radius:2px;
+  background:rgba(255,255,255,.35);cursor:pointer;transition:width .2s,opacity .2s;margin:0}
+.tp-row:hover .tp-vol,.tp-vol:focus{width:74px;opacity:1}
+.tp-vol::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;border-radius:50%;background:var(--gold);border:0}
+.tp-vol::-moz-range-thumb{width:11px;height:11px;border:0;border-radius:50%;background:var(--gold)}
+.tp-time{font-size:12px;color:#eee;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+@media (max-width:640px){.tp-vol{display:none}.tp-center{width:60px;height:60px}.tp-center svg{width:26px;height:26px}}
+/* ---- Up Next queue (9/8): the rest of the row the card came from
+   rides a column to the right of the playing video on desktop and the
+   player advances through it. Phones keep the single-video stage (the
+   queue still drives auto-advance there). */
+.theater-main{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0}
+.theater-stage.queued{flex-direction:row;align-items:center;justify-content:center;gap:clamp(16px,2vw,28px);padding:0 clamp(16px,3vw,48px)}
+.theater-stage.queued .theater-main{flex:0 1 auto}
+.theater-stage.queued .theater-frame.land{width:min(calc(100vw - 480px),1500px)}
+.theater-queue{display:none;flex:0 0 clamp(280px,24vw,360px);max-height:min(82vh,820px);flex-direction:column;
+  background:transparent;border:0;border-radius:0;overflow:hidden}
+.theater-stage.queued .theater-queue{display:flex}
+.tq-head{padding:0 8px 6px;flex:0 0 auto}
+.tq-head b{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:19px;letter-spacing:.14em;text-transform:uppercase;color:#fff}
+.tq-list{overflow-y:auto;padding:0 10px 0 0;min-height:0;scrollbar-width:thin;scrollbar-color:var(--gold) transparent}
+.tq-list::-webkit-scrollbar{width:4px}.tq-list::-webkit-scrollbar-track{background:transparent}
+.tq-list::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px}
+.tq-item{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:8px;border:1px solid transparent;border-radius:14px;
+  background:transparent;color:inherit;font:inherit;cursor:pointer;transition:background .18s,border-color .18s}
+.tq-item:hover,.tq-item:focus-visible{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);outline:0}
+.tq-item.now{background:rgba(217,178,91,.12);border-color:var(--gold)}
+.tq-thumb{position:relative;flex:0 0 auto;width:58px;aspect-ratio:9/16;border-radius:8px;overflow:hidden;background:#000}
+.tq-item.wide .tq-thumb{width:104px;aspect-ratio:16/9}
+.tq-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.tq-thumb .dur{position:absolute;right:4px;bottom:4px;font-size:10px;font-weight:700;background:rgba(6,6,8,.75);color:#fff;padding:2px 5px;border-radius:4px}
+.tq-text{min-width:0;flex:1}
+.tq-k{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-bright);font-weight:700;min-height:12px}
+.tq-t{display:-webkit-box;font-size:13.5px;font-weight:600;color:#fff;line-height:1.3;margin-top:3px;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tq-c{display:block;font-size:11.5px;color:var(--dim);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:900px){
+  .theater-stage.queued{flex-direction:column;padding:0;gap:0}
+  .theater-stage.queued .theater-queue{display:none}
+  .theater-stage.queued .theater-frame.land{width:min(92vw,1500px)}
+}
+/* dots share the mute button's baseline (button: 42px tall at bottom:24px,
+   center 45px; the dot row centers on the same line) - decision 8/31 */
+.hero:not(.hero-sm) .hero-progress{bottom:40px}
+.hero-sm{height:auto;min-height:640px}
+.hero-sm .hero-slide{position:relative;inset:auto;min-height:640px;display:flex;flex-direction:column;justify-content:flex-end}
+.hero-sm .hero-copy{position:relative;left:auto;right:auto;bottom:auto;z-index:5;transform:none;
+  margin:150px 0 54px;padding:0 var(--gutter)}
+.hero-sm .hreel{top:60px;bottom:18px}
+.hero-title.ht-sm{font-size:clamp(34px,4.2vw,60px)}
+.hero-dek.oneline{max-width:none;white-space:nowrap}
+.hero-dek.dek-2line{max-width:none}
+.hero-dek.dek-2line .nw{white-space:nowrap}
+@media (max-width:700px){.hero-dek.dek-2line .nw{white-space:normal}.hero-dek.dek-2line{font-size:12.5px;text-wrap:balance}}
+@media (max-width:900px){.hero-dek.oneline{white-space:normal}}
+.rail.wrapped{flex-wrap:wrap;overflow-x:visible;justify-content:center}
+.step-card .num{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:30px;color:var(--gold);line-height:1}
+.hero-sm .hero-progress{display:none}
+.chan-tile .soon{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:24px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--gold);text-align:center;line-height:1.2}
+.chan-tile .soon small{display:block;font-family:'Inter',sans-serif;font-weight:600;font-size:10px;
+  letter-spacing:.18em;color:var(--dim);margin-top:6px}
+@media (max-width:900px){
+  .vslide .hero-copy{max-width:62%}
+  .hreel{right:5%!important;left:auto!important}
+}
+/* featured hero (9/1): wider copy column + the biggest 2-line title
+   that fits it; phones drop the nowrap and wrap naturally */
+.vslide .hero-copy.hc-wide{max-width:48%}
+@media (max-width:900px){.vslide .hero-copy.hc-wide{max-width:62%}}
+.hero-title.ht-feat{white-space:nowrap;font-size:min(clamp(30px,4.6vw,74px),3.8vw)}
+@media (max-width:700px){.hero-title.ht-feat{font-size:clamp(22px,7vw,32px)}}
+
+/* section pages: air between the compact hero and the first rail */
+.hero-sm + .shelves{margin-top:0;padding-top:34px}
+
+/* ===== about page ===== */
+.stat-band{display:flex;flex-wrap:wrap;gap:14px;padding:0 var(--gutter);margin:0 0 54px}
+.stat-band .st{flex:1 1 180px;border:1px solid var(--border);background:rgba(23,23,28,.4);padding:22px 24px}
+.stat-band .n{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:40px;color:var(--gold);line-height:1}
+.stat-band .l{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-top:6px}
+.about-copy{max-width:820px;padding:0 var(--gutter);margin:0 0 60px}
+.about-copy h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:19px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px}
+.about-copy p{font-size:14px;color:var(--dim);margin-bottom:12px;max-width:720px}
+.about-copy b{color:var(--text)}
+.founder-card{flex:0 0 clamp(250px,23vw,310px);scroll-snap-align:start;border:1px solid var(--border);
+  background:rgba(23,23,28,.4);padding:0;display:flex;flex-direction:column;overflow:hidden}
+.founder-card .fh{width:100%;height:auto;aspect-ratio:1/1.05;object-fit:cover;object-position:top;
+  border-radius:0;border:0;border-bottom:2px solid var(--gold)}
+.founder-card .inner{padding:12px 16px 14px;display:flex;flex-direction:column;gap:5px;flex:1}
+.founder-card .role{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.founder-card .nm{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:26px;text-transform:uppercase;line-height:1}
+.founder-card .role{min-height:2.4em}
+.founder-card .sch{font-size:12px;color:var(--gold)}
+.founder-card .bio{font-size:12.5px;color:var(--dim);flex:1}
+.founder-card .fw{align-self:flex-start;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold-bright);border:1px solid rgba(217,178,91,.4);padding:3px 9px;border-radius:999px}
+.amb-plate{flex:0 0 168px;scroll-snap-align:start;aspect-ratio:3/4;border:1px solid var(--border);
+  background:linear-gradient(160deg,rgba(23,23,28,.7),rgba(12,12,16,.9));display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:8px;padding:14px;text-align:center}
+.amb-plate .ini{width:52px;height:52px;border-radius:50%;border:1px solid rgba(217,178,91,.5);color:var(--gold);
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;display:flex;align-items:center;justify-content:center}
+.amb-plate .nm{font-weight:700;font-size:13px;line-height:1.25}
+.amb-plate .ss{font-size:10.5px;color:var(--dim)}
+.phase-card{flex:0 0 clamp(300px,30vw,400px);scroll-snap-align:start;border:1px solid var(--border);
+  background:rgba(23,23,28,.4);padding:26px;display:flex;flex-direction:column;gap:10px}
+.phase-card .ph{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.phase-card .t{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:26px;text-transform:uppercase;line-height:1}
+.phase-card p{font-size:12.5px;color:var(--dim);flex:1}
+.phase-card .chips{display:flex;flex-wrap:wrap;gap:6px}
+.phase-card .chips span{font-size:10px;font-weight:600;letter-spacing:.08em;padding:5px 10px;border:1px solid var(--border);color:var(--dim)}
+.chan-state{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  padding:3px 8px;border-radius:999px;background:rgba(6,6,8,.72);color:var(--gold-bright);border:1px solid rgba(217,178,91,.35)}
+.chan-tile.soon-ch{opacity:.55}
+.chan-tile.soon-ch .chan-state{color:var(--dim);border-color:var(--border)}
+/* EVENTS : logo-forward event tiles on the NIL Star hub. The whole tile is
+   the link to that event's page; the state pill and stage line are computed
+   at build time from the official timeline. */
+.ev-tile{width:clamp(320px,40vw,540px);aspect-ratio:2/1;display:flex;flex-direction:column;
+  background:linear-gradient(180deg,#141418,#08080a);
+  border-color:rgba(217,178,91,.22)}
+.ev-tile.live{border-color:rgba(217,178,91,.45)}
+.ev-state{position:absolute;top:12px;left:12px;z-index:2;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  padding:4px 10px;border-radius:999px;background:rgba(6,6,8,.72);color:var(--dim);border:1px solid var(--border)}
+.ev-tile.live .ev-state{color:var(--gold-bright);border-color:rgba(217,178,91,.45)}
+.ev-tile.live .ev-state::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--gold-bright);margin-right:7px;vertical-align:1px;box-shadow:0 0 8px var(--gold-bright)}
+.ev-logo-box{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:36px 24px 6px}
+.ev-tile .ev-logo{width:auto;height:auto;max-width:62%;max-height:100%;object-fit:contain;
+  filter:drop-shadow(0 0 18px rgba(217,178,91,.45)) drop-shadow(0 10px 26px rgba(0,0,0,.85))}
+.ev-tile .ev-logo-stack{max-height:150px}
+.ev-tile .ev-logo-wide{max-height:86px}
+.ev-foot{padding:0 16px 14px;display:flex;flex-direction:column;gap:4px;text-align:center}
+.ev-line{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:17px;line-height:1.05;text-transform:uppercase;letter-spacing:.03em}
+.ev-meta{font-size:11px;color:var(--dim);letter-spacing:.04em}
+.ev-meta b{color:var(--gold-bright);font-weight:700;margin-left:10px;text-transform:uppercase;letter-spacing:.12em;font-size:10px}
+.ev-tile:hover .ev-meta b{text-decoration:underline}
+/* SPOTLIGHT (featured page) : the athlete video + athlete of the week */
+.spot-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:1280px;margin:0 auto;padding:0 var(--gutter)}
+.spot{border:1px solid var(--border);background:rgba(23,23,28,.4);border-radius:22px;padding:22px;
+  display:flex;gap:22px;align-items:center}
+.spot .reel-cell,.spot .athf-card{flex:0 0 auto;width:min(210px,56vw);margin:0}
+.spot .card-reel{width:100%}
+.spot .athf-card{transform:none}
+.spot-tx{flex:1 1 200px;min-width:0}
+.spot-k{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.spot-tx h3{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:28px;text-transform:uppercase;line-height:1;margin:8px 0 10px}
+.spot-tx p{font-size:13px;color:var(--dim)}
+.spot-tx .btn{margin-top:16px}
+@media (max-width:760px){
+  .spot-grid{grid-template-columns:1fr}
+  .spot{flex-direction:column;align-items:flex-start}
+}
+/* RAIL ARROWS : scroll nav on channel carousels (desktop) */
+.shelf{position:relative}
+.rail-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--border);background:rgba(6,6,8,.82);color:#fff;display:grid;place-items:center;cursor:pointer}
+.rail-nav:hover{background:var(--gold);color:#060608;border-color:var(--gold)}
+.rail-nav.prev{left:10px}.rail-nav.next{right:10px}
+.rail-nav svg{width:18px;height:18px}
+@media (max-width:700px){.rail-nav{display:none!important}}
+/* TRENDING : Top-10 style rank numerals */
+.rank-cell{display:flex;align-items:flex-end}
+.rank-n{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(70px,7.5vw,120px);line-height:.78;
+  color:transparent;-webkit-text-stroke:2.5px var(--gold);letter-spacing:-.04em;margin-right:-12px;position:relative;z-index:2;flex:none}
+.rank-cell .card{position:relative;z-index:1}
+/* TOP 20 : a true 5x4 grid - twenty finalists fill it exactly, no gaps.
+   Centered on the page (border-box, so the cap includes the gutters); 2x10 on phones. */
+[data-grid="top20"] .rail{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;
+  overflow:visible;scroll-snap-type:none;max-width:calc(5*248px + 4*16px + 2*var(--gutter));
+  margin:0 auto;padding:14px var(--gutter) 22px}
+/* PHASE CARDS (event pages) : centered on the page above phone widths - cards
+   grow to share the row and any leftover card centers on its own row; phones
+   keep the horizontal scroll rail. */
+@media (min-width:701px){
+  [data-grid="phases"] .rail{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;overflow:visible;
+    scroll-snap-type:none;max-width:calc(4*400px + 3*14px + 2*var(--gutter));margin:0 auto;padding:14px var(--gutter) 22px}
+  [data-grid="phases"] .phase-card{flex:1 1 240px;max-width:400px}
+}
+/* TIMELINE : six milestones on one rule; the current phase glows */
+.tl-strip{list-style:none;display:grid;grid-template-columns:repeat(6,1fr);max-width:1280px;margin:0 auto;
+  padding:22px var(--gutter) 10px;position:relative}
+.tl-strip::before{content:"";position:absolute;top:29px;height:1px;background:var(--border);
+  left:calc(var(--gutter) + (100% - 2*var(--gutter))/12);right:calc(var(--gutter) + (100% - 2*var(--gutter))/12)}
+.tl-step{position:relative;text-align:center;padding:0 8px}
+.tl-dot{display:block;width:15px;height:15px;border-radius:50%;margin:0 auto 12px;background:#0b0b0e;border:2px solid var(--gold);position:relative;z-index:1}
+.tl-step.past .tl-dot{background:var(--gold)}
+.tl-step.now .tl-dot{background:var(--gold-bright);border-color:var(--gold-bright);box-shadow:0 0 0 5px rgba(217,178,91,.22),0 0 18px var(--gold-bright)}
+.tl-date{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.tl-t{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:19px;text-transform:uppercase;line-height:1.05;margin-top:4px}
+.tl-p{display:block;font-size:12px;color:var(--dim);margin-top:6px}
+.tl-step.now .tl-date::after{content:"Now";display:inline-block;margin-left:8px;font-size:9px;letter-spacing:.14em;padding:2px 7px;
+  border-radius:999px;border:1px solid rgba(217,178,91,.45);color:var(--gold-bright);vertical-align:middle}
+/* DO'S AND DON'TS */
+.dd-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:1240px;margin:0 auto;padding:0 var(--gutter)}
+.dd{border:1px solid var(--border);background:rgba(23,23,28,.4);border-radius:14px;padding:26px 28px}
+.dd h3{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:26px;text-transform:uppercase;line-height:1}
+.dd .dd-sub{display:block;font-size:12px;color:var(--dim);margin:6px 0 16px}
+.dd ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.dd li{font-size:13px;line-height:1.45;padding-left:26px;position:relative}
+.dd li::before{position:absolute;left:0;top:0;font-weight:800}
+.dd.do li::before{content:"\2713";color:var(--gold-bright)}
+.dd.dont li::before{content:"\2715";color:#e0645c}
+.dd.dont{border-color:rgba(224,100,92,.28)}
+.dd-note{max-width:1240px;margin:16px auto 0;padding:0 var(--gutter);font-size:12px;color:var(--dim)}
+.dd-note a{color:var(--gold)}
+/* SUBMIT BAND (event pages) : the visual peak, with the collab-post mock inside */
+.cta-band--peak{align-items:center;border-color:rgba(217,178,91,.35);
+  background:radial-gradient(90% 160% at 82% 30%,rgba(217,178,91,.16),rgba(217,178,91,0) 55%),rgba(23,23,28,.4)}
+.cta-band .cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.cta-band .pm-frame{width:min(232px,70vw);margin-left:auto}
+.cta-band .pm-spec{margin-top:18px}
+/* CENTERED PAGES (event + about) : one shared content edge - every block caps
+   at 1280 and centers on the page; rails become centered wrapping rows above
+   phone widths. */
+.shelves.centered .shelf-head,.shelves.centered .about-copy,.shelves.centered .faq,.shelves.centered .dd-grid,
+.shelves.centered .dd-note,.shelves.centered .tl-strip,.shelves.centered .stat-band{
+  max-width:1360px;margin-left:auto;margin-right:auto}
+.shelves.centered .about-copy p{max-width:760px}
+.shelves.centered .cta-band,.shelves.centered .work-band{width:calc(100% - 2*var(--gutter));max-width:calc(1360px - 2*var(--gutter));margin-left:auto;margin-right:auto}
+.shelves.centered .shelf + .shelf{padding-top:12px}
+@media (min-width:701px){
+  .shelves.centered [data-grid="founders"] .rail,.shelves.centered [data-grid="roadmap"] .rail{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;
+    overflow:visible;scroll-snap-type:none;max-width:1360px;margin:0 auto;padding:14px var(--gutter) 22px}
+  .shelves.centered [data-grid="founders"] .founder-card{flex:1 1 220px;max-width:310px}
+  .shelves.centered [data-grid="roadmap"] .phase-card{flex:1 1 240px;max-width:400px}
+
+}
+/* mobile-only line break + infinite channel rails (9/2) */
+br.mbr{display:none}
+@media (max-width:700px){br.mbr{display:inline}}
+/* logo rails: trimmed top (logos carry their own letterbox) but the same
+   bottom as every other rail so shelf-to-shelf gaps stay uniform */
+.rail-tight{padding-top:6px;padding-bottom:16px}
+/* NIL TV Advisory Board (from the approved mockup, 9/2) */
+.adv-card{flex:1 1 240px;max-width:326px;border:1px solid var(--border);
+  background:rgba(23,23,28,.4);display:flex;flex-direction:column;overflow:hidden}
+.adv-card .fh{width:100%;height:auto;aspect-ratio:1/1.05;object-fit:cover;object-position:top;border-bottom:2px solid var(--gold);
+  background:linear-gradient(180deg,#141418,#0a0a0d)}
+.adv-card .inner{padding:12px 16px 14px;display:flex;flex-direction:column;gap:5px;flex:1}
+.adv-card .nm{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:24px;text-transform:uppercase;line-height:1}
+.adv-card .role{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.adv-card .bio{font-size:12.5px;color:var(--dim);flex:1}
+.adv-card .fw{align-self:flex-start;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold-bright);border:1px solid rgba(217,178,91,.4);padding:3px 9px;border-radius:999px;white-space:nowrap}
+.shelves.centered [data-grid="advisory"] .rail{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;
+  overflow:visible;scroll-snap-type:none;max-width:1360px;margin:0 auto;padding:14px var(--gutter) 22px}
+@media (min-width:1100px){
+  .shelves.centered [data-grid="advisory"] .rail{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+}
+@media (max-width:700px){
+  .shelves.centered [data-grid="advisory"] .rail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;overflow:visible;padding:10px var(--gutter) 16px}
+  .adv-card{max-width:none}
+  .adv-card .nm{font-size:19px}
+  .adv-card .bio{font-size:11.5px}
+}
+/* work band contact info in the cards (9/2), no button */
+.work-open .phase-card .wb-mail{flex:none;font-size:13px}
+.work-open .phase-card .wb-mail a{color:var(--gold-bright);font-weight:700;border-bottom:1px solid rgba(217,178,91,.45);transition:border-color .2s}
+.work-open .phase-card .wb-mail a:hover{border-bottom-color:var(--gold-bright)}
+/* pillars title sized like the Work With NIL TV heading (9/2) */
+[data-grid="roadmap"] .shelf-title{font-weight:800;font-size:28px;letter-spacing:.02em}
+/* about work band unboxed (9/2): title + three pillar-sized cards, no outer box */
+.work-band.work-open{border:none;background:none;padding:6px 0 0;border-radius:0}
+.work-band.work-open .wb-grid{gap:14px;margin:22px 0 26px}
+/* about-page rhythm (9/1): tighter section spacing, roadmap chips stack */
+.shelves.centered .stat-band{margin-bottom:26px}
+.shelves.centered .about-copy{margin-bottom:28px}
+.shelves.centered .shelf{padding-bottom:18px}
+.shelves.centered .work-band{margin-top:8px}
+.shelves.centered [data-grid="roadmap"] .chips{flex-direction:column;align-items:stretch;text-align:center}
+/* three pillars (9/2): the whole centered edge is 1360 now */
+.shelves.centered [data-grid="roadmap"] .phase-card{flex:1 1 240px;max-width:440px;padding:22px 24px}
+/* the Founding Five always sit in ONE row on desktop - five equal columns,
+   nothing hangs below (8/27) */
+@media (min-width:1100px){
+  .shelves.centered [data-grid="founders"] .rail{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+  .shelves.centered [data-grid="founders"] .founder-card{flex:none;width:auto;max-width:none;min-width:0}
+}
+.pm-frame{flex:0 0 auto;width:min(272px,78vw);aspect-ratio:9/16;border-radius:22px;overflow:hidden;position:relative;
+  border:1px solid rgba(217,178,91,.35);background-color:#0b0b0e;background-size:cover;background-position:center;box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.pm-frame::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(6,6,8,.72) 0,rgba(6,6,8,0) 26%,rgba(6,6,8,0) 55%,rgba(6,6,8,.9) 100%)}
+.pm-top{position:absolute;top:12px;left:12px;right:12px;z-index:1;display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600}
+.pm-top i{width:24px;height:24px;border-radius:50%;background:var(--gold);flex:none}
+.pm-top small{display:block;font-weight:400;color:var(--dim);font-size:10px}
+.pm-lower{position:absolute;left:12px;right:12px;bottom:14px;z-index:1}
+.pm-lower b{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;text-transform:uppercase;letter-spacing:.04em;line-height:1}
+.pm-lower span{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-bright);margin-top:4px}
+.pm-spec{list-style:none;margin-top:18px;display:flex;flex-direction:column;gap:8px}
+.pm-spec li{font-size:12.5px;padding-left:18px;position:relative}
+.pm-spec li::before{content:"";position:absolute;left:0;top:7px;width:8px;height:8px;background:var(--gold);transform:rotate(45deg)}
+@media (max-width:760px){
+  .dd-grid{grid-template-columns:1fr}
+  .cta-band .pm-frame{margin:18px auto 0}
+  .tl-strip{grid-template-columns:1fr;gap:18px;padding-left:calc(var(--gutter) + 28px)}
+  .tl-strip::before{left:calc(var(--gutter) + 7px);right:auto;top:30px;bottom:30px;width:1px;height:auto}
+  .tl-step{text-align:left;padding:0}
+  .tl-dot{position:absolute;left:-28px;top:1px;margin:0}
+}
+[data-grid="top20"] .reel-cell{width:auto;min-width:0}
+[data-grid="top20"] .card-reel{width:100%}
+.cta-band{margin:20px var(--gutter) 0;border:1px solid var(--border);background:rgba(23,23,28,.4);
+  padding:38px 34px;display:flex;align-items:center;gap:26px;flex-wrap:wrap}
+.cta-band .tx{flex:1 1 380px}
+.cta-band h2{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:28px;text-transform:uppercase;line-height:1}
+.cta-band p{font-size:13px;color:var(--dim);margin-top:8px;max-width:560px}
+
+/* live chrome on the cinema shell */
+.nav-right a.nav-icon svg{width:17px;height:17px}
+#nav-avatar{cursor:pointer}
+#nav-avatar.signed{color:var(--gold);border-color:rgba(217,178,91,.55)}
+#nav-avatar svg{width:16px;height:16px}
+.nav-icon:focus-visible,#nav-avatar:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.cin-news{max-width:430px;margin:34px auto 0;text-align:left}
+.cin-news h4{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:12px}
+.cin-news .row{display:flex;gap:10px}
+.cin-news input[type=email]{flex:1;background:rgba(245,245,247,.06);border:1px solid var(--border);color:var(--text);
+  padding:11px 16px;border-radius:999px;font-family:inherit;font-size:13px}
+.cin-news input[type=email]:focus{outline:none;border-color:rgba(217,178,91,.6)}
+.cin-news .consent{display:block;font-size:11px;color:var(--dim);margin-top:10px;line-height:1.5}
+.cin-news .consent a{color:var(--gold-bright)}
+#news-msg{font-size:12px;color:var(--red);margin-top:8px;min-height:16px;text-align:center}
+#news-msg.ok{color:#6fdd9a}
+
+/* 3-column footer grid: brand | nav | newsletter */
+.foot-grid{display:grid;grid-template-columns:1fr 1.5fr 1.1fr;gap:48px;max-width:1240px;
+  margin:0 auto;padding:0 var(--gutter);text-align:left;align-items:start}
+.fg-brand{display:flex;flex-direction:column;align-items:center;text-align:center}
+.fg-brand .footer-logo{margin:0 0 12px}
+.fg-brand .footer-tag{margin-bottom:4px}
+.fg-socials{display:flex;gap:14px;margin-top:10px}
+.fg-socials a{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);color:var(--dim);
+  display:flex;align-items:center;justify-content:center;transition:color .2s,border-color .2s}
+.fg-socials a:hover{color:var(--gold);border-color:var(--gold)}
+.fg-socials svg{width:22px;height:22px}
+.fg-nav{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.fg-col h4,.fg-news h4{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.fg-col a{display:block;font-size:12.5px;color:var(--dim);padding:4px 0;transition:color .2s}
+.fg-col a:hover{color:var(--text)}
+.cin-news{display:none}
+.fg-news .row{display:flex;gap:10px}
+.fg-news input[type=email]{flex:1;min-width:0;background:rgba(245,245,247,.06);border:1px solid var(--border);
+  color:var(--text);padding:11px 16px;border-radius:999px;font-family:inherit;font-size:13px}
+.fg-news input[type=email]:focus{outline:none;border-color:rgba(217,178,91,.6)}
+.fg-news .consent{display:block;font-size:11px;color:var(--dim);margin-top:10px;line-height:1.5}
+.fg-news .consent a{color:var(--gold-bright)}
+@media (max-width:900px){
+  /* stacked mobile footer mirrors the desktop zones: centered brand block,
+     the same three link columns, then the newsletter capped and centered */
+  .foot-grid{grid-template-columns:1fr;gap:34px;text-align:center}
+  .fg-brand .footer-logo{margin:0 auto 12px}
+  .fg-socials{justify-content:center}
+  .fg-nav{grid-template-columns:repeat(2,1fr)}
+  .fg-news{width:100%;max-width:420px;margin:0 auto}
+}
+
+/* ===== mobile pass ===== */
+.v-wide-mobile{display:none}
+.nav-burger{display:none;width:44px;height:44px;border:0;background:none;color:var(--text);
+  align-items:center;justify-content:center;cursor:pointer;margin-left:auto}
+.nav-burger svg{width:22px;height:22px}
+.mobile-menu{display:none;position:fixed;top:56px;left:0;right:0;z-index:99;flex-direction:column;
+  background:rgba(6,6,8,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);
+  padding:8px 0 14px}
+.mobile-menu a{padding:13px var(--gutter);font-size:15px;font-weight:600;color:var(--text);
+  border-bottom:1px solid rgba(255,255,255,.05)}
+.mobile-menu.open{display:flex}
+.nav{padding-left:max(var(--gutter),env(safe-area-inset-left));
+  padding-right:max(var(--gutter),env(safe-area-inset-right))}
+.shelf-all{padding:8px 0}
+@media (max-width:900px){
+  .nav-burger{display:flex}
+  .nav-right{margin-left:0}
+}
+@media (max-width:700px){
+  .hero{height:auto;min-height:0;background:var(--bg)}
+  .hero-slide{background:var(--bg)}
+  /* the blurred glow/echo/scrim are desktop billboard dressing; on the
+     stacked phone layout they paint a discolored band under the copy */
+  .hglow,.hero-echo,.hero-scrim{display:none}
+  .hero-slide{position:relative;inset:auto;display:none;flex-direction:column;
+    padding:76px 0 26px}
+  .hero-sm .hero-slide{min-height:0}
+  .hero-slide.on{display:flex}
+  /* slides stack in one grid cell so the section holds the tallest slide's
+     height - switching slides never shifts the page (8/31) */
+  .hero:not(.hero-sm){display:grid}
+  .hero:not(.hero-sm) .hero-slide{display:flex;grid-area:1/1;visibility:hidden}
+  .hero:not(.hero-sm) .hero-slide.on{visibility:visible}
+  /* CTA row pins to the slide bottom so buttons sit at the same y on every
+     slide regardless of copy height */
+  .hero:not(.hero-sm) .hero-copy{display:flex;flex-direction:column;flex:1}
+  .hero:not(.hero-sm) .hero-ctas{margin-top:auto}
+  .shelves{margin-top:0}
+  .hero-copy,.vslide .hero-copy{position:relative;left:auto;right:auto;bottom:auto;max-width:100%;
+    margin:0;padding:12px var(--gutter) 6px;z-index:5;transform:none}
+  .hero-sm .hero-copy,.hero-sm .hero-copy[style]{margin:12px 0 0!important;padding:0 var(--gutter) 6px}
+  .hreel{position:relative;inset:auto;top:auto!important;bottom:auto!important;
+    right:auto!important;left:auto!important;height:auto;aspect-ratio:16/9;
+    width:100%;margin:0 0 8px;z-index:2}
+  .hreel .hero-video{width:100%;height:100%;object-fit:contain;background:#000;border-radius:0}
+  .rank-n{font-size:54px;-webkit-text-stroke:2px var(--gold)}
+  /* bottom-right of the 16:9 band, matching the reel slides' button: the band
+     is full-bleed (100vw x 56.25vw) starting under the 76px slide padding, so
+     its bottom edge sits at 76px + 56.25vw; 42px button + 12px inset */
+  .vw-mute, .hero-slide > .hreel-mute{bottom:auto;top:calc(56.25vw + 22px);right:12px}
+  .v-wide .hero-title{font-size:clamp(36px,10.5vw,50px)}
+  .v-wide .hero-video{position:relative;inset:auto;left:auto;right:auto;
+    width:100%;height:auto;aspect-ratio:16/9;object-fit:contain;background:#000;
+    border-radius:0;margin:0 0 8px;z-index:2;-webkit-mask-image:none;mask-image:none}
+  .shelf-head{flex-wrap:wrap;gap:2px 12px}
+  .shelf-sub{font-size:12px}
+  .shelf-title{white-space:nowrap;order:1;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .shelf-all{order:2}
+  .shelf-sub{order:3;flex-basis:100%;font-size:12px}
+  .hero-echo{display:none}
+  .hero-arrow{display:none}
+  .hero-progress{position:static;left:auto;transform:none;justify-content:center;
+    display:flex;margin:0 0 22px}
+  .hero-title{font-size:clamp(34px,10vw,48px)}
+  .hero-title.ht-sm{font-size:clamp(28px,7.6vw,40px)}
+  /* uniform copy zones: every slide's title bottom, dek, and CTA row land at
+     the same y, so slide changes never shift the page */
+  /* zone sized to the reduced NIL Star logo (9/2: cut hero height) */
+  .hero:not(.hero-sm) .hero-title{min-height:68px;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;margin-bottom:10px}
+  .hero-slide .hero-title .hero-logo{width:auto;align-self:flex-start}
+  .hero:not(.hero-sm) .hero-dek{min-height:42px;margin-bottom:16px}
+  .hero-sm .hero-slide{padding-bottom:12px}
+  .v-wide-mobile{display:none!important}
+  .fg-socials{gap:14px}
+  .fg-socials a{width:46px;height:46px}
+  .fg-socials svg{width:22px;height:22px}
+  .hl-nilstar{height:64px}
+  .hero-meta{flex-wrap:wrap;gap:6px 10px}
+  .hero-scrim{background:linear-gradient(to bottom,rgba(6,6,8,.55),rgba(6,6,8,.35) 55%,var(--bg) 96%)}
+}
+@media (max-width:480px){
+  .fg-nav{grid-template-columns:repeat(2,1fr);gap:14px}
+  .fg-col a{font-size:11.5px;padding:3px 0}
+  .fg-col h4{font-size:11px}
+  .founder-card{flex-basis:78vw}
+  .phase-card{flex-basis:80vw}
+  .ev-tile{width:82vw}
+  [data-grid="top20"] .rail{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:none}
+  /* event phase cards stack on phones (same call as the About roadmap) */
+  [data-grid="phases"] .rail{display:grid;grid-template-columns:1fr;gap:14px;overflow:visible;padding:10px var(--gutter) 6px;scroll-snap-type:none}
+  [data-grid="phases"] .phase-card{flex:none;width:auto;flex-basis:auto}
+  /* copy-first heroes: the reel follows the pitch + CTA, a little shorter */
+  .hero-sm .hero-copy + .hreel{margin:14px auto 0}
+  .ev-tile .ev-logo-stack{max-height:118px}
+  .ev-tile .ev-logo-wide{max-height:70px}
+}
+
+/* explicit card rounding */
+.card,.card-wide,.card-reel{border-radius:22px}
+/* distinct active tab */
+.nav-links a.active{color:var(--gold);position:relative}
+.nav-links a.active::after{content:"";position:absolute;left:0;right:0;bottom:-19px;height:2px;background:var(--gold)}
+/* logo as a rail title */
+.shelf-title .shelf-logo{height:68px;width:auto;display:block}
+/* channel tile cells with descriptors */
+.chan-cell{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1 1 0;min-width:230px}
+.chan-cell .chan-tile{width:100%;flex:none;min-width:0}
+.chan-cap-soon{color:var(--gold)!important;font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:13px}
+.chan-cap{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);text-align:center}
+.chan-cap b{color:var(--text);font-weight:600}
+/* mobile: MUST follow every chan base rule above - a media query adds no
+   specificity, so at equal specificity the later rule always wins */
+@media (max-width:700px){
+  .chan-cell{min-width:0;flex:0 0 30vw;gap:6px}
+  .chan-tile img{width:96%;height:84%}
+  .chan-cap,.chan-cap-soon{font-size:11px;letter-spacing:.12em}
+}
+/* Local Channels rail (9/9, homepage + channels page): horizontal chanh
+   marks in short, gold-framed tiles. The chanh files are 1000x333 with the
+   artwork in rows ~80-236, so the tile clips the built-in letterbox: 86%-wide
+   image, overflow hidden, nudged down 2.4% so the art (which sits above the
+   file's centre) lands centred. */
+.shelf-title--local{font-size:34px}
+.rail-chlocal{align-items:center}
+.rail-chlocal .chan-cell{flex:1 1 0;min-width:310px;gap:4px}
+.rail-chlocal .chan-tile{aspect-ratio:11/3;border-radius:14px;
+  border:1px solid rgba(217,178,91,.55);background:transparent;box-shadow:none;
+  transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease}
+.rail-chlocal .chan-tile:hover{border-color:var(--gold-bright);box-shadow:0 0 22px rgba(217,178,91,.28)}
+.rail-chlocal .chan-tile img{width:86%;height:auto;max-width:none;transform:translateY(2.4%)}
+@media (max-width:700px){
+  .rail-chlocal{gap:10px;padding-top:4px;padding-bottom:10px}
+  .rail-chlocal .chan-cell{flex:0 0 56vw;min-width:0;gap:5px}
+  .rail-chlocal .chan-tile{border-radius:12px}
+  .rail-chlocal .chan-cap,.rail-chlocal .chan-cap-soon{font-size:10.5px;letter-spacing:.1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+}
+
+/* combined work-with-us band (about) */
+.work-band{margin:20px var(--gutter) 0;border:1px solid var(--border);background:rgba(23,23,28,.4);padding:38px 34px}
+.work-band h2{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:28px;text-transform:uppercase;line-height:1}
+.work-band > p{font-size:13px;color:var(--dim);margin-top:8px;max-width:62ch}
+.wb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0 28px}
+.wb-card{border:1px solid var(--border);background:rgba(12,12,16,.6);padding:20px;border-radius:14px}
+.wb-card .t{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;text-transform:uppercase;letter-spacing:.04em;color:var(--gold);margin-bottom:8px}
+.wb-card p{font-size:12.5px;color:var(--dim)}
+.wb-card a{color:var(--gold-bright);font-weight:700;border-bottom:1px solid rgba(217,178,91,.45);transition:border-color .2s}
+.wb-card a:hover{border-bottom-color:var(--gold-bright)}
+@media (max-width:820px){.wb-grid{grid-template-columns:1fr}}
+/* partners page */
+.p-wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px 22px;padding:0 var(--gutter)}
+.p-tile{background:transparent;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;padding:10px}
+.p-tile img{max-height:56%;max-width:82%;width:auto;object-fit:contain;opacity:.8;transition:opacity .2s}
+.p-tile:hover img{opacity:1}
+.faq{display:grid;grid-template-columns:1fr;gap:12px;align-items:start;padding:0 var(--gutter);margin:0 0 60px}
+.faq details{max-width:900px}
+@media (max-width:760px){.faq{grid-template-columns:1fr}}
+.faq details{border:1px solid var(--border);background:rgba(23,23,28,.4);border-radius:14px;margin:0;padding:0 20px}
+.faq summary{cursor:pointer;font-weight:600;font-size:13.5px;padding:16px 0;list-style:none;position:relative;padding-right:30px}
+.faq summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:20px;color:var(--gold)}
+.faq details[open] summary::after{content:"-"}
+.faq details p{font-size:12.5px;color:var(--dim);padding:0 0 16px}
+
+.hreel-mute{position:absolute;bottom:12px;right:12px;z-index:6;width:42px;height:42px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.35);background:rgba(6,6,8,.55);color:#f5f5f7;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);transition:background .2s}
+.hreel-mute:hover{background:var(--gold);color:#060608;border-color:var(--gold)}
+.hreel-mute svg{width:18px;height:18px}
+.vw-mute{bottom:24px;right:24px;z-index:40}
+/* every hero mute button sits at the section bottom-right on desktop (8/31) */
+.hero-slide > .hreel-mute{bottom:24px;right:24px;z-index:40}
+
+/* about page mobile: founders 2-2-1 grid, roadmap stacked vertical */
+@media (max-width:700px){
+  [data-grid="founders"] .rail,[data-grid="roadmap"] .rail{
+    display:grid;gap:14px;overflow:visible;padding-bottom:0}
+  [data-grid="founders"] .rail{grid-template-columns:repeat(4,1fr)}
+  [data-grid="roadmap"] .rail{grid-template-columns:1fr}
+  [data-grid="founders"] .founder-card,[data-grid="roadmap"] .phase-card{
+    flex:none;width:auto;flex-basis:auto}
+  /* 2-2-1 (8/31): every card the same size, two per row; the fifth
+     starts at column 2 of 4, so it is centered at identical width */
+  [data-grid="founders"] .founder-card{grid-column:span 2}
+  [data-grid="founders"] .founder-card:nth-child(5){grid-column:2 / span 2}
+  [data-grid="founders"] .founder-card .inner{padding:10px 12px 12px;gap:4px}
+  [data-grid="founders"] .founder-card .nm{font-size:17px}
+  [data-grid="founders"] .founder-card .bio{font-size:11px}
+  [data-grid="founders"] .founder-card .fw{font-size:9px;padding:3px 7px}
+}
+
+/* logo rail titles: center the head row (an img has no text baseline) */
+.shelf-head:has(.shelf-logo){align-items:center}
+/* featured athlete cards (link to the built profile pages) */
+.athf-card{flex:0 0 clamp(210px,19vw,260px);scroll-snap-align:start;border:1px solid var(--border);
+  background:rgba(23,23,28,.4);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;
+  transition:transform .22s,border-color .22s}
+.athf-card:hover{transform:translateY(-4px);border-color:rgba(217,178,91,.5)}
+.athf-card img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top;border-bottom:2px solid var(--gold)}
+.athf-card .nm{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;text-transform:uppercase;
+  padding:12px 16px 2px;line-height:1}
+.athf-card .sp{font-size:11px;color:var(--dim);padding:0 16px 14px}
+
+/* ---------- athlete pages (hand pages, built by scripts/builders/build-payments.py) ---------- */
+.pay-panel{margin:0 var(--gutter);max-width:640px;border:1px solid rgba(217,178,91,.35);
+  background:linear-gradient(180deg,rgba(217,178,91,.07),rgba(23,23,28,.5));border-radius:18px;padding:34px 34px 30px}
+.pay-panel .pk{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:8px}
+.pay-panel h2{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:32px;text-transform:uppercase;line-height:1;margin-bottom:10px}
+.pay-panel p{font-size:13.5px;color:var(--dim)}
+.pay-panel .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;align-items:center}
+.pay-panel .note{font-size:12px;color:var(--dim);opacity:.85;margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.pay-panel .note a{color:var(--gold-bright)}
+.pay-panel .spin{width:30px;height:30px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--gold);animation:payspin .8s linear infinite;margin:6px 0 14px}
+@keyframes payspin{to{transform:rotate(360deg)}}
+.pay-panel.err{border-color:rgba(224,51,74,.45)}
+.pay-panel.err h2{color:var(--red)}
+.pay-panel + .pay-panel{margin-top:18px}
+a.pay-panel{display:block;color:inherit;text-decoration:none;transition:border-color .25s ease,box-shadow .25s ease,transform .25s ease}
+a.pay-panel:hover{border-color:var(--gold);box-shadow:0 0 28px rgba(217,178,91,.22);transform:translateY(-2px)}
+a.pay-panel .btn{pointer-events:none}
+.btn[disabled],.btn.is-off{opacity:.45;cursor:not-allowed;transform:none!important}
+/* application form: follows the printed Google Form flow (numbered, one column) */
+.apply-wrap{margin:0 var(--gutter);max-width:760px}
+.apply-wrap .lead{font-size:13.5px;color:var(--dim);margin-bottom:18px;max-width:640px}
+.apply-wrap .lead a{color:var(--gold-bright)}
+.gf-head{border:1px solid var(--border);border-top:6px solid var(--gold);background:rgba(23,23,28,.4);border-radius:14px;padding:26px 28px 18px;margin-bottom:14px}
+.gf-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:30px;text-transform:uppercase;line-height:1;margin-bottom:12px}
+.gf-head .lead{margin-bottom:10px;max-width:none}
+.gf-head .lead b{color:var(--text)}
+.gf-req{font-size:12px;color:var(--red);margin-top:6px}
+.apply-form .q{display:flex;gap:14px;border:1px solid var(--border);background:rgba(23,23,28,.4);border-radius:14px;padding:20px 22px;margin-bottom:12px}
+.apply-form .qn{flex:none;width:28px;font-size:13px;color:var(--dim);padding-top:2px;font-variant-numeric:tabular-nums}
+.apply-form .qb{flex:1;min-width:0}
+.apply-form label,.apply-form .ql{display:block;font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px}
+.apply-form .mo{font-size:12px;font-style:italic;color:var(--dim);margin:-6px 0 10px}
+.apply-form input[type=text],.apply-form input[type=email],.apply-form input[type=tel],.apply-form select,.apply-form textarea{
+  background:rgba(245,245,247,.06);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:10px;
+  font-family:inherit;font-size:13px;width:100%;max-width:420px}
+.apply-form textarea{max-width:none;min-height:96px;resize:vertical}
+.apply-form select option{color:#111}
+.apply-form input:focus,.apply-form select:focus,.apply-form textarea:focus{outline:none;border-color:rgba(217,178,91,.6)}
+.apply-form .ovals{display:flex;flex-direction:column;gap:10px}
+.apply-form .ovals label{display:flex;gap:10px;align-items:center;font-weight:400;font-size:13.5px;margin:0;cursor:pointer;position:relative}
+.apply-form .ovals input{position:absolute;opacity:0;width:0;height:0}
+.apply-form .ovals span{width:30px;height:18px;border-radius:999px;border:1.5px solid var(--dim);flex:none;transition:background .15s,border-color .15s}
+.apply-form .ovals input:checked + span{background:var(--gold);border-color:var(--gold)}
+.apply-form .ovals input:focus-visible + span{outline:2px solid var(--gold);outline-offset:2px}
+.apply-form .chk{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:var(--dim);line-height:1.5;margin:0 0 12px;font-weight:400}
+.apply-form .chk input{margin-top:3px;flex:none;width:16px;height:16px;accent-color:var(--gold)}
+.apply-form .chk b{color:var(--text);font-weight:600}
+.apply-form .chk a{color:var(--gold-bright)}
+.apply-form .req{color:var(--gold)}
+.apply-form .hint{font-size:11.5px;color:var(--dim);margin:-4px 0 14px}
+.gf-alt{font-size:12.5px;color:var(--dim);margin:0 0 60px}
+.gf-alt a{color:var(--gold-bright)}
+.gf-embed{background:#fff;border-radius:14px;padding:8px;margin:0 0 60px;max-width:656px;overflow-x:auto}
+.gf-embed iframe{display:block;max-width:100%}
+.apply-form .submit-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:6px 0 60px}
+#apply-msg{font-size:12.5px;color:var(--red);min-height:18px}
+.apply-done{border:1px solid rgba(111,221,154,.45);background:rgba(23,23,28,.5);border-radius:14px;padding:26px;margin-bottom:60px}
+.apply-done h3{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:26px;text-transform:uppercase;margin-bottom:8px}
+.apply-done p{font-size:13px;color:var(--dim);margin-bottom:8px}
+.apply-done ol{font-size:13px;color:var(--dim);padding-left:20px;margin:6px 0 8px}
+.apply-done li{margin-bottom:4px}
+.apply-done pre{font-size:11px;line-height:1.45;color:var(--dim);background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:10px;padding:14px;overflow:auto;max-height:320px;margin-top:12px}
+</style>
+<link rel="stylesheet" href="/assets/css/cinema-chrome.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a class="nav-logo" href="/">
+    <img src="/assets/img/niltv-logo-sm.webp" alt="NIL TV">
+  </a>
+  <div class="nav-links">
+    <a href="/channels/">Channels</a>
+    <a href="/competitions/">Competitions</a>
+    <a href="/featured/">Featured</a>
+    <a href="/about/">About</a>
+  </div>
+  <div class="nav-right"></div>
+  <button class="nav-burger" id="navBurger" aria-label="Menu" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/channels/">Channels</a>
+  <a href="/competitions/">Competitions</a>
+  <a href="/featured/">Featured</a>
+  <a href="/about/">About</a>
+</div>
+
+<section class="hero hero-sm" id="hero" style="min-height:0"><div class="hero-slide vslide on" style="min-height:0"><div class="hero-copy" style="margin:120px 0 8px"><div class="hero-kicker">NIL TV Athletes</div><h1 class="hero-title ht-sm">Athlete Payments</h1><p class="hero-dek dek-2line">Payouts, receipts, and tax forms live in your Stripe account.</p></div></div><div class="hero-progress" id="heroDots"><button class="hero-dot on" data-i="0" aria-label="Slide 1"><span></span></button></div></section>
+
+<main class="shelves centered" id="main">
+
+<section class="pay-panel" id="payPanel" aria-live="polite">
+  <div class="pk">NIL TV Athletes</div>
+  <h2>Your Stripe Account</h2>
+  <div class="acts"><a class="btn btn-gold" href="https://connect.stripe.com/express_login" target="_blank" rel="noopener">Open Stripe Account</a></div>
+  <div class="note">Stripe signs you in with the email on your NIL TV account and a code sent to your phone.<br>First time here? Use the setup link from your welcome text or email. It finishes your Stripe setup and never expires.<br>Questions about a payment: <a href="mailto:contact@niltv.com">contact@niltv.com</a>.</div>
+</section>
+
+<a class="pay-panel pay-link" href="/athlete-signup/">
+  <div class="pk">Not on NIL TV yet?</div>
+  <h2>College Athlete Application</h2>
+  <p>Apply to join the NIL TV athlete network. Sign in with your NIL TV account and the form takes about ten minutes.</p>
+  <div class="acts"><span class="btn btn-gold">Start Your Application</span></div>
+</a>
+
+</main>
+
+<!-- FOOTER : credits roll -->
+<footer class="footer">
+  <div class="foot-grid">
+    <div class="fg-brand">
+      <a class="footer-logo-link" href="/" aria-label="NIL TV home"><img class="footer-logo" src="/assets/img/niltv-logo.webp" alt="NIL TV"></a>
+      <p class="footer-tag">Real Name. Real Game. Real TV.</p>
+      <div class="fg-socials">
+        <a href="https://www.instagram.com/niltv" target="_blank" rel="noopener" aria-label="NIL TV on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg></a>
+        <a href="https://www.youtube.com/@niltv" target="_blank" rel="noopener" aria-label="NIL TV on YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="5.5" width="19" height="13" rx="3.5"/><path d="M10 9.2l5 2.8-5 2.8z" fill="currentColor" stroke="none"/></svg></a>
+        <a href="https://www.tiktok.com/@niltvnet" target="_blank" rel="noopener" aria-label="NIL TV on TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 4v9.6a3.9 3.9 0 1 1-3.2-3.83"/><path d="M14.5 5.2c.7 1.9 2.2 3.2 4.5 3.4"/></svg></a>
+        <a href="https://www.facebook.com/p/NILTV-61586941205109/" target="_blank" rel="noopener" aria-label="NIL TV on Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13.5 21v-6.5H16l.5-3h-3V9.2c0-.9.4-1.7 1.7-1.7h1.4V4.9c-.7-.1-1.5-.2-2.3-.2-2.3 0-3.8 1.4-3.8 3.9v2.9H8v3h2.5V21"/></svg></a>
+        <a href="https://www.linkedin.com/company/111621256/" target="_blank" rel="noopener" aria-label="NIL TV on LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8.5" r="1" fill="currentColor" stroke="none"/><path d="M8 11.5V17M12 17v-3.4a2.1 2.1 0 0 1 4.2 0V17M12 13.6v-2.1"/></svg></a>
+      </div>
+    </div>
+    <div class="fg-nav">
+      <!-- first list mirrors the header nav exactly; no list headings (8/29) -->
+      <div class="fg-col">
+        <a href="/channels/">Channels</a><a href="/competitions/">Competitions</a>
+        <a href="/featured/">Featured</a><a href="/about/">About</a></div>
+      <div class="fg-col">
+        <a href="/legal/privacy/">Privacy Policy</a><a href="/legal/terms/">Terms of Use</a>
+        <a href="/legal/contest-notice/">Contest Notice</a><a href="/payments/">Athlete Portal</a></div>
+    </div>
+    <div class="fg-news">
+      <h4>Get NIL TV Updates</h4>
+      <form id="news-form" novalidate>
+        <div class="row">
+          <input type="email" id="news-email" aria-label="Email address" placeholder="Your email here" autocomplete="email" required>
+          <button type="submit" class="btn btn-gold">Sign Up</button>
+        </div>
+        <label class="consent"><input type="checkbox" id="news-consent"> I am 18 or older and agree to receive email updates from NIL TV. <a href="/legal/privacy/">Privacy Policy</a></label>
+        <div id="news-msg" role="status"></div>
+      </form>
+    </div>
+  </div>
+  <!-- Google tag (GA4): same property as the current WordPress site -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GT-T94D2H5L"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());gtag('config', 'GT-T94D2H5L');</script>
+  <p class="footer-legal">&copy; 2026 NIL TV. All rights reserved.</p>
+</footer>
+
+<div class="theater" id="theater" role="dialog" aria-modal="true" aria-label="Video player">
+  <div class="theater-glow" id="theaterGlow"></div>
+  <div class="theater-dim"></div>
+  <div class="theater-stage" id="theaterStage">
+    <div class="theater-main" id="theaterMain">
+    <div class="theater-frame" id="theaterFrame">
+      <video id="theaterVideo" playsinline loop></video>
+      <button class="tp-center" id="tpCenter" aria-label="Play"></button>
+      <div class="tp-bar" id="tpBar">
+        <div class="tp-progress" id="tpProg">
+          <div class="tp-fill" id="tpFill"></div>
+          <div class="tp-knob" id="tpKnob"></div>
+        </div>
+        <div class="tp-row">
+          <button class="tp-mute" id="tpMute" aria-label="Mute"></button>
+          <input type="range" class="tp-vol" id="tpVol" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+          <span class="tp-time" id="tpTime">0:00 / 0:00</span>
+        </div>
+      </div>
+    </div>
+    <div class="theater-lt">
+      <div class="k" id="theaterKicker"></div>
+      <div class="t" id="theaterTitle"></div>
+    </div>
+    </div>
+    <aside class="theater-queue" id="theaterQueue" aria-label="Up next">
+      <div class="tq-head"><b>Up next</b></div>
+      <div class="tq-list" id="tqList"></div>
+    </aside>
+  </div>
+  <button class="theater-x" id="theaterX" aria-label="Close">✕</button>
+</div>
+
+<script src="/config.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>NILTV.initCinema();</script>
+<script>
+(function(){
+  var nav = document.getElementById('nav');
+  window.addEventListener('scroll', function(){
+    nav.classList.toggle('scrolled', window.scrollY > 24);
+  }, {passive:true});
+
+  var reduceMotion = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var slides = document.querySelectorAll('.hero-slide');
+  var dots = document.querySelectorAll('.hero-dot');
+  var i = 0, timer = null, soundHold = false;
+
+  /* Decision 2: only the active slide's reel plays, as a cropped-wide muted
+     loop; sources attach lazily on first activation. Reduced-motion visitors
+     keep the still posters. */
+  function slideVideo(slide, on){
+    if (!slide || reduceMotion) return;
+    slide.querySelectorAll('.hero-video, .hero-echo').forEach(function(v){
+      // phones skip the echo layer entirely - it is hidden there and the
+      // second stream would only burn data and battery; hz billboard slides
+      // hide it at every width (the full-bleed video covers it completely)
+      if (v.classList.contains('hero-echo') &&
+          (window.innerWidth < 900 || v.closest('.hz'))) return;
+      // wide slide: desktop plays the wide cut, phones play the vertical cut
+      if (v.closest('.v-wide-mobile')) return;
+      if (on){
+        if (!v.src && v.dataset.src) v.src = v.dataset.src;
+        v.play().catch(function(){});
+      } else {
+        v.pause();
+      }
+    });
+  }
+
+  /* pre-buffer the NEXT slide's reel while the current one plays so every
+     rotation starts on frame one instead of fetching from zero (9/3) */
+  function warmNext(n){
+    if (reduceMotion || slides.length < 2) return;
+    slides[(n + 1) % slides.length].querySelectorAll('.hero-video').forEach(function(v){
+      if (v.closest('.v-wide-mobile')) return;
+      if (!v.src && v.dataset.src){ v.preload = 'auto'; v.src = v.dataset.src; }
+    });
+  }
+
+  function show(n){
+    var leaving = slides[i];
+    slideVideo(leaving, false);
+    soundState.forEach(function(st){
+      if (st.sl === leaving && !st.v.muted){
+        setSound(st, false);
+        try { st.v.currentTime = 0; } catch(e){}
+      }
+    });
+    soundHold = false;
+    if (vwSt) vwSt.b.style.display = slides[n % slides.length].classList.contains('v-wide') ? '' : 'none';
+    slides[i].classList.remove('on');
+    dots[i].classList.remove('on');
+    i = n % slides.length;
+    slides[i].classList.add('on');
+    slideVideo(slides[i], true);
+    warmNext(i);
+    var d = dots[i];
+    d.classList.remove('on');
+    void d.offsetWidth;
+    d.classList.add('on');
+  }
+  function arm(){
+    clearInterval(timer);
+    /* soundHold: a visitor who unmuted a reel is watching it - the carousel
+       stays on that slide until they mute again or navigate themselves */
+    if (reduceMotion || soundHold || slides.length < 2) return;
+    timer = setInterval(function(){ show(i + 1); }, 8000);
+  }
+  dots.forEach(function(d){
+    d.addEventListener('click', function(){
+      show(parseInt(d.dataset.i, 10));
+      arm();
+    });
+  });
+  var MUTED_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M22 9l-6 6M16 9l6 6"/></svg>';
+  var SOUND_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+  /* one source of truth for a slide's sound state: video.muted, the button
+     icon, and the carousel hold always change together (audio-only - the
+     presentation never changes between muted and unmuted) */
+  var soundState = [];  // {sl, v, b}
+  function setSound(st, on){
+    st.v.muted = !on;
+    if (on){
+      if (!st.v.src && st.v.dataset.src) st.v.src = st.v.dataset.src;
+      st.v.play().catch(function(){});
+    }
+    st.b.innerHTML = on ? SOUND_IC : MUTED_IC;
+    st.b.setAttribute('aria-label', on ? 'Mute' : 'Unmute');
+    soundHold = on;
+    if (on) clearInterval(timer); else arm();
+  }
+  function regSound(sl, v, appendTo, extraCls){
+    if (!sl || !v) return null;
+    var b = document.createElement('button');
+    b.className = 'hreel-mute' + (extraCls ? ' ' + extraCls : '');
+    b.setAttribute('aria-label', 'Unmute');
+    b.innerHTML = MUTED_IC;
+    var st = {sl: sl, v: v, b: b};
+    b.addEventListener('click', function(e){
+      e.stopPropagation();
+      setSound(st, st.v.muted);
+    });
+    appendTo.appendChild(b);
+    soundState.push(st);
+    return st;
+  }
+  document.querySelectorAll('.hreel').forEach(function(fr){
+    if (fr.classList.contains('v-wide-mobile')) return; // hidden swap layer
+    // button lives on the SLIDE so it pins to the section corner (8/31)
+    var slideEl = fr.closest('.hero-slide') || fr;
+    regSound(slideEl, fr.querySelector('video'), slideEl);
+  });
+  var vwSt = (function(){
+    var sl = document.querySelector('.hero-slide.v-wide');
+    var heroEl2 = document.getElementById('hero');
+    if (!sl || !heroEl2) return null;
+    var st = regSound(sl, sl.querySelector('video.vw-desk'), heroEl2, 'vw-mute');
+    if (st) st.b.style.display = slides.length && slides[0].classList.contains('v-wide') ? '' : 'none';
+    return st;
+  })();
+
+  document.querySelectorAll('.hero-arrow').forEach(function(b){
+    b.addEventListener('click', function(){
+      var d = b.classList.contains('next') ? 1 : -1;
+      show((i + d + slides.length) % slides.length);
+      arm();
+    });
+  });
+  var burger = document.getElementById('navBurger');
+  var mmenu = document.getElementById('mobileMenu');
+  if (burger && mmenu){
+    burger.addEventListener('click', function(){
+      var open = mmenu.classList.toggle('open');
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    mmenu.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){ mmenu.classList.remove('open'); });
+    });
+  }
+
+  var heroEl = document.getElementById('hero');
+  var touchX = null, touchY = null;
+  if (heroEl && slides.length > 1){
+    heroEl.addEventListener('touchstart', function(e){
+      touchX = e.touches[0].clientX; touchY = e.touches[0].clientY;
+    }, {passive:true});
+    heroEl.addEventListener('touchend', function(e){
+      if (touchX === null) return;
+      var dx = e.changedTouches[0].clientX - touchX;
+      var dy = e.changedTouches[0].clientY - touchY;
+      if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy)){
+        show((i + (dx < 0 ? 1 : -1) + slides.length) % slides.length);
+        arm();
+      }
+      touchX = null;
+    }, {passive:true});
+  }
+
+  slideVideo(slides[0], true);
+  warmNext(0);
+  arm();
+
+  /* Decision 6: the theater. Dim everything, spotlight the portrait frame,
+     glow with the reel's own poster. */
+  var theater = document.getElementById('theater');
+  var tVideo = document.getElementById('theaterVideo');
+  var tGlow = document.getElementById('theaterGlow');
+
+  var theaterReturnFocus = null;
+  var tStage = document.getElementById('theaterStage');
+  var tqList = document.getElementById('tqList');
+  var tQueue = [], tQi = -1;   // the row the card came from, in row order
+
+  /* load one item into the frame (the theater is already open) */
+  function tLoad(item){
+    tGlow.style.backgroundImage = item.poster ? "url('" + item.poster + "')" : "none";
+    if (item.poster) tVideo.poster = item.poster;
+    document.getElementById('theaterKicker').textContent = item.kicker || '';
+    document.getElementById('theaterTitle').textContent = item.title || '';
+    tpReset();
+    tVideo.onloadedmetadata = function(){
+      var fr = document.getElementById('theaterFrame');
+      if (fr){
+        fr.classList.toggle('land', tVideo.videoWidth > tVideo.videoHeight);
+        // frame takes the video's EXACT shape, so the picture fills it
+        // edge-to-edge and the control overlay never extends past the
+        // video (9/2)
+        if (tVideo.videoWidth && tVideo.videoHeight)
+          fr.style.aspectRatio = tVideo.videoWidth + ' / ' + tVideo.videoHeight;
+      }
+      tpSync();
+    };
+    tVideo.src = item.mp4;
+    tVideo.muted = false;
+    tVideo.play().catch(function(){
+      tVideo.muted = true;
+      tVideo.play().catch(function(){});
+    });
+  }
+  function mk(tag, cls, text){
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  /* Up Next column: the playing item leads, then the rest of the row in
+     row order, wrapping around - so the column always reads as "what
+     plays after this" (9/8). */
+  function renderQueue(){
+    tqList.textContent = '';
+    if (!tQueue.length) return;
+    for (var k = 0; k < tQueue.length; k++){
+      var n = (tQi + k) % tQueue.length, it = tQueue[n];
+      var b = mk('button', 'tq-item' + (it.wide ? ' wide' : '') + (k === 0 ? ' now' : ''));
+      b.type = 'button';
+      b.dataset.n = n;
+      var th = mk('span', 'tq-thumb');
+      var im = document.createElement('img');
+      im.src = it.poster; im.alt = ''; im.loading = 'lazy';
+      th.appendChild(im);
+      if (it.dur) th.appendChild(mk('span', 'dur', it.dur));
+      b.appendChild(th);
+      var tx = mk('span', 'tq-text');
+      tx.appendChild(mk('span', 'tq-k', k === 0 ? 'Now playing' : (k === 1 ? 'Up next' : '')));
+      tx.appendChild(mk('span', 'tq-t', it.title || ''));
+      if (it.kicker) tx.appendChild(mk('span', 'tq-c', it.kicker));
+      b.appendChild(tx);
+      b.addEventListener('click', function(e){
+        e.stopPropagation();
+        tPlayIndex(parseInt(this.dataset.n, 10));
+      });
+      tqList.appendChild(b);
+    }
+    tqList.scrollTop = 0;
+  }
+  function setQueue(items, idx){
+    tQueue = (items && items.length > 1) ? items : [];
+    tQi = tQueue.length ? (idx || 0) : -1;
+    tStage.classList.toggle('queued', tQueue.length > 0);
+    tVideo.loop = !tQueue.length;   // a lone video loops; a row advances
+    renderQueue();
+  }
+  function tPlayIndex(n){
+    if (!tQueue.length) return;
+    tQi = (n + tQueue.length) % tQueue.length;
+    renderQueue();
+    tLoad(tQueue[tQi]);
+  }
+  /* open with one item, plus (optionally) the row it came from and its
+     index in that row */
+  function openTheater(item, queue, idx){
+    theaterReturnFocus = document.activeElement;
+    theater.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    var tx = document.getElementById('theaterX');
+    if (tx) tx.focus();
+    clearInterval(timer);
+    slideVideo(slides[i], false);
+    tVideo.controls = false;   // custom controls below own the whole surface
+    setQueue(queue || [], idx || 0);
+    tLoad(tQueue.length ? tQueue[tQi] : item);
+  }
+  function closeTheater(){
+    if (theaterReturnFocus && theaterReturnFocus.focus) theaterReturnFocus.focus();
+    theaterReturnFocus = null;
+    tVideo.pause();
+    tVideo.removeAttribute('src');
+    tVideo.load();
+    setQueue([], 0);
+    theater.classList.remove('open');
+    document.body.style.overflow = '';
+    slideVideo(slides[i], true);
+    arm();
+  }
+  document.getElementById('theaterX').addEventListener('click', closeTheater);
+  theater.addEventListener('click', function(e){
+    if (e.target === theater || e.target.classList.contains('theater-dim') ||
+        e.target.classList.contains('theater-stage') ||
+        e.target.classList.contains('theater-main')) closeTheater();
+  });
+  /* ---- custom player controls (9/2). One owner of playback state:
+     the video's own play/pause events drive every piece of UI. */
+  var tFrame = document.getElementById('theaterFrame');
+  var tpCenter = document.getElementById('tpCenter'), tpProg = document.getElementById('tpProg');
+  var tpFill = document.getElementById('tpFill'), tpKnob = document.getElementById('tpKnob');
+  var tpMute = document.getElementById('tpMute'), tpVol = document.getElementById('tpVol');
+  var tpTime = document.getElementById('tpTime');
+  var PLAY_IC = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+  var PAUSE_IC = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+  var VOL_HI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+  var VOL_LO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>';
+  var VOL_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M22 9l-6 6M16 9l6 6"/></svg>';
+  function tpFmt(s){
+    if (!isFinite(s) || s < 0) s = 0;
+    s = Math.floor(s);
+    var m = Math.floor(s / 60), h = Math.floor(m / 60);
+    var mm = h ? String(m % 60).padStart(2, '0') : String(m % 60);
+    return (h ? h + ':' + mm : mm) + ':' + String(s % 60).padStart(2, '0');
+  }
+  function tpSync(){
+    var d = tVideo.duration, c = tVideo.currentTime;
+    var pct = (isFinite(d) && d > 0) ? (c / d * 100) : 0;
+    tpFill.style.width = pct + '%';
+    tpKnob.style.left = pct + '%';
+    tpTime.textContent = tpFmt(c) + ' / ' + tpFmt(d);
+  }
+  function tpMuteIcon(){
+    tpMute.innerHTML = (tVideo.muted || tVideo.volume === 0) ? VOL_OFF
+      : (tVideo.volume < .5 ? VOL_LO : VOL_HI);
+    tpMute.setAttribute('aria-label', tVideo.muted ? 'Unmute' : 'Mute');
+  }
+  function tpReset(){
+    // fresh open: hover shows the sound/progress bar, but the center
+    // pause button stays hidden until the first pause (9/2)
+    tFrame.classList.add('virgin');
+    tFrame.classList.remove('playing', 'show-ui');
+    tFrame.style.aspectRatio = '';  // exact shape re-set per video
+    tpCenter.innerHTML = PLAY_IC;
+    tpFill.style.width = '0%';
+    tpKnob.style.left = '0%';
+    tpTime.textContent = '0:00 / 0:00';
+    tpVol.value = tVideo.muted ? 0 : tVideo.volume;
+    tpMuteIcon();
+  }
+  var tpUiT = null;
+  function tpShowUi(){
+    tFrame.classList.add('show-ui');
+    clearTimeout(tpUiT);
+    tpUiT = setTimeout(function(){ tFrame.classList.remove('show-ui'); }, 2000);
+  }
+  tVideo.addEventListener('play', function(){
+    tFrame.classList.add('playing');
+    tpCenter.innerHTML = PAUSE_IC;
+    tpCenter.setAttribute('aria-label', 'Pause');
+    tpShowUi();
+  });
+  tVideo.addEventListener('pause', function(){
+    tFrame.classList.remove('virgin');  // first pause unlocks the center button
+    tFrame.classList.remove('playing');
+    tpCenter.innerHTML = PLAY_IC;
+    tpCenter.setAttribute('aria-label', 'Play');
+  });
+  tVideo.addEventListener('timeupdate', tpSync);
+  tVideo.addEventListener('ended', function(){ if (tQueue.length) tPlayIndex(tQi + 1); });
+  tVideo.addEventListener('volumechange', function(){
+    tpMuteIcon();
+    tpVol.value = tVideo.muted ? 0 : tVideo.volume;
+  });
+  function tpToggle(){ if (tVideo.paused) tVideo.play().catch(function(){}); else tVideo.pause(); }
+  tFrame.addEventListener('click', function(e){
+    e.stopPropagation();
+    if (e.target.closest('.tp-bar')) return;   // bar clicks never toggle playback
+    tpToggle();
+  });
+  tFrame.addEventListener('mousemove', tpShowUi);
+  tFrame.addEventListener('touchstart', tpShowUi, {passive: true});
+  tpMute.addEventListener('click', function(e){
+    e.stopPropagation();
+    tVideo.muted = !tVideo.muted;
+    if (!tVideo.muted && tVideo.volume === 0) tVideo.volume = 1;
+  });
+  tpVol.addEventListener('input', function(e){
+    e.stopPropagation();
+    tVideo.volume = parseFloat(tpVol.value);
+    tVideo.muted = tVideo.volume === 0;
+  });
+  function tpSeek(e){
+    var r = tpProg.getBoundingClientRect();
+    var x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+    var pct = Math.min(1, Math.max(0, x / r.width));
+    if (isFinite(tVideo.duration)) tVideo.currentTime = pct * tVideo.duration;
+    tpSync();
+  }
+  tpProg.addEventListener('pointerdown', function(e){
+    e.stopPropagation(); e.preventDefault();
+    tpProg.classList.add('drag');
+    tpProg.setPointerCapture(e.pointerId);
+    tpSeek(e);
+    function mv(ev){ tpSeek(ev); }
+    function up(ev){
+      tpProg.classList.remove('drag');
+      tpProg.removeEventListener('pointermove', mv);
+      tpProg.removeEventListener('pointerup', up);
+    }
+    tpProg.addEventListener('pointermove', mv);
+    tpProg.addEventListener('pointerup', up);
+  });
+  document.addEventListener('keydown', function(e){
+    if (!theater.classList.contains('open')) return;
+    if (e.key === 'Escape') closeTheater();
+    else if (e.key === ' ' || e.key === 'k'){ e.preventDefault(); tpToggle(); tpShowUi(); }
+    else if (e.key === 'ArrowRight'){ tVideo.currentTime = Math.min((tVideo.duration || 0), tVideo.currentTime + 5); tpShowUi(); }
+    else if (e.key === 'ArrowLeft'){ tVideo.currentTime = Math.max(0, tVideo.currentTime - 5); tpShowUi(); }
+    else if (e.key === 'm'){ tVideo.muted = !tVideo.muted; tpShowUi(); }
+    else if (e.key === 'n' || e.key === 'N'){ tPlayIndex(tQi + 1); }
+    else if (e.key === 'p' || e.key === 'P'){ tPlayIndex(tQi - 1); }
+  });
+  tpReset();   // paint the initial icons before the first open
+
+  document.querySelectorAll('.theater-open').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      openTheater({mp4: a.dataset.mp4, poster: a.dataset.poster,
+                   kicker: a.dataset.kicker, title: a.dataset.title}, [], 0);
+    });
+  });
+
+  /* Reel and wide cards open in the theater - the mp4 lives beside every
+     poster (cropped posters live at poster-fill.jpg, the mp4 still sits at
+     /video/{id}/master.mp4, so match the id prefix), and the caption is
+     already on the card. One delegated listener, so rail clones made later
+     (wrap-around rails) behave like the originals. Cards with no playable
+     source (image-post series) keep their normal navigation. */
+  function cardItem(card){
+    var img = card.querySelector('img');
+    var m = img && img.src.match(/^(.*\/video\/[^\/]+)\/poster(?:-fill)?\.jpg/);
+    var mp4 = card.dataset.mp4 || (m ? m[1] + '/master.mp4' : null);
+    if (!mp4) return null;
+    var it = {mp4: mp4, poster: card.dataset.poster || (img ? img.src : ''), id: card.getAttribute('href') || mp4};
+    if (card.classList.contains('card-wide')){
+      var tag = card.querySelector('.chan-tag'), ttl = card.querySelector('.art-title');
+      it.kicker = tag ? tag.textContent.trim() : '';
+      it.title = ttl ? ttl.textContent.trim() : (card.getAttribute('aria-label') || '');
+      it.wide = true;
+    } else {
+      var cap = card.parentElement && card.parentElement.querySelector('.reel-caption');
+      var bb = cap && cap.querySelector('b');
+      it.kicker = bb ? bb.textContent : '';
+      it.title = cap ? (bb ? cap.textContent.replace(bb.textContent, '').replace(/^\s*[-\u00b7]\s*/, '').trim() : cap.textContent.trim())
+                     : (card.getAttribute('aria-label') || '');
+      var d = card.querySelector('.dur');
+      it.dur = d ? d.textContent.trim() : '';
+    }
+    return it;
+  }
+  /* the queue = every playable card in the same rail, row order, clones
+     and repeats dropped; idx = where the clicked card sits in it */
+  function rowQueue(card, self){
+    var rail = card.closest('.rail');
+    var items = [], idx = 0, seen = {};
+    if (!rail) return {items: items, idx: idx};
+    rail.querySelectorAll('.card-reel, .card-wide').forEach(function(c){
+      if (c.closest('[data-clone]')) return;
+      var it = cardItem(c);
+      if (!it || seen[it.id]) return;
+      seen[it.id] = true;
+      if (it.id === self.id) idx = items.length;
+      items.push(it);
+    });
+    return {items: items, idx: idx};
+  }
+  document.addEventListener('click', function(e){
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    var card = e.target.closest('.card-reel, .card-wide');
+    if (!card || theater.contains(card)) return;
+    var it = cardItem(card);
+    if (!it) return;
+    e.preventDefault();
+    var q = rowQueue(card, it);
+    openTheater(it, q.items, q.idx);
+  });
+  /* Flaky-network self-heal: a failed poster retries up to 3 times with
+     backoff (1.5s / 3s / 4.5s, cache-busting query). A 6s watchdog also
+     nudges marquee images that STALLED without ever firing an error - the
+     other cause of blank cards on cold or lossy connections. */
+  function healImg(im, attempt){
+    if (attempt > 3) return;
+    setTimeout(function(){ im.src = im.src.split('?')[0] + '?r' + attempt; }, attempt * 1500);
+  }
+  document.querySelectorAll('.chmq-card img, .card img, .chan-tile img, .card-poster img').forEach(function(im){
+    if (!im.src) return;
+    var attempt = 0;
+    im.addEventListener('error', function(){ attempt++; healImg(im, attempt); });
+    if (im.complete && im.naturalWidth === 0){ attempt = 1; healImg(im, 1); }
+  });
+  setTimeout(function(){
+    document.querySelectorAll('.chmq-card img').forEach(function(im){
+      if (!(im.complete && im.naturalWidth > 0)) im.src = im.src.split('?')[0] + '?w1';
+    });
+  }, 6000);
+})();
+</script>
+
+<script>
+/* Netflix-style rails (9/8): every carousel that overflows wraps
+   around. A copy of the leading cells rides after the last one and a copy
+   of the trailing cells sits before the first, so the arrows never
+   dead-end; once the strip settles inside a copy it jumps back by exactly
+   one period (invisible - the pixels are identical). Clones carry
+   data-clone so the theater queue and page dedupe ignore them. Arrows
+   stay on every overflowing rail. */
+document.querySelectorAll('.shelf').forEach(function(sh){
+  var r = sh.querySelector('.rail');
+  if (!r || r.classList.contains('wrapped') || r.closest('[data-grid]') || r.querySelector('.chmq-card')) return;
+  var cells = Array.prototype.slice.call(r.children);
+  var period = 0, leadW = 0, wrapOn = false;
+  function jump(x){
+    var sb = r.style.scrollBehavior;
+    r.style.scrollBehavior = 'auto';
+    r.scrollLeft = x;
+    r.style.scrollBehavior = sb;
+  }
+  function clone(c){
+    var d = c.cloneNode(true);
+    d.setAttribute('data-clone', '');
+    d.setAttribute('aria-hidden', 'true');
+    d.querySelectorAll('a, button').forEach(function(x){ x.setAttribute('tabindex', '-1'); });
+    return d;
+  }
+  function build(){
+    r.querySelectorAll('[data-clone]').forEach(function(c){ c.remove(); });
+    wrapOn = false;
+    if (cells.length < 2 || r.scrollWidth <= r.clientWidth + 8) return;
+    var gap = parseFloat(getComputedStyle(r).columnGap) || 0;
+    // enough cells to cover two viewports on each side, so two quick arrow
+    // presses in a row still land on real content before the strip resettles
+    var need = 0, w = 0;
+    for (var k = 0; k < cells.length && w < r.clientWidth + gap; k++){
+      w += cells[k].getBoundingClientRect().width + gap; need++;
+    }
+    need = Math.min(cells.length, need * 2 + 1);
+    var head = cells.slice(0, need).map(clone);
+    var tail = cells.slice(cells.length - need).map(clone);
+    tail.forEach(function(d){ r.insertBefore(d, cells[0]); });
+    head.forEach(function(d){ r.appendChild(d); });
+    period = head[0].offsetLeft - cells[0].offsetLeft;   // one full lap of originals
+    leadW = cells[0].offsetLeft - tail[0].offsetLeft;    // width of the leading clones
+    jump(leadW);
+    wrapOn = true;
+  }
+  function settle(){
+    if (!wrapOn) return;
+    var x = r.scrollLeft;
+    if (x >= leadW + period) jump(x - period);
+    else if (x < leadW) jump(x + period);
+  }
+  var st = null;
+  if ('onscrollend' in window) r.addEventListener('scrollend', settle);
+  else r.addEventListener('scroll', function(){ clearTimeout(st); st = setTimeout(settle, 160); }, {passive: true});
+  function mk(dir){
+    var b = document.createElement('button');
+    b.className = 'rail-nav ' + (dir < 0 ? 'prev' : 'next');
+    b.setAttribute('aria-label', dir < 0 ? 'Scroll back' : 'Scroll forward');
+    b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="' +
+      (dir < 0 ? 'M15 5l-7 7 7 7' : 'M9 5l7 7-7 7') + '"/></svg>';
+    b.addEventListener('click', function(){
+      settle();   // re-centre first so a burst of clicks never reaches the physical end
+      r.scrollBy({left: dir * r.clientWidth * 0.8, behavior: 'smooth'});
+    });
+    sh.appendChild(b);
+  }
+  function tog(){
+    var ov = wrapOn || r.scrollWidth > r.clientWidth + 8;
+    sh.querySelectorAll('.rail-nav').forEach(function(b){ b.style.display = ov ? '' : 'none'; });
+  }
+  var rt = null;
+  function rebuild(){ clearTimeout(rt); rt = setTimeout(function(){ build(); tog(); }, 200); }
+  mk(-1); mk(1); build(); tog();
+  window.addEventListener('resize', rebuild);
+});
+</script>
+
+<script>
+/* Athlete Payments gate.
+   No token: the static panel above (Stripe Express login).
+   ?t=<token>: the permanent setup link. Asks the payout backend for status
+   and sends the athlete straight to Stripe onboarding or their dashboard. */
+(function(){
+  var cfg = window.NILTV_CONFIG || {};
+  var token = new URLSearchParams(location.search).get('t');
+  if (!token) return;
+  var panel = document.getElementById('payPanel');
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function render(html, err){ panel.innerHTML = html; panel.classList.toggle('err', !!err); }
+  function fail(title, msg){
+    render('<div class="pk">NIL TV Athletes</div><h2>' + esc(title) + '</h2><p>' + esc(msg) + '</p>' +
+      '<div class="acts"><button class="btn btn-gold" type="button" onclick="location.reload()">Try Again</button></div>' +
+      '<div class="note">Still stuck? Reply to the text or email that sent you here.</div>', true);
+  }
+  function go(){
+    render('<div class="pk">NIL TV Athletes</div><div class="spin"></div><p>Opening Stripe.</p>');
+    fetch(cfg.payoutsApi + '?t=' + encodeURIComponent(token))
+      .then(function(r){ return r.json().then(function(b){ return {ok:r.ok, body:b}; }); })
+      .then(function(res){
+        var b = res.body || {};
+        if (res.ok && b.url) location.replace(b.url);
+        else if (b.error === 'invalid_link') fail('Link Problem', 'This link is not valid. Use the exact link we sent you.');
+        else fail('Stripe did not respond', 'Give it a minute and try again.');
+      })
+      .catch(function(){ fail('Could not connect', 'Check your signal and try again.'); });
+  }
+  if (!cfg.payoutsApi){
+    render('<div class="pk">NIL TV Athletes</div><h2>Setup Link Recognized</h2>' +
+      '<p>Payout setup is not connected on this environment yet. Once it is, this link opens Stripe onboarding the first time and your Stripe dashboard after that.</p>' +
+      '<div class="acts"><button class="btn btn-gold is-off" type="button" disabled>Continue to Stripe</button></div>' +
+      '<div class="note">Backend pending: the niltv-payouts-start function URL.</div>');
+    return;
+  }
+  render('<div class="pk">NIL TV Athletes</div><div class="spin"></div><p>Checking your setup.</p>');
+  fetch(cfg.payoutsApi + '?t=' + encodeURIComponent(token) + '&check=1')
+    .then(function(r){ return r.json().then(function(b){ return {ok:r.ok, body:b}; }); })
+    .then(function(res){
+      var b = res.body || {};
+      if (!res.ok){
+        if (b.error === 'invalid_link') fail('Link Problem', 'This link is not valid. Use the exact link we sent you.');
+        else fail('Stripe did not respond', 'Give it a minute and try again.');
+        return;
+      }
+      var ready = b.kind === 'dashboard';
+      render('<div class="pk">NIL TV Athletes</div><h2>' + (ready ? 'Your Stripe Account' : 'Finish Your Setup') + '</h2>' +
+        '<p>' + (ready ? 'Your account is verified and connected to your bank.' : 'Stripe still needs a few details before NIL TV can pay you. Identity check and bank details take about five minutes.') + '</p>' +
+        '<div class="acts"><button class="btn btn-gold" type="button" id="goStripe">' + (ready ? 'Open Stripe Account' : 'Continue to Stripe') + '</button></div>' +
+        (ready ? '' : '<div class="note">Have your government ID and bank routing and account numbers ready.</div>'));
+      document.getElementById('goStripe').addEventListener('click', go);
+    })
+    .catch(function(){ fail('Could not connect', 'Check your signal and try again.'); });
+})();
+</script>
+</body>
+</html>

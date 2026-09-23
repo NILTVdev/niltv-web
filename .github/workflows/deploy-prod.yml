@@ -1,0 +1,110 @@
+name: Deploy Prod
+
+# niltv.com builds here, from the release branch, on a cloud runner. Three
+# ways in:
+#   push to release      a promotion (git push origin main:release) goes live
+#   workflow_dispatch    the app's ingest Lambda dispatches this right after it
+#                        publishes new clips (event-driven, no polling); a person
+#                        can also dispatch it with force=true from the Actions tab
+#   schedule             a safety net every three hours that deploys only when
+#                        the change check finds release or the content moved
+# The change check compares the live build.json commit with the release tip and
+# the live watch-page count with the API's clip count, so a dispatch or a
+# scheduled run that finds nothing new ends in seconds without a deploy.
+on:
+  push:
+    branches: [release]
+  schedule:
+    - cron: "45 */3 * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Deploy even if nothing changed
+        type: boolean
+        default: false
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+env:
+  PROD_URL: https://prod.dkdfgvugisb3v.amplifyapp.com
+  PROD_API: https://dr60jt51m7xh2.cloudfront.net
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      deploy: ${{ steps.compare.outputs.deploy }}
+      reason: ${{ steps.compare.outputs.reason }}
+    steps:
+      # No checkout: the release tip comes from the API, so this job is a few
+      # seconds of curl even when it runs on the schedule.
+      - name: Compare prod with release and the API
+        id: compare
+        env:
+          FORCE: ${{ github.event_name == 'push' || inputs.force == true }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$FORCE" = "true" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+            echo "reason=${{ github.event_name }}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          tip=$(gh api "repos/$GITHUB_REPOSITORY/branches/release" --jq '.commit.sha' | cut -c1-7)
+          live=$(curl -sf -m 20 "$PROD_URL/build.json?t=$(date +%s)" || echo '{}')
+          commit=$(echo "$live" | jq -r '.commit // "none"')
+          pages=$(echo "$live" | jq -r '.watchPages // 0')
+          clips=$(curl -sf -m 20 "$PROD_API/v1/channels" | jq '[.channels[].clipCount // 0] | add')
+          echo "release $tip / live $commit; api clips $clips / live watch pages $pages"
+          if [ "$commit" = "none" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"; echo "reason=no build stamp on prod" >> "$GITHUB_OUTPUT"
+          elif [ "$commit" != "$tip" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"; echo "reason=release moved ($commit -> $tip)" >> "$GITHUB_OUTPUT"
+          elif [ "$clips" != "$pages" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"; echo "reason=content changed ($pages pages, $clips clips)" >> "$GITHUB_OUTPUT"
+          else
+            echo "deploy=false" >> "$GITHUB_OUTPUT"; echo "reason=nothing changed" >> "$GITHUB_OUTPUT"
+          fi
+
+  deploy:
+    needs: changes
+    if: needs.changes.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_CI_ROLE_ARN }}
+          aws-region: us-east-1
+      # Same runner as the deploy so only one machine starts per run. A poster
+      # problem must never hold the site back: a failure here is reported on
+      # the run but the deploy step still goes ahead.
+      - name: Repair posters that do not fill 9:16
+        continue-on-error: true
+        # From the runner's temp dir, so the audit reports it writes never land
+        # in the checkout: deploy.ps1 refuses a tree with untracked files.
+        working-directory: ${{ runner.temp }}
+        run: |
+          pip install --quiet boto3 'opencv-python-headless<5' numpy
+          python "$GITHUB_WORKSPACE/scripts/poster-audit.py" --stage prod --fix
+          # dev shares the same clips; keep its posters honest too
+          python "$GITHUB_WORKSPACE/scripts/poster-audit.py" --stage dev --fix
+      - name: Deploy release to prod (${{ needs.changes.outputs.reason }})
+        shell: pwsh
+        run: ./deploy.ps1 -Env prod -Yes -ProdFills

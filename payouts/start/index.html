@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payout Setup | NIL TV</title>
+<meta name="description" content="Set up your NIL TV payout account with Stripe.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#060608">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060608;
+  --surface:#17171c;
+  --text:#f5f5f7;
+  --dim:#a8a8b3;
+  --gold:#d9b25b;
+  --red:#e0334a;
+  --border:rgba(255,255,255,0.09);
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Inter',sans-serif;font-size:14px;line-height:1.55;
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:24px;-webkit-font-smoothing:antialiased;
+}
+.card{
+  width:100%;max-width:420px;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--radius);
+  padding:40px 32px;text-align:center;
+}
+.card img{height:34px;width:auto;margin:0 auto 26px}
+h4{
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;
+  font-size:26px;letter-spacing:.02em;text-transform:uppercase;
+  margin-bottom:10px;
+}
+p{color:var(--dim);margin-bottom:6px}
+.spinner{
+  width:34px;height:34px;margin:26px auto 4px;border-radius:50%;
+  border:3px solid var(--border);border-top-color:var(--gold);
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn{
+  display:inline-block;margin-top:22px;padding:12px 30px;
+  background:var(--gold);color:#151000;font-weight:600;font-size:14px;
+  border:0;border-radius:999px;cursor:pointer;
+}
+.btn:hover{filter:brightness(1.07)}
+.hidden{display:none}
+.err h4{color:var(--red)}
+.fine{font-size:12px;margin-top:22px;color:var(--dim);opacity:.75}
+</style>
+</head>
+<body>
+<div class="card">
+  <img src="/assets/img/niltv-logo.webp" alt="NIL TV">
+
+  <div id="loading">
+    <h4>Payout Setup</h4>
+    <p>Taking you to our secure payment partner, Stripe.</p>
+    <p>Stripe verifies your identity and collects your bank details directly. NIL TV never sees them.</p>
+    <div class="spinner"></div>
+  </div>
+
+  <div id="error" class="err hidden">
+    <h4>Link Problem</h4>
+    <p id="error-msg">We could not open your payout setup.</p>
+    <button class="btn" onclick="go()">Try Again</button>
+    <p class="fine">Still stuck? Reply to the text or email that sent you here and we will send a fresh link.</p>
+  </div>
+</div>
+
+<script src="/config.js"></script>
+<script>
+function show(id){
+  document.getElementById('loading').classList.toggle('hidden', id!=='loading');
+  document.getElementById('error').classList.toggle('hidden', id!=='error');
+}
+function fail(msg){
+  document.getElementById('error-msg').textContent = msg;
+  show('error');
+}
+function go(){
+  show('loading');
+  var api = (window.NILTV_CONFIG||{}).payoutsApi;
+  var t = new URLSearchParams(location.search).get('t');
+  if(!t){ fail('This link is missing its code. Use the exact link we sent you.'); return; }
+  if(!api){ fail('Payout setup is not live yet. Check back soon.'); return; }
+  fetch(api + '?t=' + encodeURIComponent(t))
+    .then(function(r){ return r.json().then(function(b){ return {ok:r.ok, body:b}; }); })
+    .then(function(res){
+      if(res.ok && res.body.url){ location.replace(res.body.url); }
+      else if(res.body && res.body.error === 'invalid_link'){ fail('This link is not valid. Use the exact link we sent you.'); }
+      else { fail('Stripe did not respond. Give it a minute and try again.'); }
+    })
+    .catch(function(){ fail('Could not connect. Check your signal and try again.'); });
+}
+go();
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+name: Verify Deploy
+
+# Twice a day, confirm that prod serves the tip of release with the full
+# marquee and no dev references, and that dev serves a build with the marquee
+# intact. One job, one runner: both checks are a handful of curls.
+on:
+  schedule:
+    - cron: "15 2,14 * * *"   # UTC; half an hour after a deploy slot
+  workflow_dispatch:
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Prod serves the tip of release, freshly rebuilt
+        env:
+          URL: https://prod.dkdfgvugisb3v.amplifyapp.com
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tip=$(gh api "repos/$GITHUB_REPOSITORY/branches/release" --jq '.commit.sha' | cut -c1-7)
+          body=$(curl -sf -m 20 "$URL/build.json?t=$(date +%s)") || { echo "::error::$URL/build.json unreachable (prod has never been deployed with a build stamp, or the site is down)"; exit 1; }
+          echo "$body"
+          commit=$(echo "$body" | jq -r '.commit')
+          built=$(echo "$body" | jq -r '.builtAt')
+          env=$(echo "$body" | jq -r '.env')
+          [ "$env" = "prod" ] || { echo "::error::prod site reports env '$env'"; exit 1; }
+          case "$tip" in
+            "$commit"*) ;;
+            *) echo "::error::prod serves $commit but release is at $tip (promotion not rebuilt yet, or the deploy workflow is broken)"; exit 1 ;;
+          esac
+          pages=$(echo "$body" | jq -r '.watchPages // 0')
+          clips=$(curl -sf -m 20 "https://dr60jt51m7xh2.cloudfront.net/v1/channels" | jq '[.channels[].clipCount // 0] | add')
+          [ "$pages" = "$clips" ] || { echo "::error::prod has $pages watch pages but the API publishes $clips clips; the deploy has not caught up"; exit 1; }
+          cards=$(curl -sf -m 20 "$URL/channels/" | grep -o 'class="chmq-card"' | wc -l)
+          [ "$cards" -eq 63 ] || { echo "::error::prod channels page has $cards marquee cards (expected 63)"; exit 1; }
+          if curl -sf -m 20 "$URL/" | grep -qE "dkdfgvugisb3v|d1nm1d2txb83wa"; then
+            echo "::error::prod homepage references the dev environment"; exit 1
+          fi
+          echo "prod ok: commit $commit (release tip $tip), built $built, $pages pages for $clips clips, 63 cards, no dev references"
+
+      - name: Dev serves a build with the marquee intact
+        env:
+          URL: https://dev.dkdfgvugisb3v.amplifyapp.com
+          AUTH: ${{ secrets.DEV_SITE_BASIC_AUTH }}
+        run: |
+          if [ -z "$AUTH" ]; then
+            echo "::notice::DEV_SITE_BASIC_AUTH secret not set; dev check skipped"
+            exit 0
+          fi
+          body=$(curl -sf -m 20 -H "Authorization: Basic $AUTH" "$URL/build.json?t=$(date +%s)") || { echo "::error::$URL/build.json unreachable (auth or deploy)"; exit 1; }
+          echo "$body"
+          cards=$(curl -sf -m 20 -H "Authorization: Basic $AUTH" "$URL/channels/" | grep -o 'class="chmq-card"' | wc -l)
+          [ "$cards" -eq 63 ] || { echo "::error::dev channels page has $cards marquee cards (expected 63)"; exit 1; }
+          echo "dev ok: commit $(echo "$body" | jq -r .commit), built $(echo "$body" | jq -r .builtAt), 63 cards"

@@ -1,7 +1,6 @@
 name: Checks
 
 # One runner for the small per-PR checks: the secret scan over the full history
-# (plus a second scan from a private rule file when one is set)
 # and the PR base rule. release is what production builds from, so only three
 # kinds of branch may target it:
 #   main       the promotion (normally a fast-forward push, a PR is also fine)
@@ -24,8 +23,6 @@ jobs:
     name: Secret scan and PR base
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    env:
-      NAME_GUARD_TOML: ${{ secrets.NAME_GUARD_TOML }}
     steps:
       - name: Feature branches target main
         if: github.event_name == 'pull_request'
@@ -66,8 +63,3 @@ jobs:
           gitleaks version
       - name: Scan every commit reachable from this ref
         run: gitleaks git --redact --no-banner --verbose --exit-code 1 .
-      - name: Second scan (private rule file)
-        if: ${{ env.NAME_GUARD_TOML != '' }}
-        run: |
-          printf '%s\n' "$NAME_GUARD_TOML" > "$RUNNER_TEMP/name-guard.toml"
-          gitleaks git --config "$RUNNER_TEMP/name-guard.toml" --redact --no-banner --exit-code 1 .

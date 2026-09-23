@@ -75,7 +75,7 @@ Every commit is scanned for secret-shaped strings, locally and in CI.
 
 The `Checks` workflow runs the same scan over the full history on every pull request and every push to `main`. This site has no server-side secrets by design; anything that needs one belongs in the app backend, not here.
 
-Maintainer clones and CI also run a second scan from a private rule file.
+Maintainer clones also run a second scan from a private rule file in their pre-commit hook.
 
 ## License
 

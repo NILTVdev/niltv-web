@@ -40,6 +40,9 @@ HUB_CSS = r"""
 .ask-foot span{white-space:nowrap}
 .ask.mine{border-color:rgba(217,178,91,.45)}
 .ask-act{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+/* display:flex above would beat the hidden attribute; the button row must
+   really go away while the submit form is open */
+.ask-act[hidden]{display:none}
 .ask-act .btn{padding:9px 20px;font-size:13px}
 .ask-msg{font-size:12px;color:var(--red)}
 .btn[disabled]{opacity:.45;cursor:not-allowed;transform:none!important}

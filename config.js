@@ -10,6 +10,9 @@ window.NILTV_CONFIG = {
   // (niltv-dashboard, applications router; CORS allows this origin). Empty =
   // the /athlete-signup/ form runs in demo mode and shows the payload instead.
   applicationsApi: "https://api-dev.niltv.com/api/applications/",
+  // Athlete Content Hub API base, with a trailing slash. Empty = /hub/ runs
+  // on sample data (hub/sample-asks.json) and says so on the page.
+  hubApi: "",
   cognito: {
     // niltv-dev pool + the niltv-dev-web client (SRP, no secret - browser
     // safe). deploy.ps1 -Env prod writes the prod pool and client instead.

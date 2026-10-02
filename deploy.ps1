@@ -20,7 +20,7 @@
 # PROD PIPELINE: the tree stays dev-flavored; prod deploys stage a copy,
 # regenerate watch/channel pages + sitemap/robots/llms against the PROD API,
 # sweep every baked dev reference to the prod CDN + niltv.com, swap in the
-# prod config.js, prune the dev-only pages (vote, athletes, partners), and
+# prod config.js, prune the dev-only pages (vote, athletes, partners, hub), and
 # guard that zero dev references ship.
 param(
   [ValidateSet("dev","prod")][Alias("Branch")][string]$Env = "dev",
@@ -77,7 +77,7 @@ $prodClient = "866nashv1brjs96apc17r1gfa"
 $zip = Join-Path $tmpDir "niltv-web-deploy-$Env-$PID.zip"
 if (Test-Path $zip) { Remove-Item $zip -Force }
 
-# Shared page set. Prod additionally excludes vote/athletes/partners (dev-only).
+# Shared page set. Prod additionally excludes vote/athletes/partners/hub (dev-only).
 # concepts/ is an ignored scratch dir: dev ships it only when present.
 $pages = @("index.html","not-found.html","sitemap.xml","robots.txt","llms.txt","build.json","assets",
            "channels","featured","about","watch","legal","nilstar","competitions",
@@ -178,7 +178,7 @@ window.NILTV_CONFIG = {
   if ($LASTEXITCODE -ne 0) { Write-Error "dev deploy refused: athlete pages could not be built. The private data folder is missing - set NILTV_PRIVATE_DATA or create ../private-data/niltv-web beside the repo (see DEVELOPING.md)."; exit 1 }
   # athlete-signup and payments ship to prod too (they are in $pages); the dev
   # tree just adds the dev-only pages here.
-  $items = $pages + @("config.js","vote","athletes","partners")
+  $items = $pages + @("config.js","vote","athletes","partners","hub")
   if (Test-Path (Join-Path $src "concepts")) { $items += "concepts" }   # drafts copied in from the private folder, never committed
   New-Zip $zip $src $items
   Write-Host "Zipped $((Get-Item $zip).Length) bytes for 'dev' (commit $sha)"

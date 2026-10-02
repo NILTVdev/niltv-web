@@ -1,0 +1,94 @@
+{
+  "asks": [
+    {
+      "id": "sample-training-table-trivia",
+      "category": "Trivia",
+      "title": "Training Table Trivia",
+      "summary": "Quiz a teammate on food, fuel, and team traditions while you eat. Short, fun, and easy to film at the dining hall.",
+      "steps": [
+        "Film vertical, 30 to 60 seconds",
+        "Ask at least three questions on camera",
+        "Post as a collab with @niltv"
+      ],
+      "due": "2026-11-14",
+      "slots": null,
+      "claimed": 7,
+      "posted": "2026-09-28"
+    },
+    {
+      "id": "sample-podcast-submission",
+      "category": "Podcast",
+      "title": "Podcast Guest Submission",
+      "summary": "Tell us a story from your season in your own words. We pick guests for the next round of episodes from these.",
+      "steps": [
+        "Record a two minute voice or video pitch",
+        "Say your name, school, and sport first",
+        "Share the file link when you submit"
+      ],
+      "due": "2026-11-21",
+      "slots": 5,
+      "claimed": 2,
+      "posted": "2026-09-30"
+    },
+    {
+      "id": "sample-game-day-grwm",
+      "category": "Game Day",
+      "title": "Game Day Get Ready With Me",
+      "summary": "Take us from your room to warmups on a home game day.",
+      "steps": [
+        "Film vertical, under 90 seconds",
+        "Show the routine, the fit, and the walk in",
+        "Post as a collab with your campus channel"
+      ],
+      "due": "2026-12-05",
+      "slots": 3,
+      "claimed": 0,
+      "posted": "2026-10-01"
+    },
+    {
+      "id": "sample-day-in-the-life",
+      "category": "Lifestyle",
+      "title": "Day in the Life",
+      "summary": "Class, practice, meals, and everything in between. One full day, start to finish.",
+      "steps": [
+        "Film vertical, one to three minutes",
+        "Add a voice over so we hear it from you",
+        "Post as a collab with @niltv"
+      ],
+      "due": null,
+      "slots": null,
+      "claimed": 12,
+      "posted": "2026-09-22"
+    },
+    {
+      "id": "sample-what-i-eat",
+      "category": "Lifestyle",
+      "title": "What I Eat in a Day",
+      "summary": "Show what fuels a training day, from breakfast to the late snack.",
+      "steps": [
+        "Film vertical, 45 to 90 seconds",
+        "Name each meal on screen or in the voice over",
+        "Post as a collab with @niltv"
+      ],
+      "due": null,
+      "slots": null,
+      "claimed": 0,
+      "posted": "2026-09-25"
+    },
+    {
+      "id": "sample-senior-spotlight",
+      "category": "Feature",
+      "title": "Senior Season Spotlight",
+      "summary": "One senior per campus channel sits down for a short interview about their last season.",
+      "steps": [
+        "Seniors only",
+        "We send the questions after you claim it",
+        "Film horizontal in a quiet spot with good light"
+      ],
+      "due": "2026-12-12",
+      "slots": 1,
+      "claimed": 0,
+      "posted": "2026-10-02"
+    }
+  ]
+}

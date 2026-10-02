@@ -1184,6 +1184,12 @@ br.mbr{display:none}
 .ask-act .btn{padding:9px 20px;font-size:13px}
 .ask-msg{font-size:12px;color:var(--red)}
 .btn[disabled]{opacity:.45;cursor:not-allowed;transform:none!important}
+.ask-link{display:block;max-width:100%;font-size:12.5px;color:var(--gold-bright);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ask-noteline{font-size:12px;color:var(--dim)}
+.ask-form{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--border);padding-top:12px}
+.ask-form label{display:block;font-size:12px;color:var(--dim)}
+.ask-form input{display:block;width:100%;margin-top:5px;background:rgba(245,245,247,.06);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:10px;font-family:inherit;font-size:13px}
+.ask-form input:focus{outline:none;border-color:rgba(217,178,91,.6)}
 .hub-empty{font-size:13.5px;color:var(--dim);margin:0 0 60px}
 #hubMine{scroll-margin-top:76px}
 @media (max-width:700px){.hub-grid{grid-template-columns:1fr}}
@@ -1231,7 +1237,7 @@ br.mbr{display:none}
 
 <div id="hubBoard" hidden>
   <div class="hub-wrap">
-    <p class="hub-note" id="hubNote" hidden><b>Sample data.</b> The hub is not connected on this environment yet, so these asks are examples and your claims are saved in this browser only.</p>
+    <p class="hub-note" id="hubNote" hidden><b>Sample data.</b> The hub is not connected on this environment yet, so these asks are examples and your claims and submissions are saved in this browser only.</p>
     <div class="hub-state" id="hubState" role="status"></div>
   </div>
   <section class="shelf" id="hubMine" hidden>
@@ -1901,18 +1907,23 @@ document.querySelectorAll('.shelf').forEach(function(sh){
 </script>
 
 <script>
-/* Athlete Content Hub: the open content asks and the visitor's own claims.
+/* Athlete Content Hub: the open content asks, the visitor's own claims, and
+   the link they submit for a claimed ask.
    Where the environment has NIL TV accounts the hub shows only after sign-in.
 
    With NILTV_CONFIG.hubApi set (live), every call carries the account's ID
    token:
-     GET  {hubApi}asks               -> {asks: [...]}; each ask carries `mine`,
-                                        null or {status, claimed_at}
+     GET  {hubApi}asks               -> {asks: [...]}; each ask carries `mine`:
+                                        null, or {status: claimed|submitted,
+                                        claimed_at, submitted_at, url, note}
      POST {hubApi}asks/{id}/claim    -> 2xx, or 409 when the last spot has gone
      POST {hubApi}asks/{id}/unclaim  -> 2xx
-   With none (demo) it runs on /hub/sample-asks.json, keeps claims in this
-   browser's localStorage, and says so on the page.
-   Ask text is rendered with textContent only. */
+     POST {hubApi}asks/{id}/submit   -> 2xx; JSON body {url, note}; a second
+                                        submit replaces the first
+   With none (demo) it runs on /hub/sample-asks.json, keeps claims and
+   submissions in this browser's localStorage, and says so on the page.
+   Ask text is rendered with textContent only; a submitted link becomes an
+   anchor only when it parses as http(s). */
 (function(){
   var cfg = window.NILTV_CONFIG || {};
   var N = window.NILTV || {};
@@ -1928,6 +1939,7 @@ document.querySelectorAll('.shelf').forEach(function(sh){
   var grid = document.getElementById('hubGrid');
   var count = document.getElementById('hubCount');
   var empty = document.getElementById('hubEmpty');
+  var NOTE_MAX = 200;
 
   function mk(tag, cls, text){
     var n = document.createElement(tag);
@@ -1942,7 +1954,7 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     if (!m) return '';
     return new Date(+m[1], +m[2] - 1, +m[3]).toLocaleDateString('en-US', {month: 'short', day: 'numeric'});
   }
-  // A claim time is an instant, so it is shown on the visitor's own calendar.
+  // A claim or submit time is an instant, shown on the visitor's own calendar.
   function fmtWhen(iso){
     var d = new Date(iso || '');
     return isNaN(d) ? '' : d.toLocaleDateString('en-US', {month: 'short', day: 'numeric'});
@@ -1955,6 +1967,20 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     if (ask.slots == null) return 'Open to all athletes' + (claimed ? ' · ' + claimed + ' claimed' : '');
     if (isFull(ask)) return 'All spots claimed';
     return (ask.slots - claimed) + ' of ' + ask.slots + (ask.slots === 1 ? ' spot' : ' spots') + ' left';
+  }
+  // "instagram.com/reel/abc" -> "https://instagram.com/reel/abc"; null when it
+  // is not an http(s) address at all.
+  function cleanUrl(raw){
+    var v = String(raw || '').trim();
+    if (!v || /\s/.test(v)) return null;
+    if (!/^https?:\/\//i.test(v)) v = 'https://' + v;
+    try {
+      var u = new URL(v);
+      if (u.protocol !== 'http:' && u.protocol !== 'https:') return null;
+      // a real host has a dot in it; new URL() alone accepts almost anything
+      if (!/^[a-z0-9-]+(\.[a-z0-9-]+)+$/i.test(u.hostname)) return null;
+      return u.href;
+    } catch (e) { return null; }
   }
 
   /* ---- data: demo and live answer the same calls ---- */
@@ -1970,12 +1996,13 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     e.status = status;
     return e;
   }
-  function authed(path, method){
+  function authed(path, method, body){
     var tokenP = (N.auth && N.auth.getIdToken) ? N.auth.getIdToken() : Promise.resolve(null);
     return tokenP.then(function(token){
       var headers = {};
       if (token) headers.Authorization = 'Bearer ' + token;
-      return fetch(cfg.hubApi + path, {method: method || 'GET', headers: headers});
+      if (body) headers['Content-Type'] = 'application/json';
+      return fetch(cfg.hubApi + path, {method: method || 'GET', headers: headers, body: body ? JSON.stringify(body) : undefined});
     });
   }
   function listAsks(){
@@ -2004,10 +2031,90 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     return authed('asks/' + encodeURIComponent(ask.id) + (on ? '/claim' : '/unclaim'), 'POST')
       .then(function(r){ if (!r.ok) throw httpError(r.status); });
   }
+  function submitLink(ask, url, noteText){
+    if (demo){
+      var claims = readClaims();
+      var mine = claims[ask.id] || {status: 'claimed', claimed_at: new Date().toISOString()};
+      mine.status = 'submitted';
+      mine.submitted_at = new Date().toISOString();
+      mine.url = url;
+      mine.note = noteText;
+      claims[ask.id] = mine;
+      writeClaims(claims);
+      return Promise.resolve();
+    }
+    return authed('asks/' + encodeURIComponent(ask.id) + '/submit', 'POST', {url: url, note: noteText})
+      .then(function(r){ if (!r.ok) throw httpError(r.status); });
+  }
 
   /* ---- cards ---- */
+  function failText(e){
+    var status = e && e.status;
+    if (status === 409) return 'That last spot was just claimed.';
+    if (status === 401) return 'Your sign-in expired. Sign in again.';
+    return 'That did not go through. Try again.';
+  }
+  function actionButton(label, cls, onClick){
+    var b = mk('button', 'btn ' + cls, label);
+    b.type = 'button';
+    b.addEventListener('click', onClick);
+    return b;
+  }
+  // the submit form, built when the athlete asks for it; it replaces the
+  // card's button row until it is sent or cancelled
+  function linkForm(ask, act, msg){
+    var form = mk('form', 'ask-form');
+    // the page checks the link itself (cleanUrl adds a missing https://), so
+    // the browser's own URL rule must not block the submit first
+    form.noValidate = true;
+    var urlLabel = mk('label', null, 'Link to your post');
+    var urlIn = document.createElement('input');
+    urlIn.type = 'url';
+    urlIn.required = true;
+    urlIn.placeholder = 'https://www.instagram.com/reel/...';
+    urlIn.value = (ask.mine && ask.mine.url) || '';
+    urlLabel.appendChild(urlIn);
+    form.appendChild(urlLabel);
+    var noteLabel = mk('label', null, 'Note for the team (optional)');
+    var noteIn = document.createElement('input');
+    noteIn.type = 'text';
+    noteIn.maxLength = NOTE_MAX;
+    noteIn.value = (ask.mine && ask.mine.note) || '';
+    noteLabel.appendChild(noteIn);
+    form.appendChild(noteLabel);
+    var row = mk('div', 'ask-act');
+    var send = mk('button', 'btn btn-gold', 'Send');
+    send.type = 'submit';
+    row.appendChild(send);
+    row.appendChild(actionButton('Cancel', 'btn-ghost', function(){
+      form.remove();
+      act.hidden = false;
+    }));
+    var formMsg = mk('span', 'ask-msg');
+    formMsg.setAttribute('role', 'status');
+    row.appendChild(formMsg);
+    form.appendChild(row);
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      formMsg.textContent = '';
+      var url = cleanUrl(urlIn.value);
+      if (!url){
+        formMsg.textContent = 'Paste the full link to your post.';
+        urlIn.focus();
+        return;
+      }
+      send.disabled = true;
+      submitLink(ask, url, noteIn.value.trim().slice(0, NOTE_MAX)).then(refresh).catch(function(e2){
+        send.disabled = false;
+        formMsg.textContent = failText(e2);
+      });
+    });
+    return form;
+  }
   function card(ask){
-    var el = mk('article', 'ask' + (ask.mine ? ' mine' : ''));
+    var mine = ask.mine;
+    var submitted = !!(mine && mine.status === 'submitted');
+    var el = mk('article', 'ask' + (mine ? ' mine' : ''));
     var top = mk('div', 'ask-top');
     top.appendChild(mk('span', 'ask-cat', ask.category || 'Content'));
     var due = fmtDay(ask.due);
@@ -2021,8 +2128,11 @@ document.querySelectorAll('.shelf').forEach(function(sh){
       el.appendChild(ul);
     }
     var foot = mk('div', 'ask-foot');
-    if (ask.mine){
-      var when = fmtWhen(ask.mine.claimed_at);
+    if (submitted){
+      var sentWhen = fmtWhen(mine.submitted_at);
+      foot.appendChild(mk('b', null, 'Submitted' + (sentWhen ? ' ' + sentWhen : '')));
+    } else if (mine){
+      var when = fmtWhen(mine.claimed_at);
       foot.appendChild(mk('b', null, 'You claimed this' + (when ? ' ' + when : '')));
     } else {
       foot.appendChild(mk('b', null, slotsText(ask)));
@@ -2030,31 +2140,57 @@ document.querySelectorAll('.shelf').forEach(function(sh){
       if (posted) foot.appendChild(mk('span', null, 'Posted ' + posted));
     }
     el.appendChild(foot);
+    if (submitted){
+      var href = cleanUrl(mine.url);
+      var link = mk(href ? 'a' : 'span', 'ask-link', mine.url || '');
+      if (href){
+        link.href = href;
+        link.target = '_blank';
+        link.rel = 'noopener';
+      }
+      el.appendChild(link);
+      if (mine.note) el.appendChild(mk('p', 'ask-noteline', 'Note: ' + mine.note));
+    }
 
     var act = mk('div', 'ask-act');
-    var full = !ask.mine && isFull(ask);
-    var btn = mk('button', 'btn ' + (ask.mine ? 'btn-ghost' : 'btn-gold'), ask.mine ? 'Unclaim' : (full ? 'Full' : 'Claim'));
-    btn.type = 'button';
-    btn.disabled = full;
     var msg = mk('span', 'ask-msg');
     msg.setAttribute('role', 'status');
-    btn.addEventListener('click', function(){
-      var claiming = !ask.mine;
-      btn.disabled = true;
+    function openForm(){
+      act.hidden = true;
       msg.textContent = '';
-      setClaim(ask, claiming).then(function(){
-        return refresh().then(function(){
-          // the card just moved up the page: follow it
-          if (claiming && mineSec.scrollIntoView) mineSec.scrollIntoView({behavior: 'smooth', block: 'start'});
+      el.insertBefore(linkForm(ask, act, msg), act);
+    }
+    if (submitted){
+      act.appendChild(actionButton('Change link', 'btn-ghost', openForm));
+    } else if (mine){
+      act.appendChild(actionButton('Submit', 'btn-gold', openForm));
+      act.appendChild(actionButton('Unclaim', 'btn-ghost', function(){
+        var b = this;
+        b.disabled = true;
+        msg.textContent = '';
+        setClaim(ask, false).then(refresh).catch(function(e){
+          b.disabled = false;
+          msg.textContent = failText(e);
         });
-      }).catch(function(e){
-        btn.disabled = false;
-        var status = e && e.status;
-        msg.textContent = status === 409 ? 'That last spot was just claimed.'
-          : (status === 401 ? 'Your sign-in expired. Sign in again.' : 'That did not go through. Try again.');
+      }));
+    } else {
+      var full = isFull(ask);
+      var claim = actionButton(full ? 'Full' : 'Claim', 'btn-gold', function(){
+        claim.disabled = true;
+        msg.textContent = '';
+        setClaim(ask, true).then(function(){
+          return refresh().then(function(){
+            // the card just moved up the page: follow it
+            if (mineSec.scrollIntoView) mineSec.scrollIntoView({behavior: 'smooth', block: 'start'});
+          });
+        }).catch(function(e){
+          claim.disabled = false;
+          msg.textContent = failText(e);
+        });
       });
-    });
-    act.appendChild(btn);
+      claim.disabled = full;
+      act.appendChild(claim);
+    }
     act.appendChild(msg);
     el.appendChild(act);
     return el;
@@ -2079,9 +2215,10 @@ document.querySelectorAll('.shelf').forEach(function(sh){
   function render(asks){
     var mine = asks.filter(function(a){ return a.mine; });
     var open = asks.filter(function(a){ return !a.mine; });
+    var sent = mine.filter(function(a){ return a.mine.status === 'submitted'; }).length;
     say('');
     fill(mineGrid, mine);
-    mineCount.textContent = mine.length ? mine.length + ' claimed' : '';
+    mineCount.textContent = mine.length ? mine.length + ' claimed' + (sent ? ', ' + sent + ' submitted' : '') : '';
     mineSec.hidden = !mine.length;
     fill(grid, open);
     count.textContent = open.length ? open.length + ' open' : '';
@@ -2100,7 +2237,7 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     }
     say('Could not load the open asks. Check your connection and try again.', true);
   }
-  // reload in place, without the loading line (used after a claim)
+  // reload in place, without the loading line (used after every action)
   function refresh(){
     return listAsks().then(render, failed);
   }

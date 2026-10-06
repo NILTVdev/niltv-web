@@ -349,9 +349,9 @@ async function main() {
     "", "competitions/", "nilstar/season-1/", "channels/", "featured/", "about/",
     "contact/", "legal/privacy/", "legal/terms/", "legal/contest-notice/",
   ];
-  // vote + athletes are dev-only; prod excludes the pages entirely, so they
-  // never enter its sitemap
-  if (ENV !== "prod") urls.push("vote/", "athletes/");
+  // vote + athletes + streaming are dev-only; prod excludes the pages
+  // entirely, so they never enter its sitemap
+  if (ENV !== "prod") urls.push("vote/", "athletes/", "streaming/");
   let watchCount = 0;
 
   const HIDDEN = new Set(["ch-esports"]); // hidden from the web

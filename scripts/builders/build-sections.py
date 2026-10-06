@@ -198,12 +198,24 @@ def watch_btn(vid, kicker, title, gold=True, label="Watch"):
 GOLD_BTN = '        <a class="btn btn-gold" href="%s">%s</a>'
 GHOST_BTN = '        <a class="btn btn-ghost" href="%s">%s</a>'
 
-def page(slug, name, hero, main_sections, nav_label=None, nav_slug=None, main_cls=""):
+def page(slug, name, hero, main_sections, nav_label=None, nav_slug=None, main_cls="",
+         extra_css="", extra_tab=False):
     nav_label = nav_label or name
     nav_slug = nav_slug or slug
     p = head
     p = p.replace("<title>Concept B - CINEMA | NIL TV</title>",
                   "<title>%s - Cinema | NIL TV</title>" % name, 1)
+    if extra_css:
+        p = p.replace("</head>", extra_css + "</head>", 1)
+    if extra_tab:
+        # a tab that only this page carries (dev-only prototypes): inserted
+        # before About in the header nav and the mobile menu, so the shared
+        # chrome and every other page stay as they are
+        link = '<a href="/concepts/cinema/%s/">%s</a>' % (nav_slug, nav_label)
+        p = p.replace('    <a href="/about/">About</a>\n  </div>',
+                      '    %s\n    <a href="/about/">About</a>\n  </div>' % link, 1)
+        p = p.replace('  <a href="/about/">About</a>\n</div>',
+                      '  %s\n  <a href="/about/">About</a>\n</div>' % link, 1)
     p = p.replace('<a href="/concepts/cinema/%s/">%s</a>' % (nav_slug, nav_label),
                   '<a href="/concepts/cinema/%s/" class="active">%s</a>' % (nav_slug, nav_label), 1)
     body = hero + '\n\n<main class="shelves%s">\n\n' % ((" " + main_cls) if main_cls else "") + "\n\n".join(main_sections) + "\n\n</main>\n\n"
@@ -1159,6 +1171,12 @@ window.addEventListener("load", function(){
 });
 </script>'''
 page("vote", "Vote", vote_head, [vote_main], nav_label="Competitions", nav_slug="competitions")
+
+
+# ================= STREAMING PAGE (esports prototype, dev only) =================
+import streaming_page as _sp
+os.makedirs(OUT + "streaming", exist_ok=True)
+page("streaming", "Streaming", _sp.HERO, [_sp.MAIN], extra_css=_sp.CSS, extra_tab=True)
 
 
 # ================= PARTNERS PAGE =================

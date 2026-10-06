@@ -32,6 +32,8 @@ SEO = {
          "The NIL TV roster: the athletes creating across the network. Search any name to watch their videos."),
     "partners/": ("Partner With NIL TV | Brand Campaigns",
          "Put your brand on air: athlete led campaigns across NIL TV, NIL Star, and the campus channels. 30M+ impressions, 280+ network brands, real campaign proof with NIL TV Athletes."),
+    "streaming/": ("Streaming | NIL TV",
+         "Live college esports across the NIL TV network: who is live now, the week ahead, and replays."),
     "contact/": ("Contact NIL TV | Get In Touch",
          "Reach the NIL TV team: partnerships, general questions, and legal."),
     "featured/": ("Featured | NIL TV",
@@ -117,6 +119,7 @@ promote(C + "vote/index.html", "vote/")
 promote(C + "athletes/index.html", "athletes/")
 promote(C + "partners/index.html", "partners/")
 promote(C + "contact/index.html", "contact/")
+promote(C + "streaming/index.html", "streaming/")   # dev-only prototype: outside the prod page set
 
 # channels page: tiles point at the real per-channel pages
 ch = io.open(W + "channels/index.html", encoding="utf-8").read()

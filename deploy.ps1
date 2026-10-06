@@ -178,7 +178,7 @@ window.NILTV_CONFIG = {
   if ($LASTEXITCODE -ne 0) { Write-Error "dev deploy refused: athlete pages could not be built. The private data folder is missing - set NILTV_PRIVATE_DATA or create ../private-data/niltv-web beside the repo (see DEVELOPING.md)."; exit 1 }
   # athlete-signup and payments ship to prod too (they are in $pages); the dev
   # tree just adds the dev-only pages here.
-  $items = $pages + @("config.js","vote","athletes","partners")
+  $items = $pages + @("config.js","vote","athletes","partners","streaming")
   if (Test-Path (Join-Path $src "concepts")) { $items += "concepts" }   # drafts copied in from the private folder, never committed
   New-Zip $zip $src $items
   Write-Host "Zipped $((Get-Item $zip).Length) bytes for 'dev' (commit $sha)"

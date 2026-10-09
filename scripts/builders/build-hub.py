@@ -53,11 +53,24 @@ HUB_CSS = r"""
 .ask-form input{display:block;width:100%;margin-top:5px;background:rgba(245,245,247,.06);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:10px;font-family:inherit;font-size:13px}
 .ask-form input:focus{outline:none;border-color:rgba(217,178,91,.6)}
 .hub-empty{font-size:13.5px;color:var(--dim);margin:0 0 60px}
+/* the three steps, shown before and after sign-in */
+.hub-how{padding:0 var(--gutter);margin:0 0 28px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;max-width:1160px}
+.hub-how > div{border:1px solid var(--border);background:rgba(23,23,28,.4);border-radius:14px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start}
+.hub-how .n{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:30px;color:var(--gold);line-height:1;flex:none}
+.hub-how b{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:19px;text-transform:uppercase;line-height:1;margin-bottom:5px}
+.hub-how p{font-size:12.5px;color:var(--dim)}
+@media (max-width:700px){.hub-how{grid-template-columns:1fr;gap:10px}}
 #hubMine{scroll-margin-top:76px}
 @media (max-width:700px){.hub-grid{grid-template-columns:1fr}}
 """
 
 HUB_MAIN = r"""<main class="shelves" id="main">
+
+<div class="hub-how" aria-label="How the Content Hub works">
+  <div><span class="n">1</span><div><b>Browse</b><p>See the content the network is looking for right now.</p></div></div>
+  <div><span class="n">2</span><div><b>Claim</b><p>Take an ask you can deliver. It moves to your claims so everyone knows it is covered.</p></div></div>
+  <div><span class="n">3</span><div><b>Submit</b><p>Post it as a collab with NIL TV, then paste the link here so the team can find it.</p></div></div>
+</div>
 
 <div class="hub-wrap">
   <div class="hub-gate" id="hubGate">

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Push the cinema template's nav / mobile menu / footer into the pages that are
 NOT generated from it, so the header is one thing sitewide:
-  - athletes/{slug}/index.html   (athlete pages)
+  - scripts/builders/athlete-template.html + athletes/{slug}/index.html (athlete pages)
   - the ambassador page factory template (optional, via NILTV_AMBASSADOR_TEMPLATE)
   - legal/{privacy,terms,contest-notice}/index.html  (standalone docs:
     get the nav + footer markup, the chrome CSS extracted from the template,
@@ -85,7 +85,9 @@ def sync_blocks(path):
 # the ambassador page factory's template lives outside this repo; point
 # NILTV_AMBASSADOR_TEMPLATE at it so rebuilds there keep the same chrome
 _extra = [p for p in [os.environ.get("NILTV_AMBASSADOR_TEMPLATE")] if p and os.path.exists(p)]
-for p in sorted(glob.glob(W + "athletes/*/index.html")) + _extra:
+# the athlete page template first: build-athletes.py regenerates every
+# athletes/<slug>/ page from it, so a page-only sync would not survive a build
+for p in [W + "scripts/builders/athlete-template.html"] + sorted(glob.glob(W + "athletes/*/index.html")) + _extra:
     sync_blocks(p)
 
 # ---------- 2) legal pages: inject chrome around the document ----------

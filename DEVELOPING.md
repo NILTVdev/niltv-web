@@ -48,6 +48,7 @@ used to have in the tree:
 
 ```
 <private>/athletes/_data/athletes.json      athlete records (build-athletes.py)
+<private>/athletes/_data/onboarding.json    who is cleared to publish (sync-athlete-status.py)
 <private>/athletes/_photos/<slug>/          source photos referenced by the records
 <private>/athletes/<slug>/                  hand-built athlete pages (mirrored as-is)
 <private>/fixtures/api/                     API snapshots (capture-fixtures.py writes here)
@@ -65,6 +66,12 @@ its directory block empty; `build-athletes.py` fills it at build time and the
 generated `athletes/<slug>/` pages and `athletes/index.json` are gitignored.
 `deploy.ps1` (dev) runs the athlete build with `--require`, so a dev deploy
 fails clearly when the folder is missing.
+
+An athlete page is published only when the athlete is `accepted` in the
+dashboard (agreement signed, Stripe payouts set up) and the record is complete
+(class year, three facts, description, a social handle, About copy, a hero
+photo). Refresh the status with `sync-athlete-status.py`, then run
+`build-athletes.py --report` to see who is held back and why.
 
 ## Making changes
 

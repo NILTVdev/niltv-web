@@ -23,7 +23,10 @@ EXTS = (".html", ".xml", ".txt", ".js", ".webmanifest")
 DRAFT_RE = re.compile(r"[ \t]*<!--(?:(?!-->).)*draft(?:(?!-->).)*-->\s*", re.S | re.I)
 # Cuts for features that are on main but not signed off for prod go here: a
 # regex applied to the staging copy plus a line in the hard guard below.
-# Currently empty.
+# Athletes nav link: the /athletes/ pages are dev-only (deploy.ps1 prunes
+# them), so the nav link to them is cut from prod. Delete with the prune.
+ATHLETES_NAV_RE = re.compile(r'[ \t]*<a href="/athletes/"(?: class="active")?>Athletes</a>\n?')
+ATHLETES_JS_RE = re.compile(r'[ \t]*\["Athletes", "/athletes/"\],\n')
 
 def main():
     root, origin, cdn = sys.argv[1], sys.argv[2], sys.argv[3]
@@ -38,6 +41,9 @@ def main():
             t2 = t.replace(DEV_CDN, cdn).replace(DEV_ORIGIN, origin)
             if fn.lower().endswith(".html"):
                 t2, n_draft = DRAFT_RE.subn("", t2)
+                t2 = ATHLETES_NAV_RE.sub("", t2)
+            if fn.lower().endswith(".js"):
+                t2 = ATHLETES_JS_RE.sub("", t2)
             if fills_off:
                 n = t2.count("/poster-fill.jpg")
                 if n:
@@ -56,10 +62,10 @@ def main():
                 continue
             p = os.path.join(dirpath, fn)
             t = io.open(p, encoding="utf-8", errors="ignore").read()
-            if "d1nm1d2txb83wa" in t or "dkdfgvugisb3v" in t:
+            if "d1nm1d2txb83wa" in t or "dkdfgvugisb3v" in t or '"/athletes/' in t:
                 left.append(os.path.relpath(p, root))
     if left:
-        print("SWEEP GUARD FAILED - dev references remain in:")
+        print("SWEEP GUARD FAILED - dev references or /athletes/ links remain in:")
         for p in left[:20]:
             print("  ", p)
         sys.exit(1)

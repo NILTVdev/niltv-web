@@ -28,6 +28,10 @@ DRAFT_RE = re.compile(r"[ \t]*<!--(?:(?!-->).)*draft(?:(?!-->).)*-->\s*", re.S |
 # so the guard also fails any prod page that links to it.
 UNRELEASED_RE = re.compile(r"[ \t]*<!-- unreleased:([\w-]+) -->.*?<!-- /unreleased:\1 -->\s*", re.S)
 UNRELEASED_GUARD = ("unreleased:", "/communitystar/")
+# Athletes nav link: the /athletes/ pages are dev-only (deploy.ps1 prunes
+# them), so the nav link to them is cut from prod. Delete with the prune.
+ATHLETES_NAV_RE = re.compile(r'[ \t]*<a href="/athletes/"(?: class="active")?>Athletes</a>\n?')
+ATHLETES_JS_RE = re.compile(r'[ \t]*\["Athletes", "/athletes/"\],\n')
 
 def main():
     root, origin, cdn = sys.argv[1], sys.argv[2], sys.argv[3]
@@ -43,6 +47,9 @@ def main():
             if fn.lower().endswith(".html"):
                 t2 = UNRELEASED_RE.sub("", t2)
                 t2, n_draft = DRAFT_RE.subn("", t2)
+                t2 = ATHLETES_NAV_RE.sub("", t2)
+            if fn.lower().endswith(".js"):
+                t2 = ATHLETES_JS_RE.sub("", t2)
             if fills_off:
                 n = t2.count("/poster-fill.jpg")
                 if n:
@@ -61,12 +68,12 @@ def main():
                 continue
             p = os.path.join(dirpath, fn)
             t = io.open(p, encoding="utf-8", errors="ignore").read()
-            if "d1nm1d2txb83wa" in t or "dkdfgvugisb3v" in t:
+            if "d1nm1d2txb83wa" in t or "dkdfgvugisb3v" in t or '"/athletes/' in t:
                 left.append(os.path.relpath(p, root))
             elif fn.lower().endswith(".html") and any(g in t for g in UNRELEASED_GUARD):
                 left.append(os.path.relpath(p, root) + " (unreleased feature)")
     if left:
-        print("SWEEP GUARD FAILED - dev references or unreleased features remain in:")
+        print("SWEEP GUARD FAILED - dev references, unreleased features or /athletes/ links remain in:")
         for p in left[:20]:
             print("  ", p)
         sys.exit(1)

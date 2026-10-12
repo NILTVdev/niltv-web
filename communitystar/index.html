@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Community Star Application | NIL TV</title>
-<meta name="description" content="Apply for Community Star. For college athletes who show up for their community.">
-<meta name="robots" content="noindex">
+<title>Community Star | NIL TV</title>
+<meta name="description" content="Community Star is a national search for college athletes who show up for their community. Applications open Nov 2. Top 25 finalists announced Nov 25.">
 <link rel="canonical" href="https://dev.dkdfgvugisb3v.amplifyapp.com/communitystar/">
-<meta property="og:title" content="Community Star Application | NIL TV">
-<meta property="og:description" content="Apply for Community Star. For college athletes who show up for their community.">
+<meta property="og:title" content="Community Star | NIL TV">
+<meta property="og:description" content="Community Star is a national search for college athletes who show up for their community. Applications open Nov 2. Top 25 finalists announced Nov 25.">
 <meta property="og:url" content="https://dev.dkdfgvugisb3v.amplifyapp.com/communitystar/">
 <meta property="og:image" content="https://dev.dkdfgvugisb3v.amplifyapp.com/assets/img/og-card.png">
 <meta property="og:type" content="website">
@@ -605,6 +604,39 @@ ul{list-style:none}
 .tp-vol::-moz-range-thumb{width:11px;height:11px;border:0;border-radius:50%;background:var(--gold)}
 .tp-time{font-size:12px;color:#eee;font-variant-numeric:tabular-nums;letter-spacing:.02em}
 @media (max-width:640px){.tp-vol{display:none}.tp-center{width:60px;height:60px}.tp-center svg{width:26px;height:26px}}
+/* ---- Up Next queue (9/8): the rest of the row the card came from
+   rides a column to the right of the playing video on desktop and the
+   player advances through it. Phones keep the single-video stage (the
+   queue still drives auto-advance there). */
+.theater-main{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0}
+.theater-stage.queued{flex-direction:row;align-items:center;justify-content:center;gap:clamp(18px,2.5vw,40px);padding:0 clamp(16px,3vw,48px)}
+.theater-stage.queued .theater-main{flex:1 1 auto}
+.theater-stage.queued .theater-frame.land{width:min(calc(100vw - 480px),1500px)}
+.theater-queue{display:none;flex:0 0 clamp(280px,24vw,360px);max-height:min(82vh,820px);flex-direction:column;
+  background:rgba(23,23,28,.74);border:1px solid var(--border);border-radius:22px;overflow:hidden;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.theater-stage.queued .theater-queue{display:flex}
+.tq-head{display:flex;align-items:baseline;justify-content:space-between;padding:16px 18px 10px;border-bottom:1px solid var(--border);flex:0 0 auto}
+.tq-head b{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:19px;letter-spacing:.14em;text-transform:uppercase;color:#fff}
+.tq-head span{font-size:11.5px;color:var(--dim);letter-spacing:.04em}
+.tq-list{overflow-y:auto;padding:8px;scrollbar-width:thin;min-height:0}
+.tq-item{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:8px;border:1px solid transparent;border-radius:14px;
+  background:transparent;color:inherit;font:inherit;cursor:pointer;transition:background .18s,border-color .18s}
+.tq-item:hover,.tq-item:focus-visible{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);outline:0}
+.tq-item.now{background:rgba(217,178,91,.12);border-color:var(--gold)}
+.tq-thumb{position:relative;flex:0 0 auto;width:58px;aspect-ratio:9/16;border-radius:8px;overflow:hidden;background:#000}
+.tq-item.wide .tq-thumb{width:104px;aspect-ratio:16/9}
+.tq-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.tq-thumb .dur{position:absolute;right:4px;bottom:4px;font-size:10px;font-weight:700;background:rgba(6,6,8,.75);color:#fff;padding:2px 5px;border-radius:4px}
+.tq-text{min-width:0;flex:1}
+.tq-k{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-bright);font-weight:700;min-height:12px}
+.tq-t{display:-webkit-box;font-size:13.5px;font-weight:600;color:#fff;line-height:1.3;margin-top:3px;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tq-c{display:block;font-size:11.5px;color:var(--dim);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:900px){
+  .theater-stage.queued{flex-direction:column;padding:0;gap:0}
+  .theater-stage.queued .theater-queue{display:none}
+  .theater-stage.queued .theater-frame.land{width:min(92vw,1500px)}
+}
 /* dots share the mute button's baseline (button: 42px tall at bottom:24px,
    center 45px; the dot row centers on the same line) - decision 8/31 */
 .hero:not(.hero-sm) .hero-progress{bottom:40px}
@@ -639,7 +671,6 @@ ul{list-style:none}
 
 /* section pages: air between the compact hero and the first rail */
 .hero-sm + .shelves{margin-top:0;padding-top:34px}
-.mhero + .shelves{margin-top:0;padding-top:56px}
 
 /* ===== about page ===== */
 .stat-band{display:flex;flex-wrap:wrap;gap:14px;padding:0 var(--gutter);margin:0 0 54px}
@@ -1104,151 +1135,27 @@ br.mbr{display:none}
   padding:12px 16px 2px;line-height:1}
 .athf-card .sp{font-size:11px;color:var(--dim);padding:0 16px 14px}
 
-/* ---------- athlete pages (hand pages, built by scripts/builders/build-payments.py) ---------- */
-.pay-panel{margin:0 var(--gutter);max-width:640px;border:1px solid rgba(217,178,91,.35);
-  background:linear-gradient(180deg,rgba(217,178,91,.07),rgba(23,23,28,.5));border-radius:18px;padding:34px 34px 30px}
-.pay-panel .pk{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:8px}
-.pay-panel h2{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:32px;text-transform:uppercase;line-height:1;margin-bottom:10px}
-.pay-panel p{font-size:13.5px;color:var(--dim)}
-.pay-panel .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;align-items:center}
-.pay-panel .note{font-size:12px;color:var(--dim);opacity:.85;margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
-.pay-panel .note a{color:var(--gold-bright)}
-.pay-panel .spin{width:30px;height:30px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--gold);animation:payspin .8s linear infinite;margin:6px 0 14px}
-@keyframes payspin{to{transform:rotate(360deg)}}
-.pay-panel.err{border-color:rgba(224,51,74,.45)}
-.pay-panel.err h2{color:var(--red)}
-.pay-lines{margin:26px var(--gutter) 60px;max-width:640px}
-.pay-lines h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
-.pay-lines ul{list-style:none;padding:0}
-.pay-lines li{font-size:13px;color:var(--dim);padding:9px 0;border-bottom:1px solid var(--border)}
-.pay-lines li b{color:var(--text);font-weight:600}
-.btn[disabled],.btn.is-off{opacity:.45;cursor:not-allowed;transform:none!important}
-/* application form: follows the printed Google Form flow (numbered, one column) */
-.apply-wrap{margin:0 auto;max-width:760px;padding:0 var(--gutter)}
-
-/* ---- map hero (built by scripts/builders/build-signup-map.py) ---- */
-.mhero{position:relative;overflow:hidden;background:var(--bg);display:grid;grid-template-columns:minmax(300px,38%) 1fr;align-items:center;min-height:460px;isolation:isolate;padding-top:56px}
-.mhero-copy{position:relative;z-index:3;padding:48px var(--gutter)}
-.mhero-copy .hero-kicker{margin-bottom:14px}
-.mhero-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(38px,4.6vw,64px);line-height:.92;text-transform:uppercase;color:var(--text);margin:0 0 16px;text-wrap:balance}
-.mhero-dek{color:var(--dim);font-size:15.5px;max-width:34ch;margin:0}
-.mhero-dek b{color:var(--text);font-weight:600}
-.mhero-map{position:relative;z-index:1;padding:26px 2% 36px 0}
-.usmap{display:block;width:100%;height:auto;max-height:520px}
-.mhero-scrim{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(90deg,var(--bg) 0,var(--bg) 30%,rgba(6,6,8,.55) 40%,rgba(6,6,8,0) 50%)}
-.mhero-scrim-b{position:absolute;left:0;right:0;bottom:0;height:70px;z-index:2;pointer-events:none;background:linear-gradient(180deg,rgba(6,6,8,0),var(--bg))}
-.mhero-glow{position:absolute;z-index:0;width:520px;height:520px;border-radius:50%;right:6%;top:50%;transform:translate(0,-50%);background:radial-gradient(closest-side,rgba(217,178,91,.13),rgba(217,178,91,.04) 50%,transparent 72%);pointer-events:none}
-.usmap .land{fill:rgba(255,255,255,.085)}
-.usmap .outline{fill:none;stroke:var(--gold);stroke-opacity:.26;stroke-width:1;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
-.usmap .arc{fill:none;stroke:var(--gold);stroke-opacity:.42;stroke-width:1.1;stroke-linecap:round;stroke-dasharray:1200;stroke-dashoffset:1200;animation:mhero-draw 1.8s cubic-bezier(.4,0,.2,1) .25s forwards}
-.usmap .pin{fill:var(--gold-bright);stroke:var(--bg);stroke-width:1.5;filter:drop-shadow(0 0 6px rgba(240,201,107,.55))}
-.usmap .app{fill:var(--gold);fill-opacity:.22;stroke:var(--gold);stroke-opacity:.5;stroke-width:.8}
-.usmap .lbl{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-weight:700;font-size:12.5px;letter-spacing:.14em;fill:var(--dim)}
-.usmap .leader{stroke:rgba(255,255,255,.22);stroke-width:.8}
-.usmap .hub-core{fill:var(--gold-bright);stroke:var(--bg);stroke-width:2;filter:drop-shadow(0 0 10px rgba(240,201,107,.8))}
-.usmap .hub-ring{fill:none;stroke:var(--gold-bright);stroke-width:1;opacity:.35;transform-origin:826.46px 344.41px;animation:mhero-pulse 3.6s ease-out infinite}
-.usmap .hub-ring.r2{animation-delay:1.8s}
-.usmap .hub-lbl{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-weight:800;font-size:13.5px;letter-spacing:.2em;fill:var(--gold-bright)}
-@keyframes mhero-draw{to{stroke-dashoffset:0}}
-@keyframes mhero-pulse{0%{transform:scale(.55);opacity:.55}80%{opacity:.06}100%{transform:scale(1.45);opacity:0}}
-@media (prefers-reduced-motion:reduce){.usmap .arc{animation:none;stroke-dashoffset:0}.usmap .hub-ring{animation:none;opacity:.25}}
-@media (max-width:820px){
-  .mhero{grid-template-columns:1fr;min-height:0}
-  .mhero-copy{padding:40px var(--gutter) 8px}
-  .mhero-map{padding:0 var(--gutter) 10px}
-  .mhero-scrim,.mhero-glow{display:none}
-  .mhero-scrim-b{height:48px}
-  .usmap .lbl,.usmap .leader{display:none}
-}
-.apply-wrap .lead{font-size:13.5px;color:var(--dim);margin-bottom:18px;max-width:640px}
-.apply-wrap .lead a{color:var(--gold-bright)}
-.gf-head{border:1px solid var(--border);border-top:6px solid var(--gold);background:rgba(23,23,28,.4);border-radius:14px;padding:26px 28px 18px;margin-bottom:14px}
-.gf-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:30px;text-transform:uppercase;line-height:1;margin-bottom:12px}
-.gf-head .lead{margin-bottom:10px;max-width:none}
-.gf-head .lead b{color:var(--text)}
-.gf-req{font-size:12px;color:var(--red);margin-top:6px}
-.apply-form .q{display:flex;gap:14px;border:1px solid var(--border);background:rgba(23,23,28,.4);border-radius:14px;padding:20px 22px;margin-bottom:12px}
-.apply-form .qn{flex:none;width:28px;font-size:13px;color:var(--dim);padding-top:2px;font-variant-numeric:tabular-nums}
-.apply-form .qb{flex:1;min-width:0}
-.apply-form label,.apply-form .ql{display:block;font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px}
-.apply-form .mo{font-size:12px;font-style:italic;color:var(--dim);margin:-6px 0 10px}
-.apply-form input[type=text],.apply-form input[type=email],.apply-form input[type=tel],.apply-form input[type=url],.apply-form select,.apply-form textarea{
-  background:rgba(245,245,247,.06);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:10px;
-  font-family:inherit;font-size:13px;width:100%;max-width:420px}
-.apply-form textarea{max-width:none;min-height:96px;resize:vertical}
-.apply-form select option{color:#111}
-.apply-form input:-webkit-autofill,.apply-form input:-webkit-autofill:focus{-webkit-box-shadow:0 0 0 1000px #111116 inset;-webkit-text-fill-color:#f2f2f2;caret-color:#f2f2f2;transition:background-color 9999s ease-out 0s}
-.apply-form input:focus,.apply-form select:focus,.apply-form textarea:focus{outline:none;border-color:rgba(217,178,91,.6)}
-.apply-form .ovals{display:flex;flex-direction:column;gap:10px}
-.apply-form .ovals label{display:flex;gap:10px;align-items:center;font-weight:400;font-size:13.5px;margin:0;cursor:pointer;position:relative}
-.apply-form .ovals input{position:absolute;opacity:0;width:0;height:0}
-.apply-form .ovals span{width:30px;height:18px;border-radius:999px;border:1.5px solid var(--dim);flex:none;transition:background .15s,border-color .15s}
-.apply-form .ovals input:checked + span{background:var(--gold);border-color:var(--gold)}
-.apply-form .ovals input:focus-visible + span{outline:2px solid var(--gold);outline-offset:2px}
-.apply-form .chk{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:var(--dim);line-height:1.5;margin:0 0 12px;font-weight:400}
-.apply-form .chk input{margin-top:3px;flex:none;width:16px;height:16px;accent-color:var(--gold)}
-.apply-form .chk b{color:var(--text);font-weight:600}
-.apply-form .chk a{color:var(--gold-bright)}
-.apply-form .req{color:var(--gold)}
-.apply-form .hint{font-size:11.5px;color:var(--dim);margin:-4px 0 14px}
-.gf-embed{background:#fff;border-radius:14px;padding:8px;margin:0 0 60px;max-width:656px;overflow-x:auto}
-.gf-embed iframe{display:block;max-width:100%}
-.apply-form .submit-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:6px 0 60px}
-#apply-msg{font-size:12.5px;color:var(--red);min-height:18px}
-.apply-done{border:1px solid rgba(111,221,154,.45);background:rgba(23,23,28,.5);border-radius:14px;padding:26px;margin-bottom:60px}
-.apply-done h3{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:26px;text-transform:uppercase;margin-bottom:8px}
-.apply-done p{font-size:13px;color:var(--dim);margin-bottom:8px}
-.apply-done ol{font-size:13px;color:var(--dim);padding-left:20px;margin:6px 0 8px}
-.apply-gate{border:1px solid var(--border);border-top:6px solid var(--gold);background:rgba(23,23,28,.5);border-radius:14px;padding:26px 28px;margin-bottom:60px}
-.apply-gate h3{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:26px;text-transform:uppercase;margin-bottom:8px}
-.apply-gate p{font-size:13.5px;color:var(--dim);margin-bottom:12px;max-width:560px}
-.apply-gate .hint{font-size:12px;opacity:.8}
-.school-box{position:relative}
-.school-list{position:absolute;left:0;right:0;top:100%;z-index:20;margin:4px 0 0;padding:4px 0;list-style:none;max-height:260px;overflow:auto;background:#17171c;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,.5)}
-.school-list li{padding:8px 12px;font-size:13.5px;cursor:pointer;display:flex;justify-content:space-between;gap:12px}
-.school-list li small{color:var(--dim);white-space:nowrap}
-.school-list li:hover,.school-list li.on{background:rgba(217,178,91,.14)}
-.school-list li.none{color:var(--dim);cursor:default}
-.apply-done li{margin-bottom:4px}
-.apply-done pre{font-size:11px;line-height:1.45;color:var(--dim);background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:10px;padding:14px;overflow:auto;max-height:320px;margin-top:12px}
-
-/* ---------- COMMUNITY STAR ---------- */
-.cs-hero{position:relative;overflow:hidden;padding:116px 0 30px;isolation:isolate}
-/* the shared .shelves rule pulls content up over the hero (-7vh); this page stacks */
-.cs-hero + .shelves{margin-top:0;padding-top:8px}
-.cs-hero .mhero-glow{right:auto;left:50%;transform:translate(-50%,-50%);top:55%}
-.cs-hero-in{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0 var(--gutter)}
-.cs-hero .hero-kicker{margin-bottom:12px}
-.cs-hero .mhero-dek{max-width:52ch}
-.cs-dates{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
-.cs-dates span{font-size:12px;color:var(--dim);border:1px solid var(--border);border-radius:999px;padding:6px 12px;background:rgba(23,23,28,.5)}
-.cs-dates b{color:var(--text);font-weight:600}
-.cs-steps{list-style:none;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 22px;counter-reset:st}
-.cs-steps li{counter-increment:st;border:1px solid var(--border);background:rgba(23,23,28,.4);border-radius:14px;padding:16px 16px 15px;font-size:13px;color:var(--dim);line-height:1.45}
-.cs-steps li::before{content:counter(st);display:block;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:26px;line-height:1;color:var(--gold);margin-bottom:8px}
-.cs-steps b{color:var(--text);font-weight:600}
-.cs-state{border:1px solid rgba(217,178,91,.35);background:rgba(217,178,91,.07);border-radius:14px;padding:22px;margin-bottom:18px}
-.cs-state h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:24px;text-transform:uppercase;margin-bottom:6px}
-.cs-state p{color:var(--dim);font-size:14px}
-.cs-preview{font-size:12px;color:#060608;background:var(--gold);border-radius:8px;padding:8px 12px;margin-bottom:14px;font-weight:600}
-.apply-form .at-wrap{position:relative;max-width:520px}
-.apply-form .at-wrap span{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:14px;pointer-events:none}
-.apply-form .at-wrap input{padding-left:28px!important}
-.apply-form .count{font-size:11.5px;color:var(--dim);text-align:right;margin-top:6px;font-variant-numeric:tabular-nums}
-.apply-form .count.over{color:var(--red)}
-.apply-form .q-opt .ql{margin-bottom:8px}
-.apply-form .q-opt .mo{margin:0 0 12px}
-.apply-done h3{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:34px;text-transform:uppercase;margin-bottom:8px}
-.apply-done p{font-size:14.5px;color:var(--dim);margin-bottom:10px}
-.apply-done p b{color:var(--text)}
+/* ---------- COMMUNITY STAR (info page) ---------- */
+.cs-hero{position:relative;overflow:hidden;padding:150px 0 46px;isolation:isolate;text-align:center}
+.cs-hero + .shelves{margin-top:0;padding-top:4px}
+.cs-glow{position:absolute;z-index:-1;width:760px;height:760px;border-radius:50%;left:50%;top:46%;transform:translate(-50%,-50%);
+  background:radial-gradient(closest-side,rgba(217,178,91,.2),rgba(217,178,91,.05) 55%,transparent 75%);pointer-events:none}
+.cs-star{position:absolute;z-index:-1;left:50%;top:44%;width:min(520px,92vw);transform:translate(-50%,-50%);opacity:.12}
+.cs-hero-in{max-width:820px;margin:0 auto;padding:0 var(--gutter)}
+.cs-hero .hero-kicker{margin-bottom:14px}
+.cs-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(54px,9vw,112px);line-height:.88;text-transform:uppercase;letter-spacing:.01em}
+.cs-dek{color:var(--dim);font-size:16px;max-width:48ch;margin:18px auto 0}
+.cs-ctas{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.cs-state-line{font-size:12.5px;color:var(--dim);margin-top:14px}
+.cs-state-line b{color:var(--gold-bright);font-weight:600}
+.cs-rules{text-align:center;font-size:12.5px;color:var(--dim);margin:0 auto 70px;padding:0 var(--gutter)}
+.cs-rules a{color:var(--gold-bright)}
+.cs-post{background:radial-gradient(120% 70% at 50% 38%,rgba(217,178,91,.28),rgba(11,11,14,0) 60%),linear-gradient(180deg,#17171c,#0b0b0e)}
+.cs-post svg{position:absolute;left:50%;top:42%;width:46%;transform:translate(-50%,-50%);opacity:.9}
+.shelves.centered .faq{margin-bottom:24px}
 @media (max-width:700px){
-  .cs-hero{padding-top:92px}
-  .cs-steps{grid-template-columns:1fr}
-  .cs-steps li{display:flex;gap:12px;align-items:baseline}
-  .cs-steps li::before{margin:0;font-size:22px;flex:none}
-  .apply-form .q{padding:16px 14px;gap:10px}
-  .apply-form .qn{width:22px}
-  .apply-form input[type=text],.apply-form input[type=email],.apply-form input[type=tel],.apply-form input[type=url],.apply-form select,.apply-form textarea{font-size:16px}
+  .cs-hero{padding:112px 0 34px}
+  .cs-dek{font-size:14.5px}
 }
 </style>
 <link rel="stylesheet" href="/assets/css/cinema-chrome.css">
@@ -1263,7 +1170,7 @@ br.mbr{display:none}
   </a>
   <div class="nav-links">
     <a href="/channels/">Channels</a>
-    <a href="/competitions/">Competitions</a>
+    <a href="/competitions/" class="active">Competitions</a>
     <a href="/featured/">Featured</a>
     <a href="/about/">About</a>
   </div>
@@ -1280,71 +1187,105 @@ br.mbr{display:none}
 </div>
 
 <section class="cs-hero" id="hero" aria-label="Community Star">
-  <div class="mhero-glow" aria-hidden="true"></div>
+  <div class="cs-glow" aria-hidden="true"></div>
+  <div class="cs-star" aria-hidden="true"><svg viewBox="0 0 100 96" aria-hidden="true"><path d="M50 2l14.7 30 33 4.8-23.9 23.3 5.6 32.9L50 77.5 20.6 93l5.6-32.9L2.3 36.8l33-4.8z" fill="none" stroke="#d9b25b" stroke-width="2.2" stroke-linejoin="round"/></svg></div>
   <div class="cs-hero-in">
     <div class="hero-kicker">NIL TV</div>
-    <h1 class="mhero-title">Community Star</h1>
-    <p class="mhero-dek">For college athletes who show up for their community. Tell us where you make a difference and what you do there.</p>
-    <div class="cs-dates"><span>Opens <b>Nov 2</b></span><span>Closes <b>Nov 23</b></span><span>Finalists <b>Nov 25</b></span></div>
+    <h1 class="cs-title">Community Star</h1>
+    <p class="cs-dek">A national search for college athletes who show up for their community. Show us where you make a difference. The top 25 finalists are announced Nov 25.</p>
+    <div class="cs-ctas">
+      <a class="btn btn-gold" id="csApply" href="/communitystar/apply/">Apply now</a>
+      <a class="btn btn-ghost" href="#how">How it works</a>
+    </div>
+    <p class="cs-state-line" id="csStateLine">Applications open <b>Mon, Nov 2 at 9:00am ET</b>.</p>
   </div>
 </section>
 
 <main class="shelves centered" id="main">
-<div class="apply-wrap">
-  <div class="cs-preview" id="csPreview" hidden></div>
 
-  <div class="cs-state" id="csBefore" hidden>
-    <h3>Applications open Nov 2</h3>
-    <p>The form goes live Monday, November 2 at 9:00am ET. Get your Instagram post ready now.</p>
+<section class="shelf" id="how" data-grid="phases">
+  <div class="shelf-head">
+    <h2 class="shelf-title">How to Apply</h2>
+    <span class="shelf-sub">Three steps. One application per email.</span>
   </div>
-  <div class="cs-state" id="csClosed" hidden>
-    <h3>Applications are closed</h3>
-    <p>Applications are closed. Finalists announced Nov 25.</p>
+  <div class="rail">
+    <div class="phase-card">
+      <span class="ph">Step 1</span>
+      <span class="t">Post</span>
+      <p>Post your Community Star application on Instagram.</p>
+    </div>
+    <div class="phase-card">
+      <span class="ph">Step 2</span>
+      <span class="t">Collab</span>
+      <p>Invite @NILTV and @NILSTAR as collaborators on that post.</p>
+    </div>
+    <div class="phase-card">
+      <span class="ph">Step 3</span>
+      <span class="t">Apply</span>
+      <p>Fill out the <a href="/communitystar/apply/" style="color:var(--gold-bright)">application form</a> with the link to your post.</p>
+    </div>
   </div>
+</section>
 
-  <div id="csOpen" hidden>
-    <ol class="cs-steps">
-      <li><span><b>Post your application</b> on Instagram.</span></li>
-      <li><span><b>Invite @NILTV and @NILSTAR</b> as collaborators on that post.</span></li>
-      <li><span><b>Fill out this form</b> with the link to the post.</span></li>
-    </ol>
-    <div class="gf-req">* Indicates required question</div>
-
-    <form class="apply-form" id="applyForm" novalidate>
-    <div aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden"><label>Leave empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
-      <div class="q"><div class="qn">1.</div><div class="qb"><label for="q-fullName">Full name <span class="req">*</span></label><input type="text" id="q-fullName" name="fullName" required autocomplete="name" maxlength="120"></div></div>
-      <div class="q"><div class="qn">2.</div><div class="qb"><label for="q-email">Email <span class="req">*</span></label><div class="mo">One application per email. Your confirmation goes here.</div><input type="email" id="q-email" name="email" required autocomplete="email" maxlength="200"></div></div>
-      <div class="q"><div class="qn">3.</div><div class="qb"><label for="q-phone">Phone <span class="req">*</span></label><input type="tel" id="q-phone" name="phone" required autocomplete="tel" inputmode="tel" maxlength="30"></div></div>
-      <div class="q"><div class="qn">4.</div><div class="qb"><label for="q-school">School <span class="req">*</span></label><div class="mo">Start typing and pick your school from the list.</div><div class="school-box"><input type="text" id="q-school" name="school" required autocomplete="off" spellcheck="false" placeholder="e.g. Duke University" maxlength="160"><ul class="school-list" id="schoolList" hidden></ul></div><input type="hidden" id="q-schoolState" name="schoolState"><input type="hidden" id="q-schoolDomain" name="schoolDomain"></div></div>
-      <div class="q"><div class="qn">5.</div><div class="qb"><label for="q-sport">Sport <span class="req">*</span></label><input type="text" id="q-sport" name="sport" required maxlength="80" placeholder="e.g. Women's Soccer"></div></div>
-      <div class="q"><div class="qn">6.</div><div class="qb"><label for="q-classYear">Class year <span class="req">*</span></label><select id="q-classYear" name="classYear" required><option value="">Choose</option><option>Fr</option><option>So</option><option>Jr</option><option>Sr</option><option>Grad</option></select></div></div>
-      <div class="q"><div class="qn">7.</div><div class="qb"><label for="q-instagram">Instagram handle <span class="req">*</span></label><div class="at-wrap"><span aria-hidden="true">@</span><input type="text" id="q-instagram" name="instagram" required autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="31" placeholder="yourhandle"></div></div></div>
-      <div class="q"><div class="qn">8.</div><div class="qb"><label for="q-postUrl">Link to your application post <span class="req">*</span></label><div class="mo">Open the post on Instagram, tap Share, then Copy link.</div><input type="url" id="q-postUrl" name="postUrl" required inputmode="url" autocapitalize="off" spellcheck="false" placeholder="https://www.instagram.com/p/..." maxlength="300"></div></div>
-      <div class="q"><div class="qn">9.</div><div class="qb"><label for="q-community">Community you're focused on <span class="req">*</span></label><div class="mo">A city, a town, or a group.</div><input type="text" id="q-community" name="community" required maxlength="160"></div></div>
-      <div class="q"><div class="qn">10.</div><div class="qb"><label for="q-work">What you're already doing there <span class="req">*</span></label><textarea id="q-work" name="work" required rows="5" maxlength="500"></textarea><div class="count" id="workCount">0 / 500</div></div></div>
-      <div class="q"><div class="qn">11.</div><div class="qb"><label for="q-organization">Group or organization you do this work with, if any</label><input type="text" id="q-organization" name="organization" maxlength="160"></div></div>
-    <div class="q q-consent"><div class="qn">12.</div><div class="qb">
-      <div class="ql">Confirm <span class="req">*</span></div>
-      <label class="chk"><input type="checkbox" name="collabInvited" required> <span>I invited @NILTV and @NILSTAR as collaborators on my post <span class="req">*</span></span></label>
-      <label class="chk"><input type="checkbox" name="eligibleAndRules" required> <span>I'm a current college athlete and agree to the <a href="/communitystar/rules/" target="_blank" rel="noopener">official rules</a> <span class="req">*</span></span></label>
-      <label class="chk"><input type="checkbox" name="confirmAge" required> <span>I am 18 or older <span class="req">*</span></span></label>
-      <label class="chk"><input type="checkbox" name="consentPrivacy" required> <span>I have read the <a href="/legal/privacy/" target="_blank" rel="noopener">Privacy Policy</a>. NIL TV will email me about my application. <span class="req">*</span></span></label>
-    </div></div>
-
-    <div class="q q-consent q-opt"><div class="qn">13.</div><div class="qb">
-      <div class="ql">Stay in touch</div>
-      <div class="mo">Optional. Your application counts the same either way.</div>
-      <label class="chk"><input type="checkbox" name="consentEmail"> <span>Email me about NIL TV competitions, content, and updates.</span></label>
-      <label class="chk"><input type="checkbox" name="consentSms"> <span>Text me about NIL TV competitions and updates. Msg and data rates may apply. Reply STOP to opt out.</span></label>
-      <label class="chk"><input type="checkbox" name="consentPartners"> <span>Send me offers from NIL TV brand partners, and use my information for relevant partner marketing.</span></label>
-    </div></div>
-
-    <div class="submit-row"><button class="btn btn-gold" type="submit" id="applySubmit">Submit application</button><div id="apply-msg" role="status"></div></div>
-    </form>
+<section class="shelf" id="timeline" data-grid="phases">
+  <div class="shelf-head">
+    <h2 class="shelf-title">Timeline</h2>
   </div>
+  <div class="rail">
+    <div class="phase-card">
+      <span class="ph">Nov 2</span>
+      <span class="t">Applications Open</span>
+      <p>The form goes live Monday, November 2 at 9:00am ET.</p>
+    </div>
+    <div class="phase-card">
+      <span class="ph">Nov 23</span>
+      <span class="t">Applications Close</span>
+      <p>The last day to apply is Monday, November 23. The form closes at 11:59pm PT.</p>
+    </div>
+    <div class="phase-card">
+      <span class="ph">Nov 25</span>
+      <span class="t">Top 25 Announced</span>
+      <p>NIL TV reviews every application and announces the 25 finalists.</p>
+    </div>
+  </div>
+</section>
 
-  <div class="apply-done" id="applyDone" hidden></div>
+<div class="cta-band cta-band--peak" id="ready">
+  <div class="tx">
+    <h2>Have These Ready</h2>
+    <p>The form asks for a few basics and two short answers about your community.</p>
+    <ul class="pm-spec">
+      <li>Your school, sport, and class year</li>
+      <li>Your Instagram handle</li>
+      <li>The link to your application post</li>
+      <li>The community you're focused on: a city, a town, or a group</li>
+      <li>What you're already doing there, in 500 characters or less</li>
+      <li>Any group or organization you do this work with</li>
+    </ul>
+    <div class="cta-row"><a class="btn btn-gold" href="/communitystar/apply/">Go to the form</a></div>
+  </div>
+  <div class="pm-frame cs-post" aria-hidden="true">
+    <svg viewBox="0 0 100 96" aria-hidden="true"><path d="M50 2l14.7 30 33 4.8-23.9 23.3 5.6 32.9L50 77.5 20.6 93l5.6-32.9L2.3 36.8l33-4.8z" fill="none" stroke="#d9b25b" stroke-width="2.2" stroke-linejoin="round"/></svg>
+    <div class="pm-top"><i></i><span>yourhandle and 2 others<small>with niltv and nilstar</small></span></div>
+    <div class="pm-lower"><b>My Community Star application</b><span>Collab post</span></div>
+  </div>
 </div>
+
+<section class="shelf" id="faq">
+  <div class="shelf-head">
+    <h2 class="shelf-title">Questions</h2>
+  </div>
+  <div class="faq">
+    <details><summary>Who can apply?</summary><p>Current college athletes who are 18 or older. The official rules have the full eligibility terms.</p></details>
+    <details><summary>Do I need a NIL TV account?</summary><p>No. Fill out the form with your email. You get a confirmation at that address.</p></details>
+    <details><summary>Can I apply more than once?</summary><p>No. There is one application per email.</p></details>
+    <details><summary>Where do I find my post link?</summary><p>Open your post on Instagram, tap Share, then Copy link. The form only accepts instagram.com links.</p></details>
+    <details><summary>How do I know my collab invite went through?</summary><p>Once @NILTV and @NILSTAR accept, both show as collaborators on your post. Send the invites when you post so they are in before you apply.</p></details>
+    <details><summary>When are finalists announced?</summary><p>The top 25 finalists are announced Nov 25.</p></details>
+  </div>
+</section>
+<p class="cs-rules">Read the <a href="/communitystar/rules/">official rules</a>.</p>
+
 </main>
 
 <!-- FOOTER : credits roll -->
@@ -1392,7 +1333,8 @@ br.mbr{display:none}
 <div class="theater" id="theater" role="dialog" aria-modal="true" aria-label="Video player">
   <div class="theater-glow" id="theaterGlow"></div>
   <div class="theater-dim"></div>
-  <div class="theater-stage">
+  <div class="theater-stage" id="theaterStage">
+    <div class="theater-main" id="theaterMain">
     <div class="theater-frame" id="theaterFrame">
       <video id="theaterVideo" playsinline loop></video>
       <button class="tp-center" id="tpCenter" aria-label="Play"></button>
@@ -1412,6 +1354,11 @@ br.mbr{display:none}
       <div class="k" id="theaterKicker"></div>
       <div class="t" id="theaterTitle"></div>
     </div>
+    </div>
+    <aside class="theater-queue" id="theaterQueue" aria-label="Up next">
+      <div class="tq-head"><b>Up next</b><span id="tqCount"></span></div>
+      <div class="tq-list" id="tqList"></div>
+    </aside>
   </div>
   <button class="theater-x" id="theaterX" aria-label="Close">✕</button>
 </div>
@@ -1595,19 +1542,16 @@ br.mbr{display:none}
   var tGlow = document.getElementById('theaterGlow');
 
   var theaterReturnFocus = null;
-  function openTheater(mp4, poster, kicker, title){
-    theaterReturnFocus = document.activeElement;
-    tGlow.style.backgroundImage = poster ? "url('" + poster + "')" : "none";
-    if (poster) tVideo.poster = poster;
-    document.getElementById('theaterKicker').textContent = kicker || '';
-    document.getElementById('theaterTitle').textContent = title || '';
-    theater.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    var tx = document.getElementById('theaterX');
-    if (tx) tx.focus();
-    clearInterval(timer);
-    slideVideo(slides[i], false);
-    tVideo.controls = false;   // custom controls below own the whole surface
+  var tStage = document.getElementById('theaterStage');
+  var tqList = document.getElementById('tqList'), tqCount = document.getElementById('tqCount');
+  var tQueue = [], tQi = -1;   // the row the card came from, in row order
+
+  /* load one item into the frame (the theater is already open) */
+  function tLoad(item){
+    tGlow.style.backgroundImage = item.poster ? "url('" + item.poster + "')" : "none";
+    if (item.poster) tVideo.poster = item.poster;
+    document.getElementById('theaterKicker').textContent = item.kicker || '';
+    document.getElementById('theaterTitle').textContent = item.title || '';
     tpReset();
     tVideo.onloadedmetadata = function(){
       var fr = document.getElementById('theaterFrame');
@@ -1621,12 +1565,76 @@ br.mbr{display:none}
       }
       tpSync();
     };
-    tVideo.src = mp4;
+    tVideo.src = item.mp4;
     tVideo.muted = false;
     tVideo.play().catch(function(){
       tVideo.muted = true;
       tVideo.play().catch(function(){});
     });
+  }
+  function mk(tag, cls, text){
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  /* Up Next column: the playing item leads, then the rest of the row in
+     row order, wrapping around - so the column always reads as "what
+     plays after this" (9/8). */
+  function renderQueue(){
+    tqList.textContent = '';
+    if (!tQueue.length) return;
+    tqCount.textContent = tQueue.length + ' in this row';
+    for (var k = 0; k < tQueue.length; k++){
+      var n = (tQi + k) % tQueue.length, it = tQueue[n];
+      var b = mk('button', 'tq-item' + (it.wide ? ' wide' : '') + (k === 0 ? ' now' : ''));
+      b.type = 'button';
+      b.dataset.n = n;
+      var th = mk('span', 'tq-thumb');
+      var im = document.createElement('img');
+      im.src = it.poster; im.alt = ''; im.loading = 'lazy';
+      th.appendChild(im);
+      if (it.dur) th.appendChild(mk('span', 'dur', it.dur));
+      b.appendChild(th);
+      var tx = mk('span', 'tq-text');
+      tx.appendChild(mk('span', 'tq-k', k === 0 ? 'Now playing' : (k === 1 ? 'Up next' : '')));
+      tx.appendChild(mk('span', 'tq-t', it.title || ''));
+      if (it.kicker) tx.appendChild(mk('span', 'tq-c', it.kicker));
+      b.appendChild(tx);
+      b.addEventListener('click', function(e){
+        e.stopPropagation();
+        tPlayIndex(parseInt(this.dataset.n, 10));
+      });
+      tqList.appendChild(b);
+    }
+    tqList.scrollTop = 0;
+  }
+  function setQueue(items, idx){
+    tQueue = (items && items.length > 1) ? items : [];
+    tQi = tQueue.length ? (idx || 0) : -1;
+    tStage.classList.toggle('queued', tQueue.length > 0);
+    tVideo.loop = !tQueue.length;   // a lone video loops; a row advances
+    renderQueue();
+  }
+  function tPlayIndex(n){
+    if (!tQueue.length) return;
+    tQi = (n + tQueue.length) % tQueue.length;
+    renderQueue();
+    tLoad(tQueue[tQi]);
+  }
+  /* open with one item, plus (optionally) the row it came from and its
+     index in that row */
+  function openTheater(item, queue, idx){
+    theaterReturnFocus = document.activeElement;
+    theater.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    var tx = document.getElementById('theaterX');
+    if (tx) tx.focus();
+    clearInterval(timer);
+    slideVideo(slides[i], false);
+    tVideo.controls = false;   // custom controls below own the whole surface
+    setQueue(queue || [], idx || 0);
+    tLoad(tQueue.length ? tQueue[tQi] : item);
   }
   function closeTheater(){
     if (theaterReturnFocus && theaterReturnFocus.focus) theaterReturnFocus.focus();
@@ -1634,6 +1642,7 @@ br.mbr{display:none}
     tVideo.pause();
     tVideo.removeAttribute('src');
     tVideo.load();
+    setQueue([], 0);
     theater.classList.remove('open');
     document.body.style.overflow = '';
     slideVideo(slides[i], true);
@@ -1642,7 +1651,8 @@ br.mbr{display:none}
   document.getElementById('theaterX').addEventListener('click', closeTheater);
   theater.addEventListener('click', function(e){
     if (e.target === theater || e.target.classList.contains('theater-dim') ||
-        e.target.classList.contains('theater-stage')) closeTheater();
+        e.target.classList.contains('theater-stage') ||
+        e.target.classList.contains('theater-main')) closeTheater();
   });
   /* ---- custom player controls (9/2). One owner of playback state:
      the video's own play/pause events drive every piece of UI. */
@@ -1707,6 +1717,7 @@ br.mbr{display:none}
     tpCenter.setAttribute('aria-label', 'Play');
   });
   tVideo.addEventListener('timeupdate', tpSync);
+  tVideo.addEventListener('ended', function(){ if (tQueue.length) tPlayIndex(tQi + 1); });
   tVideo.addEventListener('volumechange', function(){
     tpMuteIcon();
     tpVol.value = tVideo.muted ? 0 : tVideo.volume;
@@ -1757,50 +1768,72 @@ br.mbr{display:none}
     else if (e.key === 'ArrowRight'){ tVideo.currentTime = Math.min((tVideo.duration || 0), tVideo.currentTime + 5); tpShowUi(); }
     else if (e.key === 'ArrowLeft'){ tVideo.currentTime = Math.max(0, tVideo.currentTime - 5); tpShowUi(); }
     else if (e.key === 'm'){ tVideo.muted = !tVideo.muted; tpShowUi(); }
+    else if (e.key === 'n' || e.key === 'N'){ tPlayIndex(tQi + 1); }
+    else if (e.key === 'p' || e.key === 'P'){ tPlayIndex(tQi - 1); }
   });
   tpReset();   // paint the initial icons before the first open
 
   document.querySelectorAll('.theater-open').forEach(function(a){
     a.addEventListener('click', function(e){
       e.preventDefault();
-      openTheater(a.dataset.mp4, a.dataset.poster, a.dataset.kicker, a.dataset.title);
+      openTheater({mp4: a.dataset.mp4, poster: a.dataset.poster,
+                   kicker: a.dataset.kicker, title: a.dataset.title}, [], 0);
     });
   });
 
-  /* Reel cards open in the theater too - the mp4 lives beside every poster,
-     and the caption is already on the card. */
-  document.querySelectorAll('.card-reel').forEach(function(card){
+  /* Reel and wide cards open in the theater - the mp4 lives beside every
+     poster (cropped posters live at poster-fill.jpg, the mp4 still sits at
+     /video/{id}/master.mp4, so match the id prefix), and the caption is
+     already on the card. One delegated listener, so rail clones made later
+     (wrap-around rails) behave like the originals. Cards with no playable
+     source (image-post series) keep their normal navigation. */
+  function cardItem(card){
     var img = card.querySelector('img');
-    /* cropped posters live at poster-fill.jpg - the mp4 still sits at
-       /video/{id}/master.mp4, so match the id prefix, not the filename */
     var m = img && img.src.match(/^(.*\/video\/[^\/]+)\/poster(?:-fill)?\.jpg/);
-    if (!m) return;
-    card.addEventListener('click', function(e){
-      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-      e.preventDefault();
-      var cap = card.parentElement.querySelector('.reel-caption');
-      var b = cap && cap.querySelector('b');
-      var chan = b ? b.textContent : '';
-      var title = cap ? (b ? cap.textContent.replace(b.textContent, '').replace(/^\s*[-\u00b7]\s*/, '').trim() : cap.textContent.trim()) : '';
-      openTheater(m[1] + '/master.mp4', img.src, chan, title);
+    var mp4 = card.dataset.mp4 || (m ? m[1] + '/master.mp4' : null);
+    if (!mp4) return null;
+    var it = {mp4: mp4, poster: card.dataset.poster || (img ? img.src : ''), id: card.getAttribute('href') || mp4};
+    if (card.classList.contains('card-wide')){
+      var tag = card.querySelector('.chan-tag'), ttl = card.querySelector('.art-title');
+      it.kicker = tag ? tag.textContent.trim() : '';
+      it.title = ttl ? ttl.textContent.trim() : (card.getAttribute('aria-label') || '');
+      it.wide = true;
+    } else {
+      var cap = card.parentElement && card.parentElement.querySelector('.reel-caption');
+      var bb = cap && cap.querySelector('b');
+      it.kicker = bb ? bb.textContent : '';
+      it.title = cap ? (bb ? cap.textContent.replace(bb.textContent, '').replace(/^\s*[-\u00b7]\s*/, '').trim() : cap.textContent.trim())
+                     : (card.getAttribute('aria-label') || '');
+      var d = card.querySelector('.dur');
+      it.dur = d ? d.textContent.trim() : '';
+    }
+    return it;
+  }
+  /* the queue = every playable card in the same rail, row order, clones
+     and repeats dropped; idx = where the clicked card sits in it */
+  function rowQueue(card, self){
+    var rail = card.closest('.rail');
+    var items = [], idx = 0, seen = {};
+    if (!rail) return {items: items, idx: idx};
+    rail.querySelectorAll('.card-reel, .card-wide').forEach(function(c){
+      if (c.closest('[data-clone]')) return;
+      var it = cardItem(c);
+      if (!it || seen[it.id]) return;
+      seen[it.id] = true;
+      if (it.id === self.id) idx = items.length;
+      items.push(it);
     });
-  });
-  /* Wide cards play in the theater too: explicit data-mp4 first (series
-     episodes with static art), else the CDN master.mp4 beside the poster.
-     Cards with neither (image-post series) keep their normal navigation. */
-  document.querySelectorAll('.card-wide').forEach(function(card){
-    var img = card.querySelector('img');
-    var mw = img && img.src.match(/^(.*\/video\/[^\/]+)\/poster(?:-fill)?\.jpg/);
-    var mp4 = card.dataset.mp4 || (mw ? mw[1] + '/master.mp4' : null);
-    if (!mp4) return;
-    card.addEventListener('click', function(e){
-      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-      e.preventDefault();
-      var tag = card.querySelector('.chan-tag');
-      var ttl = card.querySelector('.art-title');
-      openTheater(mp4, card.dataset.poster || (img ? img.src : ''),
-        tag ? tag.textContent : '', ttl ? ttl.textContent : '');
-    });
+    return {items: items, idx: idx};
+  }
+  document.addEventListener('click', function(e){
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    var card = e.target.closest('.card-reel, .card-wide');
+    if (!card || theater.contains(card)) return;
+    var it = cardItem(card);
+    if (!it) return;
+    e.preventDefault();
+    var q = rowQueue(card, it);
+    openTheater(it, q.items, q.idx);
   });
   /* Flaky-network self-heal: a failed poster retries up to 3 times with
      backoff (1.5s / 3s / 4.5s, cache-busting query). A 6s watchdog also
@@ -1825,10 +1858,61 @@ br.mbr{display:none}
 </script>
 
 <script>
-/* scroll arrows on every channel carousel so all channels are reachable */
+/* Netflix-style rails (9/8): every carousel that overflows wraps
+   around. A copy of the leading cells rides after the last one and a copy
+   of the trailing cells sits before the first, so the arrows never
+   dead-end; once the strip settles inside a copy it jumps back by exactly
+   one period (invisible - the pixels are identical). Clones carry
+   data-clone so the theater queue and page dedupe ignore them. Arrows
+   stay on every overflowing rail. */
 document.querySelectorAll('.shelf').forEach(function(sh){
   var r = sh.querySelector('.rail');
-  if (!r || r.classList.contains('wrapped')) return;
+  if (!r || r.classList.contains('wrapped') || r.closest('[data-grid]') || r.querySelector('.chmq-card')) return;
+  var cells = Array.prototype.slice.call(r.children);
+  var period = 0, leadW = 0, wrapOn = false;
+  function jump(x){
+    var sb = r.style.scrollBehavior;
+    r.style.scrollBehavior = 'auto';
+    r.scrollLeft = x;
+    r.style.scrollBehavior = sb;
+  }
+  function clone(c){
+    var d = c.cloneNode(true);
+    d.setAttribute('data-clone', '');
+    d.setAttribute('aria-hidden', 'true');
+    d.querySelectorAll('a, button').forEach(function(x){ x.setAttribute('tabindex', '-1'); });
+    return d;
+  }
+  function build(){
+    r.querySelectorAll('[data-clone]').forEach(function(c){ c.remove(); });
+    wrapOn = false;
+    if (cells.length < 2 || r.scrollWidth <= r.clientWidth + 8) return;
+    var gap = parseFloat(getComputedStyle(r).columnGap) || 0;
+    // enough cells to cover two viewports on each side, so two quick arrow
+    // presses in a row still land on real content before the strip resettles
+    var need = 0, w = 0;
+    for (var k = 0; k < cells.length && w < r.clientWidth + gap; k++){
+      w += cells[k].getBoundingClientRect().width + gap; need++;
+    }
+    need = Math.min(cells.length, need * 2 + 1);
+    var head = cells.slice(0, need).map(clone);
+    var tail = cells.slice(cells.length - need).map(clone);
+    tail.forEach(function(d){ r.insertBefore(d, cells[0]); });
+    head.forEach(function(d){ r.appendChild(d); });
+    period = head[0].offsetLeft - cells[0].offsetLeft;   // one full lap of originals
+    leadW = cells[0].offsetLeft - tail[0].offsetLeft;    // width of the leading clones
+    jump(leadW);
+    wrapOn = true;
+  }
+  function settle(){
+    if (!wrapOn) return;
+    var x = r.scrollLeft;
+    if (x >= leadW + period) jump(x - period);
+    else if (x < leadW) jump(x + period);
+  }
+  var st = null;
+  if ('onscrollend' in window) r.addEventListener('scrollend', settle);
+  else r.addEventListener('scroll', function(){ clearTimeout(st); st = setTimeout(settle, 160); }, {passive: true});
   function mk(dir){
     var b = document.createElement('button');
     b.className = 'rail-nav ' + (dir < 0 ? 'prev' : 'next');
@@ -1839,190 +1923,29 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     sh.appendChild(b);
   }
   function tog(){
-    var ov = r.scrollWidth > r.clientWidth + 8;
+    var ov = wrapOn || r.scrollWidth > r.clientWidth + 8;
     sh.querySelectorAll('.rail-nav').forEach(function(b){ b.style.display = ov ? '' : 'none'; });
   }
-  mk(-1); mk(1); tog();
-  window.addEventListener('resize', tog);
+  var rt = null;
+  function rebuild(){ clearTimeout(rt); rt = setTimeout(function(){ build(); tog(); }, 200); }
+  mk(-1); mk(1); build(); tog();
+  window.addEventListener('resize', rebuild);
 });
 </script>
-
 <script>
-/* Community Star application. Open window is enforced here for display and
-   by the API for real: opens 2026-11-02 09:00 ET (EST, after the Nov 1 clock
-   change), closes 2026-11-23 11:59pm PT (PST). Posts to
-   NILTV_CONFIG.communityStarApi; with no endpoint configured it runs in demo
-   mode and shows the payload. ?preview=before|open|closed shows a state. */
+/* Community Star info page: the hero button and state line follow the
+   application window. */
 (function(){
-  var OPENS = Date.parse('2026-11-02T14:00:00Z');
-  var CLOSES = Date.parse('2026-11-24T08:00:00Z');
-  var cfg = window.NILTV_CONFIG || {};
-  var form = document.getElementById('applyForm');
-  var msg = document.getElementById('apply-msg');
-  var done = document.getElementById('applyDone');
-  var btn = document.getElementById('applySubmit');
-  function say(text){ msg.textContent = text; }
-  function esc(v){ return String(v == null ? '' : v).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
-
-  /* ---- open / closed window ---- */
-  var preview = (location.search.match(/[?&]preview=(before|open|closed)\b/) || [])[1];
-  var now = Date.now();
-  var state = preview || (now < OPENS ? 'before' : (now >= CLOSES ? 'closed' : 'open'));
-  if (preview) {
-    var pv = document.getElementById('csPreview');
-    pv.textContent = 'Preview: showing the "' + preview + '" state. Real visitors see the state for the current date.';
-    pv.hidden = false;
+  var CS_OPENS=Date.parse('2026-11-02T14:00:00Z'),CS_CLOSES=Date.parse('2026-11-24T08:00:00Z');
+  var now = Date.now(), a = document.getElementById('csApply'), l = document.getElementById('csStateLine');
+  if (now >= CS_CLOSES) {
+    a.textContent = 'See the timeline'; a.setAttribute('href', '#timeline');
+    l.innerHTML = 'Applications are closed. <b>Finalists announced Nov 25.</b>';
+  } else if (now >= CS_OPENS) {
+    l.innerHTML = 'Applications are open until <b>Mon, Nov 23 at 11:59pm PT</b>.';
+  } else {
+    a.textContent = 'Get ready to apply';
   }
-  document.getElementById('csBefore').hidden = state !== 'before';
-  document.getElementById('csClosed').hidden = state !== 'closed';
-  document.getElementById('csOpen').hidden = state !== 'open';
-  if (state !== 'open') return;
-
-  /* ---- school search (same list and ranking as /athlete-signup/) ---- */
-  var schools = null, loading = null;
-  var uni = document.getElementById('q-school');
-  var list = document.getElementById('schoolList');
-  var uniDomain = document.getElementById('q-schoolDomain');
-  var uniState = document.getElementById('q-schoolState');
-  var picked = '';
-  function loadSchools(){
-    if (schools || loading) return loading;
-    loading = fetch('/athlete-signup/schools.json').then(function(r){ return r.json(); }).then(function(d){ schools = d; return d; }).catch(function(){ schools = []; return schools; });
-    return loading;
-  }
-  function norm(v){ return String(v || '').toLowerCase().replace(/[^a-z0-9& ]+/g, ' ').replace(/\s+/g, ' ').trim(); }
-  function rank(q, sch){
-    var name = norm(sch.n), alias = norm(sch.a);
-    if (!q) return 0;
-    if (name === q) return 100;
-    if (alias && alias.split('|').indexOf(q) >= 0) return 95;
-    if (name.indexOf(q) === 0) return 80;
-    if (alias && alias.indexOf(q) === 0) return 75;
-    var words = name.split(' ');
-    for (var i = 0; i < words.length; i++) if (words[i].indexOf(q) === 0) return 60 - i;
-    if (alias && alias.indexOf(q) >= 0) return 40;
-    if (name.indexOf(' ' + q) >= 0) return 30;
-    return 0;
-  }
-  function search(qraw){
-    var q = norm(qraw);
-    if (q.length < 2) return [];
-    var out = [];
-    for (var i = 0; i < schools.length; i++) { var r = rank(q, schools[i]); if (r > 0) out.push([r, schools[i]]); }
-    out.sort(function(a, b){ return b[0] - a[0] || a[1].n.localeCompare(b[1].n); });
-    return out.slice(0, 8).map(function(x){ return x[1]; });
-  }
-  var cur = -1, items = [];
-  function paint(){
-    list.innerHTML = '';
-    if (!items.length) { list.hidden = true; return; }
-    items.forEach(function(sch, i){
-      var li = document.createElement('li');
-      if (sch.none) { li.className = 'none'; li.textContent = 'No match. Type your school\'s full name and we will match it by hand.'; }
-      else {
-        li.innerHTML = '<span>' + esc(sch.n) + '</span><small>' + esc((sch.c ? sch.c + ', ' : '') + sch.s) + '</small>';
-        li.addEventListener('mousedown', function(e){ e.preventDefault(); choose(sch); });
-      }
-      if (i === cur) li.className += ' on';
-      list.appendChild(li);
-    });
-    list.hidden = false;
-  }
-  function choose(sch){
-    picked = sch.n; uni.value = sch.n; uniDomain.value = sch.d || ''; uniState.value = sch.s || '';
-    items = []; cur = -1; paint();
-  }
-  uni.addEventListener('focus', function(){ loadSchools(); });
-  uni.addEventListener('input', function(){
-    picked = ''; uniDomain.value = ''; uniState.value = '';
-    loadSchools().then(function(){
-      var q = uni.value;
-      items = search(q);
-      if (!items.length && norm(q).length >= 3) items = [{ none: true }];
-      cur = -1; paint();
-    });
-  });
-  uni.addEventListener('keydown', function(e){
-    if (list.hidden) return;
-    if (e.key === 'ArrowDown') { cur = Math.min(cur + 1, items.length - 1); paint(); e.preventDefault(); }
-    else if (e.key === 'ArrowUp') { cur = Math.max(cur - 1, 0); paint(); e.preventDefault(); }
-    else if (e.key === 'Enter' && cur >= 0 && !items[cur].none) { choose(items[cur]); e.preventDefault(); }
-    else if (e.key === 'Escape') { items = []; paint(); }
-  });
-  uni.addEventListener('blur', function(){ setTimeout(function(){ items = []; paint(); }, 120); });
-
-  /* ---- field helpers ---- */
-  var ig = document.getElementById('q-instagram');
-  ig.addEventListener('input', function(){ var v = ig.value.replace(/^\s*@+/, '').replace(/\s+/g, ''); if (v !== ig.value) ig.value = v; });
-  var work = document.getElementById('q-work'), count = document.getElementById('workCount');
-  function tally(){ var n = work.value.length; count.textContent = n + ' / 500'; count.classList.toggle('over', n >= 500); }
-  work.addEventListener('input', tally); tally();
-
-  var HANDLE = /^[A-Za-z0-9._]{1,30}$/;
-  var POST = /^https?:\/\/(www\.|m\.)?instagram\.com\/(?:[A-Za-z0-9._]+\/)?(p|reel|reels|tv)\/([A-Za-z0-9_-]+)\/?(?:[?#].*)?$/i;
-  function cleanPost(v){
-    var m = String(v).trim().match(POST);
-    return m ? 'https://www.instagram.com/' + (m[2].toLowerCase() === 'reels' ? 'reel' : m[2].toLowerCase()) + '/' + m[3] + '/' : '';
-  }
-  function digits(v){ return String(v).replace(/\D+/g, ''); }
-
-  /* ---- submit ---- */
-  form.addEventListener('submit', function(e){
-    e.preventDefault();
-    say('');
-    var bad = form.querySelector(':invalid');
-    if (bad){
-      bad.focus();
-      say(bad.type === 'checkbox' ? 'Please tick the required boxes.' : (bad.type === 'email' ? 'Please enter a valid email.' : (bad.type === 'url' ? 'Paste the full post link, starting with https://' : 'Please fill in the required fields.')));
-      return;
-    }
-    var d = digits(form.elements.phone.value);
-    if (d.length < 10 || d.length > 15){ form.elements.phone.focus(); say('Please enter a phone number with area code.'); return; }
-    if (!HANDLE.test(ig.value)){ ig.focus(); say('Instagram handles use letters, numbers, periods, and underscores only.'); return; }
-    var post = cleanPost(form.elements.postUrl.value);
-    if (!post){ form.elements.postUrl.focus(); say('The post link must be an instagram.com post or reel link.'); return; }
-
-    var fd = new FormData(form), body = {};
-    fd.forEach(function(v, k){ v = typeof v === 'string' ? v.trim() : v; if (v !== '') body[k] = v; });
-    ['collabInvited','eligibleAndRules','confirmAge','consentPrivacy','consentEmail','consentSms','consentPartners'].forEach(function(k){ body[k] = !!form.elements[k].checked; });
-    body.email = body.email.toLowerCase();
-    body.instagram = '@' + ig.value.toLowerCase();
-    body.postUrl = post;
-    body.schoolMatched = !!picked;
-    body.program = 'community-star';
-    body.season = '2026';
-    body.source = 'communitystar';
-    body.consentVersion = '2026-10-11';
-    body.submittedAt = new Date().toISOString();
-    body.userAgent = navigator.userAgent;
-    var utm = {};
-    location.search.replace(/[?&](utm_[a-z]+)=([^&]*)/g, function(_, k, v){ utm[k] = decodeURIComponent(v); });
-    if (Object.keys(utm).length) body.utm = utm;
-
-    btn.disabled = true;
-    function finish(mode){
-      document.getElementById('csOpen').hidden = true;
-      done.hidden = false;
-      done.innerHTML =
-        '<h3>You\'re in!</h3>' +
-        '<p>Make sure <b>@NILTV</b> and <b>@NILSTAR</b> accepted your collab invite. Finalists are announced Nov 25.</p>' +
-        '<p>We sent a copy of this to <b>' + esc(body.email) + '</b>.</p>' +
-        (mode === 'demo'
-          ? '<p><b>Demo mode.</b> No backend is connected on this environment. This is the payload the Community Star endpoint would store:</p><pre>' + esc(JSON.stringify(body, null, 2)) + '</pre>'
-          : '');
-      done.scrollIntoView({behavior:'smooth', block:'start'});
-      if (window.gtag) gtag('event', 'community_star_submit', {mode: mode});
-    }
-    if (!cfg.communityStarApi){ finish('demo'); return; }
-    fetch(cfg.communityStarApi, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)})
-    .then(function(r){
-      if (r.status === 409) { btn.disabled = false; form.elements.email.focus(); say('This email already has an application. One application per email.'); return; }
-      if (r.status === 410) { location.reload(); return; }
-      if (r.status === 429) { btn.disabled = false; say('Too many tries from this connection. Wait a bit and try again.'); return; }
-      if (!r.ok) throw new Error('http ' + r.status);
-      finish('live');
-    }).catch(function(){ btn.disabled = false; say('Could not send. Check your connection and try again.'); });
-  });
 })();
 </script>
 </body>

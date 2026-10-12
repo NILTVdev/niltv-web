@@ -160,6 +160,16 @@ window.NILTV_CONFIG = {
   Write-Host "Zipped $((Get-Item $zip).Length) bytes for 'prod' (commit $sha)"
 } else {
   # ---- dev: the tree IS the artifact ----
+  # One dev deploy per tree at a time: parallel runs rebuild the same
+  # generated folders and one of them fails or ships a half-built tree. A
+  # lock older than 15 minutes is treated as left over from a failed run.
+  $lock = Join-Path $src ".deploy-lock"
+  if (-not $Check) {
+    if ((Test-Path $lock) -and ((Get-Date) - (Get-Item $lock).LastWriteTime).TotalMinutes -lt 15) {
+      Write-Error "dev deploy refused: another deploy from this tree started at $((Get-Item $lock).LastWriteTime) ($(Get-Content $lock)). Wait for it, or delete .deploy-lock if it is stale."; exit 1
+    }
+    "pid=$PID started=$(Get-Date -Format s)" | Out-File -FilePath $lock -Encoding ascii
+  }
   Write-Host "Generating pages from the API..."
   $sha = git -C $src rev-parse --short HEAD
   $env:NILTV_BUILD_COMMIT = $sha; $env:NILTV_BUILD_BRANCH = (git -C $src rev-parse --abbrev-ref HEAD)
@@ -225,6 +235,7 @@ do {
 } while ($status -eq "PENDING" -or $status -eq "RUNNING")
 
 Add-Content -Path (Join-Path $src "deploy-log.txt") -Value "$(Get-Date -Format s) env=$Env job=$($dep.jobId) sha=$sha status=$status"
+if ($Env -eq "dev") { Remove-Item (Join-Path $src ".deploy-lock") -ErrorAction SilentlyContinue }
 
 if ($status -ne "SUCCEED") { Write-Error "Deployment finished with status $status"; exit 1 }
 $site = "https://$branch.$appId.amplifyapp.com"

@@ -17,6 +17,7 @@ node_modules/
 *.zip
 *.log
 deploy-log.txt
+.deploy-lock
 scripts/__pycache__/
 rebuild-log.txt
 

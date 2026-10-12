@@ -323,7 +323,10 @@ DIR_CSS = """
 .ath-card img{width:100%;height:100%;object-fit:cover;display:block}
 .ath-card .cap{position:absolute;left:0;right:0;bottom:0;padding:70px 14px 14px;background:linear-gradient(180deg,rgba(6,6,8,0) 0%,rgba(6,6,8,.92) 70%)}
 .ath-card .nm{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;line-height:1;text-transform:uppercase;letter-spacing:.01em;color:var(--text)}
-.ath-card .ss{font-size:12.5px;color:var(--dim);margin-top:4px}
+/* caption = three uniform lines: name, school, sport; each stays on one line */
+.ath-card .nm,.ath-card .ss{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ath-card .ss{font-size:12.5px;line-height:1.35;color:var(--dim);margin-top:3px}
+.ath-card .nm + .ss{margin-top:6px}
 .ath-card[hidden]{display:none}
 .ath-empty{max-width:1280px;margin:0 auto;padding:30px var(--gutter);color:var(--dim);font-size:14px}
 @media (max-width:640px){.ath-grid{grid-template-columns:repeat(2,1fr);gap:12px}.ath-card .nm{font-size:18px}}
@@ -385,9 +388,9 @@ def build_index(athletes, pills=None):
     s = re.sub(r'\s*<p class="hero-dek">[^<]*</p>', '', s, count=1)
     s = re.sub(r'(<h1 class="hero-title ht-sm">)[^<]*(</h1>)', r'\1The Athletes\2', s, count=1)
     s = s.replace('NIL TV Athletes | NIL TV', 'The Athletes | NIL TV')
-    # css (idempotent)
-    if '/* ---- athlete directory (build-athletes.py) ---- */' not in s:
-        s = s.replace('</style>', DIR_CSS + '</style>', 1)
+    # css: replace the block on every build so edits to DIR_CSS land
+    s = re.sub(r'\n/\* ---- athlete directory \(build-athletes\.py\) ---- \*/.*?\n@media \(max-width:640px\)\{\.ath-grid[^\n]*\n', '\n', s, count=1, flags=re.S)
+    s = s.replace('</style>', DIR_CSS + '</style>', 1)
     athletes = sorted(athletes, key=lambda a: (a['name'].split()[-1].lower(), a['name'].lower()))
     schools = sorted({a['school'] for a in athletes}); sports = sorted({a['sport'] for a in athletes})
     def chips(kind, label, vals):
@@ -404,7 +407,7 @@ def build_index(athletes, pills=None):
     for a in athletes:
         cards += ('    <a class="ath-card" href="/athletes/%s/" data-school="%s" data-sport="%s">\n'
                   '      <img src="/athletes/%s/photos/1.jpg" alt="%s" loading="lazy" style="object-position:%s">\n'
-                  '      <div class="cap"><div class="nm">%s</div><div class="ss">%s &middot; %s</div>%s</div>\n'
+                  '      <div class="cap"><div class="nm">%s</div><div class="ss">%s</div><div class="ss">%s</div>%s</div>\n'
                   '    </a>\n' % (a['slug'], esc(a['school']), esc(a['sport']), a['slug'], esc(a['name']), a['photos']['hero']['pos'],
                                   esc(a['name']), esc(a['school']), esc(a['sport']),
                                   (pills or {}).get(a['slug'], '')))

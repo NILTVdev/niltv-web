@@ -177,8 +177,9 @@ window.NILTV_CONFIG = {
   python (Join-Path $src "scripts/builders/build-athletes.py") --require
   if ($LASTEXITCODE -ne 0) { Write-Error "dev deploy refused: athlete pages could not be built. The private data folder is missing - set NILTV_PRIVATE_DATA or create ../private-data/niltv-web beside the repo (see DEVELOPING.md)."; exit 1 }
   # athlete-signup and payments ship to prod too (they are in $pages); the dev
-  # tree just adds the dev-only pages here.
-  $items = $pages + @("config.js","vote","athletes","partners")
+  # tree just adds the dev-only pages here. communitystar stays dev-only until
+  # launch (Nov 2): move it into $pages then.
+  $items = $pages + @("config.js","vote","athletes","partners","communitystar")
   if (Test-Path (Join-Path $src "concepts")) { $items += "concepts" }   # drafts copied in from the private folder, never committed
   New-Zip $zip $src $items
   Write-Host "Zipped $((Get-Item $zip).Length) bytes for 'dev' (commit $sha)"

@@ -268,6 +268,22 @@
   .feed[hidden]{display:none;}
   .rail{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 0 18px;scrollbar-width:none;}
   .rail::-webkit-scrollbar{display:none;}
+  /* rail arrows (the site's row-arrow pattern): shown only when the rail
+     overflows that way; touch screens swipe instead */
+  .rail-wrap{position:relative;}
+  .rail-wrap::after{content:"";position:absolute;top:0;right:0;bottom:18px;width:72px;pointer-events:none;
+    background:linear-gradient(90deg,rgba(6,6,8,0),var(--bg));opacity:0;transition:opacity .2s;}
+  .rail-wrap.more-right::after{opacity:1;}
+  .rail-arrow{position:absolute;top:calc(50% - 9px);transform:translateY(-50%);z-index:3;width:46px;height:46px;border-radius:50%;
+    border:1px solid var(--goldline);background:rgba(6,6,8,.82);color:var(--text);font-size:26px;line-height:1;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;visibility:hidden;
+    transition:opacity .2s,background .2s,color .2s;backdrop-filter:blur(6px);}
+  .rail-arrow.prev{left:-22px;}
+  .rail-arrow.next{right:-22px;}
+  .rail-arrow.on{opacity:1;visibility:visible;}
+  .rail-arrow:hover{background:var(--gold);color:#060608;}
+  .rail-arrow:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+  @media (hover:none),(max-width:760px){.rail-arrow{display:none;}}
   .tile{flex:0 0 250px;scroll-snap-align:start;position:relative;aspect-ratio:9/16;background:var(--surface);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);transition:transform .2s ease,border-color .2s ease;}
   .tile:hover{transform:translateY(-4px);border-color:var(--goldline);}
   .tile img{width:100%;height:100%;object-fit:cover;}
@@ -471,12 +487,36 @@
      fewer it ships hidden with the own reels in it; the campus channel tops the
      rail up to six, and the section shows only if it reaches MIN_FEED. */
   var MIN_FEED = {{min_feed}}, MIN_MORE = {{min_more}};
+  /* Arrows + edge fade on a horizontal rail. Re-checked on scroll and resize,
+     so an arrow shows only when there is more to see that way. */
+  var railArrows = function(rail){
+    if (!rail || rail.parentNode.classList.contains('rail-wrap')) return;
+    var wrap = document.createElement('div'); wrap.className = 'rail-wrap';
+    rail.parentNode.insertBefore(wrap, rail); wrap.appendChild(rail);
+    var mk = function(cls, label, glyph, dir){
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'rail-arrow ' + cls;
+      b.setAttribute('aria-label', label); b.textContent = glyph;
+      b.addEventListener('click', function(){ rail.scrollBy({left: dir * rail.clientWidth * 0.8, behavior: 'smooth'}); });
+      wrap.appendChild(b); return b;
+    };
+    var prev = mk('prev', 'Scroll back', '‹', -1), next = mk('next', 'Scroll forward', '›', 1);
+    var update = function(){
+      var max = rail.scrollWidth - rail.clientWidth - 2;
+      prev.classList.toggle('on', rail.scrollLeft > 2);
+      next.classList.toggle('on', rail.scrollLeft < max);
+      wrap.classList.toggle('more-right', rail.scrollLeft < max);
+    };
+    rail.addEventListener('scroll', update, {passive: true});
+    window.addEventListener('resize', update);
+    update();
+  };
   var mine = {{mine}};
   /* "" = same-origin API (the local dev server); only a missing value means no API */
   var hasApi = typeof cfg.apiBase === 'string';
   var getJson = function(url){ return fetch(url).then(function(r){ return r.ok ? r.json() : null; }); };
   var feed = document.getElementById('feed'), feedRail = document.getElementById('feedRail');
   var feedDone = Promise.resolve();
+  if (feed && feedRail && !feed.hidden) railArrows(feedRail);   // own feed: static, visible now
   if (feed && feedRail && feed.hidden) {
     var ch = feed.getAttribute('data-channel');
     if (ch && hasApi) {
@@ -487,6 +527,7 @@
         feedRail.insertAdjacentHTML('beforeend', items.map(tileHtml).join(''));
         items.forEach(function(x){ mine[x.id] = 1; });
         feed.hidden = false;
+        railArrows(feedRail);
       }).catch(function(){});
     }
   }
@@ -501,6 +542,7 @@
     if (rel.length < MIN_MORE) return;
     document.getElementById('moreRail').innerHTML = rel.map(tileHtml).join('');
     document.getElementById('more').hidden = false;
+    railArrows(document.getElementById('moreRail'));
   }).catch(function(){});
 })();
 </script>

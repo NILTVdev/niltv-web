@@ -23,7 +23,11 @@ EXTS = (".html", ".xml", ".txt", ".js", ".webmanifest")
 DRAFT_RE = re.compile(r"[ \t]*<!--(?:(?!-->).)*draft(?:(?!-->).)*-->\s*", re.S | re.I)
 # Cuts for features that are on main but not signed off for prod go here: a
 # regex applied to the staging copy plus a line in the hard guard below.
-# Currently empty.
+# Generic fence: <!-- unreleased:NAME --> ... <!-- /unreleased:NAME -->.
+# Community Star (launch Nov 2): the homepage + /competitions/ banner; the
+# /communitystar/ directory itself is dev-only in deploy.ps1.
+UNRELEASED_RE = re.compile(r"[ \t]*<!-- unreleased:([\w-]+) -->.*?<!-- /unreleased:\1 -->\s*", re.S)
+UNRELEASED_GUARD = ("unreleased:", "/communitystar/")
 
 def main():
     root, origin, cdn = sys.argv[1], sys.argv[2], sys.argv[3]
@@ -37,6 +41,7 @@ def main():
             t = io.open(p, encoding="utf-8", errors="strict").read()
             t2 = t.replace(DEV_CDN, cdn).replace(DEV_ORIGIN, origin)
             if fn.lower().endswith(".html"):
+                t2 = UNRELEASED_RE.sub("", t2)
                 t2, n_draft = DRAFT_RE.subn("", t2)
             if fills_off:
                 n = t2.count("/poster-fill.jpg")
@@ -58,8 +63,10 @@ def main():
             t = io.open(p, encoding="utf-8", errors="ignore").read()
             if "d1nm1d2txb83wa" in t or "dkdfgvugisb3v" in t:
                 left.append(os.path.relpath(p, root))
+            elif fn.lower().endswith(".html") and any(g in t for g in UNRELEASED_GUARD):
+                left.append(os.path.relpath(p, root) + " (unreleased feature)")
     if left:
-        print("SWEEP GUARD FAILED - dev references remain in:")
+        print("SWEEP GUARD FAILED - dev references or unreleased features remain in:")
         for p in left[:20]:
             print("  ", p)
         sys.exit(1)

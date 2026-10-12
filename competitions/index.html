@@ -1192,6 +1192,53 @@ br.mbr{display:none}
 
 <main class="shelves">
 
+<!-- unreleased:communitystar -->
+<style>
+.csp{position:relative;display:grid;grid-template-columns:1fr auto;align-items:center;gap:28px;overflow:hidden;
+  width:calc(100% - 2*var(--gutter));max-width:1360px;margin:0 auto 26px;padding:34px 40px;border-radius:22px;
+  border:1px solid rgba(217,178,91,.4);color:var(--text);isolation:isolate;
+  background:radial-gradient(70% 140% at 88% 50%,rgba(217,178,91,.22),rgba(217,178,91,0) 60%),linear-gradient(120deg,#15151a,#0a0a0d 70%)}
+.csp:hover{border-color:rgba(217,178,91,.7)}
+.csp-k{display:block;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.csp-t{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(40px,5.6vw,76px);line-height:.9;text-transform:uppercase;margin:8px 0 10px}
+.csp-d{display:block;font-size:14px;color:var(--dim);max-width:46ch}
+.csp-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px}
+.csp-s{font-size:12.5px;color:var(--dim)}
+.csp-s b{color:var(--gold-bright);font-weight:600}
+.csp-art{position:relative;width:clamp(150px,17vw,220px);aspect-ratio:1}
+.csp-art svg{width:100%;height:100%;filter:drop-shadow(0 0 22px rgba(217,178,91,.35))}
+.csp-art span{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:10%;
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;text-transform:uppercase;line-height:.9}
+.csp-art span b{font-size:clamp(40px,4.6vw,60px);color:var(--gold-bright)}
+.csp-art span small{font-size:12px;letter-spacing:.18em;color:var(--dim);margin-top:4px}
+@media (max-width:700px){
+  .csp{grid-template-columns:1fr;padding:26px 22px;gap:0}
+  .csp-art{position:absolute;right:-18px;top:-14px;width:150px;opacity:.35}
+  .csp-art span{display:none}
+}
+</style>
+<a class="csp" href="/communitystar/" aria-label="Community Star: learn more and apply">
+  <div class="csp-tx">
+    <span class="csp-k">New from NIL TV</span>
+    <span class="csp-t">Community Star</span>
+    <span class="csp-d">For college athletes who show up for their community. Post, collab with @NILTV and @NIL<svg viewBox="0 0 100 96" aria-hidden="true"><path d="M50 2l14.7 30 33 4.8-23.9 23.3 5.6 32.9L50 77.5 20.6 93l5.6-32.9L2.3 36.8l33-4.8z" fill="rgba(217,178,91,.08)" stroke="#d9b25b" stroke-width="2.2" stroke-linejoin="round"/></svg>, and apply.</span>
+    <span class="csp-row"><span class="btn btn-gold">Learn more</span><span class="csp-s" data-csp-state>Applications open <b>Nov 2</b></span></span>
+  </div>
+  <div class="csp-art" aria-hidden="true">STAR<span><b>25</b><small>Finalists</small></span></div>
+</a>
+<script>
+(function(){
+  var CS_OPENS=Date.parse('2026-11-02T14:00:00Z'),CS_CLOSES=Date.parse('2026-11-24T08:00:00Z');
+  var now = Date.now();
+  document.querySelectorAll('[data-csp-state]').forEach(function(el){
+    if (now >= CS_CLOSES) el.innerHTML = 'Applications closed. <b>Finalists Nov 25</b>';
+    else if (now >= CS_OPENS) el.innerHTML = 'Applications open now. <b>Closes Nov 23</b>';
+  });
+})();
+</script>
+<!-- /unreleased:communitystar -->
+
+
 <section class="shelf">
   <div class="shelf-head">
     <h2 class="shelf-title gold">NIL Singing Star Season 1</h2>

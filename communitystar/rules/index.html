@@ -1213,15 +1213,17 @@ br.mbr{display:none}
 .apply-done pre{font-size:11px;line-height:1.45;color:var(--dim);background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:10px;padding:14px;overflow:auto;max-height:320px;margin-top:12px}
 
 /* ---------- COMMUNITY STAR ---------- */
-.cs-hero{position:relative;overflow:hidden;padding:116px var(--gutter) 34px;isolation:isolate}
+.cs-hero{position:relative;overflow:hidden;padding:116px 0 30px;isolation:isolate}
+/* the shared .shelves rule pulls content up over the hero (-7vh); this page stacks */
+.cs-hero + .shelves{margin-top:0;padding-top:8px}
 .cs-hero .mhero-glow{right:auto;left:50%;transform:translate(-50%,-50%);top:55%}
-.cs-hero-in{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.cs-hero-in{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0 var(--gutter)}
 .cs-hero .hero-kicker{margin-bottom:12px}
 .cs-hero .mhero-dek{max-width:52ch}
 .cs-dates{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
 .cs-dates span{font-size:12px;color:var(--dim);border:1px solid var(--border);border-radius:999px;padding:6px 12px;background:rgba(23,23,28,.5)}
 .cs-dates b{color:var(--text);font-weight:600}
-.cs-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 22px;counter-reset:st}
+.cs-steps{list-style:none;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 22px;counter-reset:st}
 .cs-steps li{counter-increment:st;border:1px solid var(--border);background:rgba(23,23,28,.4);border-radius:14px;padding:16px 16px 15px;font-size:13px;color:var(--dim);line-height:1.45}
 .cs-steps li::before{content:counter(st);display:block;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:26px;line-height:1;color:var(--gold);margin-bottom:8px}
 .cs-steps b{color:var(--text);font-weight:600}

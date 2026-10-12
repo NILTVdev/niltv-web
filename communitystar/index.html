@@ -1136,26 +1136,56 @@ br.mbr{display:none}
 .athf-card .sp{font-size:11px;color:var(--dim);padding:0 16px 14px}
 
 /* ---------- COMMUNITY STAR (info page) ---------- */
-.cs-hero{position:relative;overflow:hidden;padding:150px 0 46px;isolation:isolate;text-align:center}
+.cs-hero{position:relative;overflow:hidden;padding:120px 0 40px;isolation:isolate}
 .cs-hero + .shelves{margin-top:0;padding-top:4px}
-.cs-glow{position:absolute;z-index:-1;width:760px;height:760px;border-radius:50%;left:50%;top:46%;transform:translate(-50%,-50%);
+.cs-glow{position:absolute;z-index:-1;width:820px;height:820px;border-radius:50%;left:68%;top:50%;transform:translate(-50%,-50%);
   background:radial-gradient(closest-side,rgba(217,178,91,.2),rgba(217,178,91,.05) 55%,transparent 75%);pointer-events:none}
-.cs-star{position:absolute;z-index:-1;left:50%;top:44%;width:min(520px,92vw);transform:translate(-50%,-50%);opacity:.12}
-.cs-hero-in{max-width:820px;margin:0 auto;padding:0 var(--gutter)}
+.cs-hero-in{max-width:1240px;margin:0 auto;padding:0 var(--gutter);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:center}
 .cs-hero .hero-kicker{margin-bottom:14px}
 .cs-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(54px,9vw,112px);line-height:.88;text-transform:uppercase;letter-spacing:.01em}
-.cs-dek{color:var(--dim);font-size:16px;max-width:48ch;margin:18px auto 0}
-.cs-ctas{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.cs-dek{color:var(--dim);font-size:16px;max-width:44ch;margin:18px 0 0}
+.cs-ctas{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+/* photo stack: three tilted 4:5 cards */
+.cs-stack{position:relative;height:clamp(380px,40vw,520px)}
+.cs-stack figure{position:absolute;margin:0;width:46%;aspect-ratio:4/5;border-radius:18px;overflow:hidden;
+  border:1px solid rgba(217,178,91,.35);box-shadow:0 28px 60px rgba(0,0,0,.65);background:#111}
+.cs-stack img{width:100%;height:100%;object-fit:cover}
+.cs-stack figure:nth-child(1){left:2%;top:12%;transform:rotate(-6deg)}
+.cs-stack figure:nth-child(2){left:27%;top:0;width:50%;z-index:2}
+.cs-stack figure:nth-child(3){right:2%;top:16%;transform:rotate(6deg)}
+.cs-stack figcaption{position:absolute;left:0;right:0;bottom:0;padding:26px 12px 10px;font-size:10px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gold-bright);background:linear-gradient(to top,rgba(6,6,8,.9),rgba(6,6,8,0))}
+/* community videos: centered row above phone widths */
+@media (min-width:701px){
+  #community .rail{flex-wrap:wrap;justify-content:center;overflow:visible;scroll-snap-type:none}
+}
+/* giving back gallery */
+.cs-gallery{display:grid;grid-template-columns:1.1fr 1fr 1fr;grid-template-rows:auto auto;gap:12px;max-width:1240px;margin:0 auto;padding:6px var(--gutter) 10px}
+.cs-gallery figure{margin:0;border-radius:16px;overflow:hidden;border:1px solid var(--border);background:#111}
+.cs-gallery img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/5}
+.cs-gallery .big{grid-row:span 2}
+.cs-gallery .big img{aspect-ratio:auto}
+.cs-quote{grid-column:2 / span 2;display:flex;flex-direction:column;justify-content:center;border:1px solid rgba(217,178,91,.3);border-radius:16px;
+  padding:22px 26px;background:radial-gradient(90% 140% at 100% 0,rgba(217,178,91,.14),rgba(217,178,91,0) 60%),rgba(23,23,28,.4)}
+.cs-quote q{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(26px,3vw,38px);line-height:1;text-transform:uppercase;quotes:none}
+.cs-quote span{font-size:12px;color:var(--dim);margin-top:10px}
 .cs-state-line{font-size:12.5px;color:var(--dim);margin-top:14px}
 .cs-state-line b{color:var(--gold-bright);font-weight:600}
 .cs-rules{text-align:center;font-size:12.5px;color:var(--dim);margin:0 auto 70px;padding:0 var(--gutter)}
 .cs-rules a{color:var(--gold-bright)}
-.cs-post{background:radial-gradient(120% 70% at 50% 38%,rgba(217,178,91,.28),rgba(11,11,14,0) 60%),linear-gradient(180deg,#17171c,#0b0b0e)}
-.cs-post svg{position:absolute;left:50%;top:42%;width:46%;transform:translate(-50%,-50%);opacity:.9}
 .shelves.centered .faq{margin-bottom:24px}
+@media (max-width:900px){
+  .cs-hero-in{grid-template-columns:1fr;gap:26px}
+  .cs-glow{left:50%;top:70%}
+  .cs-stack{height:min(92vw,440px);max-width:520px;width:100%;margin:0 auto}
+}
 @media (max-width:700px){
-  .cs-hero{padding:112px 0 34px}
+  .cs-hero{padding:96px 0 26px}
   .cs-dek{font-size:14.5px}
+  .cs-gallery{grid-template-columns:1fr 1fr}
+  .cs-gallery .big{grid-row:auto;grid-column:span 2}
+  .cs-gallery .big img{aspect-ratio:4/5}
+  .cs-quote{grid-column:span 2}
 }
 </style>
 <link rel="stylesheet" href="/assets/css/cinema-chrome.css">
@@ -1188,8 +1218,8 @@ br.mbr{display:none}
 
 <section class="cs-hero" id="hero" aria-label="Community Star">
   <div class="cs-glow" aria-hidden="true"></div>
-  <div class="cs-star" aria-hidden="true"><svg viewBox="0 0 100 96" aria-hidden="true"><path d="M50 2l14.7 30 33 4.8-23.9 23.3 5.6 32.9L50 77.5 20.6 93l5.6-32.9L2.3 36.8l33-4.8z" fill="none" stroke="#d9b25b" stroke-width="2.2" stroke-linejoin="round"/></svg></div>
   <div class="cs-hero-in">
+   <div class="cs-copy">
     <div class="hero-kicker">NIL TV</div>
     <h1 class="cs-title">Community Star</h1>
     <p class="cs-dek">A national search for college athletes who show up for their community. Show us where you make a difference. The top 25 finalists are announced Nov 25.</p>
@@ -1198,10 +1228,53 @@ br.mbr{display:none}
       <a class="btn btn-ghost" href="#how">How it works</a>
     </div>
     <p class="cs-state-line" id="csStateLine">Applications open <b>Mon, Nov 2 at 9:00am ET</b>.</p>
+   </div>
+   <div class="cs-stack" aria-hidden="true">
+     <figure><img src="https://d1nm1d2txb83wa.cloudfront.net/library/communitystar/holiday-surprise.webp" alt="" decoding="async"><figcaption>Holiday surprise</figcaption></figure>
+     <figure><img src="https://d1nm1d2txb83wa.cloudfront.net/library/communitystar/giveback-2.webp" alt="" decoding="async"><figcaption>Giving back</figcaption></figure>
+     <figure><img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DSLY6ASE3aU/poster.jpg" alt="" decoding="async"><figcaption>Duke Children's</figcaption></figure>
+   </div>
   </div>
 </section>
 
 <main class="shelves centered" id="main">
+
+<section class="shelf" id="community">
+  <div class="shelf-head">
+    <h2 class="shelf-title">Community Looks Like This</h2>
+    <span class="shelf-sub">Athletes across the network, showing up off the field.</span>
+  </div>
+  <div class="rail">
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18106477720644121/">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18106477720644121/poster.jpg" loading="lazy" decoding="async" alt="">
+        <span class="dur">1:05</span>
+      </a>
+      <p class="reel-caption">Holiday Surprise with Bruce Bolt</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DSLY6ASE3aU/">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DSLY6ASE3aU/poster.jpg" loading="lazy" decoding="async" alt="">
+        <span class="dur">0:52</span>
+      </a>
+      <p class="reel-caption">Sticks Up for Duke Children's</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DUUcvBrDN7m/">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DUUcvBrDN7m/poster.jpg" loading="lazy" decoding="async" alt="">
+        <span class="dur">0:51</span>
+      </a>
+      <p class="reel-caption">Patient Appreciation Day</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DWhvbuWkWYY/">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWhvbuWkWYY/poster.jpg" loading="lazy" decoding="async" alt="">
+        <span class="dur">1:10</span>
+      </a>
+      <p class="reel-caption">Bench to Beat Cancer</p>
+    </div>
+  </div>
+</section>
 
 <section class="shelf" id="how" data-grid="phases">
   <div class="shelf-head">
@@ -1250,6 +1323,19 @@ br.mbr{display:none}
   </div>
 </section>
 
+<section class="shelf" id="giving-back">
+  <div class="shelf-head">
+    <h2 class="shelf-title">Giving Back</h2>
+    <span class="shelf-sub">Thanksgiving 2025 on TrueBlueTV.</span>
+  </div>
+  <div class="cs-gallery">
+    <figure class="big"><img src="https://d1nm1d2txb83wa.cloudfront.net/library/communitystar/giveback-1.webp" loading="lazy" decoding="async" alt=""></figure>
+    <figure><img src="https://d1nm1d2txb83wa.cloudfront.net/library/communitystar/giveback-6.webp" loading="lazy" decoding="async" alt=""></figure>
+    <figure><img src="https://d1nm1d2txb83wa.cloudfront.net/library/communitystar/giveback-4.webp" loading="lazy" decoding="async" alt=""></figure>
+    <div class="cs-quote"><q>When we serve others, we grow together.</q><span>From the TrueBlueTV post. Athletes packed and handed out care kits for neighbors in need.</span></div>
+  </div>
+</section>
+
 <div class="cta-band cta-band--peak" id="ready">
   <div class="tx">
     <h2>Have These Ready</h2>
@@ -1264,8 +1350,7 @@ br.mbr{display:none}
     </ul>
     <div class="cta-row"><a class="btn btn-gold" href="/communitystar/apply/">Go to the form</a></div>
   </div>
-  <div class="pm-frame cs-post" aria-hidden="true">
-    <svg viewBox="0 0 100 96" aria-hidden="true"><path d="M50 2l14.7 30 33 4.8-23.9 23.3 5.6 32.9L50 77.5 20.6 93l5.6-32.9L2.3 36.8l33-4.8z" fill="none" stroke="#d9b25b" stroke-width="2.2" stroke-linejoin="round"/></svg>
+  <div class="pm-frame" aria-hidden="true" style="background-image:url('https://d1nm1d2txb83wa.cloudfront.net/library/communitystar/giveback-2.webp')">
     <div class="pm-top"><i></i><span>yourhandle and 2 others<small>with niltv and nilstar</small></span></div>
     <div class="pm-lower"><b>My Community Star application</b><span>Collab post</span></div>
   </div>

@@ -24,8 +24,8 @@ DRAFT_RE = re.compile(r"[ \t]*<!--(?:(?!-->).)*draft(?:(?!-->).)*-->\s*", re.S |
 # Cuts for features that are on main but not signed off for prod go here: a
 # regex applied to the staging copy plus a line in the hard guard below.
 # Generic fence: <!-- unreleased:NAME --> ... <!-- /unreleased:NAME -->.
-# Community Star (launch Nov 2): the homepage + /competitions/ banner; the
-# /communitystar/ directory itself is dev-only in deploy.ps1.
+# Community Star (launch Nov 2): /communitystar/ is dev-only in deploy.ps1,
+# so the guard also fails any prod page that links to it.
 UNRELEASED_RE = re.compile(r"[ \t]*<!-- unreleased:([\w-]+) -->.*?<!-- /unreleased:\1 -->\s*", re.S)
 UNRELEASED_GUARD = ("unreleased:", "/communitystar/")
 

@@ -10,6 +10,9 @@ window.NILTV_CONFIG = {
   // (niltv-dashboard, applications router; CORS allows this origin). Empty =
   // the /athlete-signup/ form runs in demo mode and shows the payload instead.
   applicationsApi: "https://api-dev.niltv.com/api/applications/",
+  // Community Star intake (POST, public, one entry per email). Empty = the
+  // /communitystar/ form runs in demo mode and shows the payload instead.
+  communityStarApi: "",
   cognito: {
     // niltv-dev pool + the niltv-dev-web client (SRP, no secret - browser
     // safe). deploy.ps1 -Env prod writes the prod pool and client instead.

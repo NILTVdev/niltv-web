@@ -11,6 +11,8 @@ athletes/index.html is committed with its directory block empty.
     python scripts/builders/build-athletes.py --review   # dev review: every record with a hero photo,
                                                          # each page carries a status strip
     (NILTV_ATHLETES_REVIEW=1 turns review on for deploy.ps1 -Env dev; prod never runs this builder)
+    python scripts/builders/build-athletes.py --review --notes   # also show the open-items strip
+    (or NILTV_ATHLETES_NOTES=1)
 
 The page template is scripts/builders/athlete-template.html.
 
@@ -257,6 +259,9 @@ def gate(athletes, onboarding, drafts=False):
 
 # ---------------------------------------------------------------- review mode
 REVIEW = '--review' in sys.argv or os.environ.get('NILTV_ATHLETES_REVIEW') == '1'
+# the review strip (open items per page) is off unless asked for, so review
+# pages look exactly like prod pages
+NOTES = '--notes' in sys.argv or os.environ.get('NILTV_ATHLETES_NOTES') == '1'
 STATUS_LABEL = {
     'accepted': 'Stripe complete',
     'stripe_pending': 'Stripe invited, not finished',
@@ -514,7 +519,7 @@ def build_review(athletes, onboarding, tpl):
     prune({a['slug'] for a, _, _ in ok})
     pills = {}
     for a, why, st in ok:
-        build_page(a, tpl, review_strip(a, onboarding, why))
+        build_page(a, tpl, review_strip(a, onboarding, why) if NOTES else '')
         print('built (review)', a['slug'], '|', STATUS_LABEL.get(st, 'status unknown'), '|', '; '.join(why) or 'complete')
     build_index([a for a, _, _ in ok], pills)
     print('index:', len(ok), 'athletes (review)')

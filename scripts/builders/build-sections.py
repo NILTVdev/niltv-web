@@ -928,7 +928,7 @@ FOUNDERS = [
  ("NIL Compliance","Anthony Egbo","Abilene Christian &middot; Football",
   "First WAC/AUC Athlete to do an NIL deal. Testified to Congress on the value and needs for NIL.","25K+ followers"),
 ]
-HEADSHOT = {"Emily Cole":"emily-cole.jpg","Chloe Mitchell":"chloe-mitchell.jpg","Will Levis":"will-levis.jpg",
+HEADSHOT = {"Emily Cole":"emily-cole.jpg","Chloe Mitchell":"chloe-mitchell.jpg","Will Levis":"will-levis-2.jpg",
             "Neal Begovich":"neal-begovich.jpg","Anthony Egbo":"anthony-egbo.jpg"}
 founder_cells = ["""    <div class="founder-card">
       <img class="fh" src=""" + '"' + DEV + """/assets/img/team/%s" loading="lazy" decoding="async" alt="%s">
@@ -981,7 +981,6 @@ ADVISORY = [
  ("Jen Munoz","Founder &middot; Sporty Spice Collective","/assets/img/advisory/jen-munoz.webp","New Mexico Soccer alumna and former pro player whose 2026 World Cup promo partners include Audi USA, Coke, Adidas, and Google.","IG 234k &middot; TikTok 240k"),
  ("Jessica Gardner","Student Anesthesiologist Asst. &middot; UNMC","/assets/img/advisory/jessica-gardner.webp","Nebraska track alumna and sports &amp; lifestyle content creator, now training as a Student Anesthesiologist Assistant at UNMC.","IG 128k &middot; TikTok 209k"),
  ("Olivia Fabry","AI Specialist &middot; Franklin Templeton","/assets/img/advisory/olivia-fabry.webp","Notre Dame pole vault alumna building The Table, a growing community that helps female college athletes launch careers in finance.","IG 70k &middot; TikTok 110.3k"),
- ("Alex Jean Glover","Sports Broadcaster &middot; NIL Consultant","/assets/img/advisory/alex-jean-glover.webp","SMU Volleyball alumna and broadcaster with dual B.S. degrees in Operations Research and Data Science, plus an M.S. in Business.","IG 67k &middot; TikTok 80.8k"),
 ]
 advisory_cells = ["""    <div class="adv-card">
       <img class="fh" src="%s" loading="lazy" decoding="async" alt="%s">

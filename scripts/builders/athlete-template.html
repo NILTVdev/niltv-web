@@ -483,8 +483,8 @@
       '<span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>' +
       '<div class="cap"><div class="t">' + title + '</div></div></a>';
   };
-  /* Video rails: own feed (static), campus channel filled to RAIL_MAX, then
-     More on NIL TV filled to RAIL_MAX. Nothing repeats across rails. */
+  /* Feed = the athlete's own videos, then their campus channel, up to
+     RAIL_MAX; shown only at MIN_FEED+. More on NIL TV follows. */
   var MIN_FEED = {{min_feed}}, MIN_MORE = {{min_more}};
   /* Arrows + edge fade on a horizontal rail. Re-checked on scroll and resize,
      so an arrow shows only when there is more to see that way. */
@@ -517,7 +517,7 @@
   var shown = {};
   Array.prototype.forEach.call(document.querySelectorAll('.tile'), function(a){ var m = (a.getAttribute('href') || '').match(/\/watch\/([^/]+)\//); if (m) shown[decodeURIComponent(m[1])] = 1; });
   var feed = document.getElementById('feed');
-  if (feed) railArrows(feed.querySelector('.rail'));   // own feed: static, visible now
+  var feedRail = feed && feed.querySelector('.rail');
   /* fill a rail from channel items up to RAIL_MAX, skipping anything on the page */
   var fill = function(rail, items){
     var have = rail.querySelectorAll('.tile').length;
@@ -526,24 +526,27 @@
     rail.insertAdjacentHTML('beforeend', add.map(tileHtml).join(''));
     return have + add.length;
   };
+  var showFeed = function(){
+    if (!feedRail || feedRail.querySelectorAll('.tile').length < MIN_FEED) return;
+    feed.hidden = false;
+    railArrows(feedRail);
+  };
+  var chanId = feed && feed.getAttribute('data-channel');
+  var feedDone = Promise.resolve();
+  if (chanId && hasApi) {
+    feedDone = getJson(cfg.apiBase + '/v1/content?channelId=' + encodeURIComponent(chanId) + '&limit=24').then(function(d){
+      fill(feedRail, (d && d.items) || []);
+    }).catch(function(){}).then(showFeed);
+  } else { showFeed(); }
   if (!hasApi) return;
-  var chan = document.getElementById('chan'), chanId = chan && chan.getAttribute('data-channel');
-  var chanDone = !chan ? Promise.resolve() :
-    getJson(cfg.apiBase + '/v1/content?channelId=' + encodeURIComponent(chanId) + '&limit=24').then(function(d){
-      var rail = chan.querySelector('.rail');
-      if (fill(rail, (d && d.items) || []) < MIN_FEED) return;
-      chan.hidden = false;
-      railArrows(rail);
-    }).catch(function(){});
-  /* "More on NIL TV": skipped when the channel rail is NIL TV itself; related
-     clips first, topped up from the network, RAIL_MAX tiles, needs MIN_MORE */
-  if (chanId === 'ch-niltv') return;
+  /* "More on NIL TV": related clips first, topped up from the network,
+     RAIL_MAX tiles, nothing already in the feed, needs MIN_MORE */
   var seed = '{{seed}}';
   var related = seed
     ? getJson(cfg.apiBase + '/v1/content/' + seed).then(function(d){ var it = d && (d.item || d); return (it && it.related) || []; }).catch(function(){ return []; })
     : Promise.resolve([]);
   var network = getJson(cfg.apiBase + '/v1/content?channelId=ch-niltv&limit=24').then(function(d){ return (d && d.items) || []; }).catch(function(){ return []; });
-  Promise.all([related, network, chanDone]).then(function(res){
+  Promise.all([related, network, feedDone]).then(function(res){
     var rail = document.getElementById('moreRail');
     if (fill(rail, (res[0] || []).concat(res[1] || [])) < MIN_MORE) { rail.innerHTML = ''; return; }
     document.getElementById('more').hidden = false;

@@ -59,7 +59,7 @@ TEMPLATE = os.path.join(os.path.dirname(__file__), 'athlete-template.html')
 INDEX = os.path.join(ROOT, 'athletes', 'index.html')
 POSTER = 'https://dr60jt51m7xh2.cloudfront.net/video/%s/poster.jpg'
 
-MIN_FEED = 3    # own reels for "{First}'s feed"; the channel top-up must reach it too
+MIN_FEED = 6    # tiles the feed (own videos + campus channel) needs before it shows
 MIN_MORE = 4    # tiles for "More on NIL TV"
 RAIL_MAX = 10   # channel and network rails always fill to this many tiles
 MIN_FACTS = 3   # class year + at least two more
@@ -140,24 +140,19 @@ def rail_section(sec_id, kick, title, more, tiles, attrs=''):
             '</section>' % (sec_id, attrs, kick, title, more, tiles))
 
 def feed_section(a):
-    """Video sections, the same pattern on every page:
-      1. "{First}'s feed": the athlete's own videos, all of them, when there are
-         MIN_FEED or more (static).
-      2. "On {channel}": the campus channel (NIL TV when the school has none),
-         filled to RAIL_MAX by the page script; an athlete with 1-2 own videos
-         gets them first in this rail. Shown only at MIN_FEED+ tiles.
-      3. "More on NIL TV" (template), skipped when rail 2 is already NIL TV."""
+    """One rail, "{First}'s feed": the athlete's own videos first (static, all
+    of them), then their campus channel's latest, added by the page script up
+    to RAIL_MAX. The rail shows only when the two together reach MIN_FEED.
+    No campus channel = own videos only. "More on NIL TV" (template) follows."""
     reels = a.get('reels') or []
-    own = len(reels) >= MIN_FEED
-    ch = a.get('channel') or {'id': 'ch-niltv', 'slug': 'niltv', 'name': 'NIL TV'}
-    out = []
-    if own:
-        out.append(rail_section('feed', 'On NIL TV', "%s&rsquo;s feed" % esc(a['first']), '', ''.join(tile(r) for r in reels)))
-    kick = 'The network' if ch['id'] == 'ch-niltv' else '%s channel' % esc(a['school'])
-    more = '      <a class="more" href="/channels/%s/">Everything on %s &rarr;</a>\n' % (ch['slug'], esc(ch['name']))
-    attrs = ' data-channel="%s" hidden' % ch['id']
-    out.append(rail_section('chan', kick, 'On %s' % esc(ch['name']), more, '' if own else ''.join(tile(r) for r in reels), attrs))
-    return '<!-- VIDEO RAILS: own feed (%d+), campus channel filled to %d, then More on NIL TV -->\n' % (MIN_FEED, RAIL_MAX) + '\n'.join(out)
+    ch = a.get('channel')
+    if not ch and len(reels) < MIN_FEED:
+        return '<!-- FEED: %d own videos and no campus channel, under %d, so no feed -->' % (len(reels), MIN_FEED)
+    attrs = (' data-channel="%s"' % ch['id'] if ch else '') + ('' if len(reels) >= MIN_FEED else ' hidden')
+    more = ('      <a class="more" href="/channels/%s/">Everything on %s &rarr;</a>\n' % (ch['slug'], esc(ch['name']))) if ch else ''
+    kick = 'On NIL TV and %s' % esc(ch['name']) if ch else 'On NIL TV'
+    return ('<!-- FEED: own videos first, then the campus channel up to %d; shown at %d+ -->\n' % (RAIL_MAX, MIN_FEED) +
+            rail_section('feed', kick, "%s&rsquo;s feed" % esc(a['first']), more, ''.join(tile(r) for r in reels), attrs))
 
 def about_section(a, wall_files):
     ab = a['about']

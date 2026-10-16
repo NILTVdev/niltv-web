@@ -483,9 +483,8 @@
       '<span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>' +
       '<div class="cap"><div class="t">' + title + '</div></div></a>';
   };
-  /* Feed: with MIN_FEED+ own reels the section is static and visible. With
-     fewer it ships hidden with the own reels in it; the campus channel tops the
-     rail up to six, and the section shows only if it reaches MIN_FEED. */
+  /* Video rails: own feed (static), campus channel filled to RAIL_MAX, then
+     More on NIL TV filled to RAIL_MAX. Nothing repeats across rails. */
   var MIN_FEED = {{min_feed}}, MIN_MORE = {{min_more}};
   /* Arrows + edge fade on a horizontal rail. Re-checked on scroll and resize,
      so an arrow shows only when there is more to see that way. */
@@ -510,39 +509,45 @@
     window.addEventListener('resize', update);
     update();
   };
+  var RAIL_MAX = {{rail_max}};
   var mine = {{mine}};
   /* "" = same-origin API (the local dev server); only a missing value means no API */
   var hasApi = typeof cfg.apiBase === 'string';
   var getJson = function(url){ return fetch(url).then(function(r){ return r.ok ? r.json() : null; }); };
-  var feed = document.getElementById('feed'), feedRail = document.getElementById('feedRail');
-  var feedDone = Promise.resolve();
-  if (feed && feedRail && !feed.hidden) railArrows(feedRail);   // own feed: static, visible now
-  if (feed && feedRail && feed.hidden) {
-    var ch = feed.getAttribute('data-channel');
-    if (ch && hasApi) {
-      feedDone = getJson(cfg.apiBase + '/v1/content?channelId=' + encodeURIComponent(ch) + '&limit=12').then(function(d){
-        var have = feedRail.querySelectorAll('.tile').length;
-        var items = ((d && d.items) || []).filter(function(x){ return x && x.id && x.thumbUrl && !mine[x.id]; }).slice(0, Math.max(0, 6 - have));
-        if (have + items.length < MIN_FEED) return;
-        feedRail.insertAdjacentHTML('beforeend', items.map(tileHtml).join(''));
-        items.forEach(function(x){ mine[x.id] = 1; });
-        feed.hidden = false;
-        railArrows(feedRail);
-      }).catch(function(){});
-    }
-  }
+  var shown = {};
+  Array.prototype.forEach.call(document.querySelectorAll('.tile'), function(a){ var m = (a.getAttribute('href') || '').match(/\/watch\/([^/]+)\//); if (m) shown[decodeURIComponent(m[1])] = 1; });
+  var feed = document.getElementById('feed');
+  if (feed) railArrows(feed.querySelector('.rail'));   // own feed: static, visible now
+  /* fill a rail from channel items up to RAIL_MAX, skipping anything on the page */
+  var fill = function(rail, items){
+    var have = rail.querySelectorAll('.tile').length;
+    var add = items.filter(function(x){ return x && x.id && x.thumbUrl && !shown[x.id]; }).slice(0, Math.max(0, RAIL_MAX - have));
+    add.forEach(function(x){ shown[x.id] = 1; });
+    rail.insertAdjacentHTML('beforeend', add.map(tileHtml).join(''));
+    return have + add.length;
+  };
   if (!hasApi) return;
-  /* "More on NIL TV": never repeats a tile from the feed, needs MIN_MORE */
+  var chan = document.getElementById('chan'), chanId = chan && chan.getAttribute('data-channel');
+  var chanDone = !chan ? Promise.resolve() :
+    getJson(cfg.apiBase + '/v1/content?channelId=' + encodeURIComponent(chanId) + '&limit=24').then(function(d){
+      var rail = chan.querySelector('.rail');
+      if (fill(rail, (d && d.items) || []) < MIN_FEED) return;
+      chan.hidden = false;
+      railArrows(rail);
+    }).catch(function(){});
+  /* "More on NIL TV": skipped when the channel rail is NIL TV itself; related
+     clips first, topped up from the network, RAIL_MAX tiles, needs MIN_MORE */
+  if (chanId === 'ch-niltv') return;
   var seed = '{{seed}}';
   var related = seed
-    ? getJson(cfg.apiBase + '/v1/content/' + seed).then(function(d){ var it = d && (d.item || d); return (it && it.related) || []; })
-    : getJson(cfg.apiBase + '/v1/content?channelId=ch-niltv&limit=12').then(function(d){ return (d && d.items) || []; });
-  Promise.all([related, feedDone]).then(function(res){
-    var rel = (res[0] || []).filter(function(x){ return x && x.id && !mine[x.id] && x.thumbUrl; }).slice(0, 6);
-    if (rel.length < MIN_MORE) return;
-    document.getElementById('moreRail').innerHTML = rel.map(tileHtml).join('');
+    ? getJson(cfg.apiBase + '/v1/content/' + seed).then(function(d){ var it = d && (d.item || d); return (it && it.related) || []; }).catch(function(){ return []; })
+    : Promise.resolve([]);
+  var network = getJson(cfg.apiBase + '/v1/content?channelId=ch-niltv&limit=24').then(function(d){ return (d && d.items) || []; }).catch(function(){ return []; });
+  Promise.all([related, network, chanDone]).then(function(res){
+    var rail = document.getElementById('moreRail');
+    if (fill(rail, (res[0] || []).concat(res[1] || [])) < MIN_MORE) { rail.innerHTML = ''; return; }
     document.getElementById('more').hidden = false;
-    railArrows(document.getElementById('moreRail'));
+    railArrows(rail);
   }).catch(function(){});
 })();
 </script>

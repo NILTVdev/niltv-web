@@ -61,6 +61,7 @@ POSTER = 'https://dr60jt51m7xh2.cloudfront.net/video/%s/poster.jpg'
 
 MIN_FEED = 3    # own reels for "{First}'s feed"; the channel top-up must reach it too
 MIN_MORE = 4    # tiles for "More on NIL TV"
+RAIL_MAX = 10   # channel and network rails always fill to this many tiles
 MIN_FACTS = 3   # class year + at least two more
 MAX_WALL = 4    # wall photos: 1, 2 or 4 (3 drops to 2 so the grid stays square)
 FACT_KEYS = [('Class', 'class_year'), ('Position', 'position'), ('Team', 'team'), ('Hometown', 'hometown'),
@@ -94,8 +95,7 @@ def socials_of(a):
 
 def ap_head(a):
     sub = ['<b>%s</b>' % esc(a['sport'])]
-    for k in ('position', 'team'):
-        if val(a, k): sub.append(esc(val(a, k)))
+    if val(a, 'position'): sub.append(esc(val(a, 'position')))
     if val(a, 'number'): sub.append('No. %s' % esc(val(a, 'number')))
     facts = facts_of(a)
     rows = ''.join('          <div class="fact"><div class="k">%s</div><div class="v">%s</div></div>\n' % (k, esc(v)) for k, v in facts)
@@ -117,41 +117,47 @@ def platcards(a):
     return '    <div class="platcards n%d">\n%s    </div>' % (len(socials), cards)
 
 def tile(r):
+    dur = '        <span class="dur">%s</span>\n' % fmt_dur(r['duration']) if r.get('duration') else ''
     return ('      <a class="tile" href="/watch/%s/">\n'
             '        <img src="%s" alt="" loading="lazy">\n'
-            '        <span class="dur">%s</span>\n'
+            '%s'
             '        %s\n'
             '        <div class="cap"><div class="t">%s</div></div>\n'
-            '      </a>\n' % (r['id'], POSTER % r['id'], fmt_dur(r['duration']), PLAY, esc(r['title'])))
+            '      </a>\n' % (r['id'], POSTER % r['id'], dur, PLAY, esc(r['title'])))
 
-def feed_section(a):
-    ch = a.get('channel'); reels = a.get('reels') or []
-    own = len(reels) >= MIN_FEED
-    if not own and not ch:
-        return '<!-- FEED : fewer than %d own reels and no campus channel, so no feed section -->' % MIN_FEED
-    # own feed: static and visible. Otherwise hidden; the page script tops it up
-    # from the channel and shows it only if the rail reaches MIN_FEED tiles.
-    chan_attr = '' if own else ' data-channel="%s" data-channel-name="%s" hidden' % (ch['id'], esc(ch['name']))
-    more = ('      <a class="more" id="feedMore" href="/channels/%s/">Everything on %s &rarr;</a>\n' % (ch['slug'], esc(ch['name']))) if ch else ''
-    title = "%s&rsquo;s feed" % esc(a['first']) if own else 'On %s' % esc(ch['name'])
-    if own:
-        kick = 'On %s' % esc(ch['name']) if ch else 'On NIL TV'
-    else:   # the heading already names the channel
-        kick = 'The network' if ch['id'] == 'ch-niltv' else '%s channel' % esc(a['school'])
-    return ('<!-- FEED: 1) %d+ of the athlete\'s own reels (static), 2) else their reels topped up from\n'
-            '     the campus channel by the script, shown only at %d+ tiles, 3) else no section. -->\n'
-            '<section class="feed" id="feed"%s>\n'
+def rail_section(sec_id, kick, title, more, tiles, attrs=''):
+    return ('<section class="feed" id="%s"%s>\n'
             '  <div class="wrap">\n'
             '    <div class="sec-head">\n'
             '      <div>\n'
             '        <p class="kick">%s</p>\n'
-            '        <h2 id="feedTitle">%s</h2>\n'
+            '        <h2>%s</h2>\n'
             '      </div>\n%s'
             '    </div>\n'
-            '    <div class="rail" id="feedRail">\n%s'
+            '    <div class="rail">\n%s'
             '    </div>\n'
             '  </div>\n'
-            '</section>' % (MIN_FEED, MIN_FEED, chan_attr, kick, title, more, ''.join(tile(r) for r in reels)))
+            '</section>' % (sec_id, attrs, kick, title, more, tiles))
+
+def feed_section(a):
+    """Video sections, the same pattern on every page:
+      1. "{First}'s feed": the athlete's own videos, all of them, when there are
+         MIN_FEED or more (static).
+      2. "On {channel}": the campus channel (NIL TV when the school has none),
+         filled to RAIL_MAX by the page script; an athlete with 1-2 own videos
+         gets them first in this rail. Shown only at MIN_FEED+ tiles.
+      3. "More on NIL TV" (template), skipped when rail 2 is already NIL TV."""
+    reels = a.get('reels') or []
+    own = len(reels) >= MIN_FEED
+    ch = a.get('channel') or {'id': 'ch-niltv', 'slug': 'niltv', 'name': 'NIL TV'}
+    out = []
+    if own:
+        out.append(rail_section('feed', 'On NIL TV', "%s&rsquo;s feed" % esc(a['first']), '', ''.join(tile(r) for r in reels)))
+    kick = 'The network' if ch['id'] == 'ch-niltv' else '%s channel' % esc(a['school'])
+    more = '      <a class="more" href="/channels/%s/">Everything on %s &rarr;</a>\n' % (ch['slug'], esc(ch['name']))
+    attrs = ' data-channel="%s" hidden' % ch['id']
+    out.append(rail_section('chan', kick, 'On %s' % esc(ch['name']), more, '' if own else ''.join(tile(r) for r in reels), attrs))
+    return '<!-- VIDEO RAILS: own feed (%d+), campus channel filled to %d, then More on NIL TV -->\n' % (MIN_FEED, RAIL_MAX) + '\n'.join(out)
 
 def about_section(a, wall_files):
     ab = a['about']
@@ -300,7 +306,7 @@ def build_page(a, tpl, strip=''):
                .replace('{{feed_section}}', feed_section(a))
                .replace('{{about_section}}', about_section(a, wall))
                .replace('{{seed}}', reels[0]['id'] if reels else '')
-               .replace('{{min_feed}}', str(MIN_FEED)).replace('{{min_more}}', str(MIN_MORE))
+               .replace('{{min_feed}}', str(MIN_FEED)).replace('{{min_more}}', str(MIN_MORE)).replace('{{rail_max}}', str(RAIL_MAX))
                .replace('{{mine}}', json.dumps({r['id']: 1 for r in reels})))
     assert '{{' not in page, 'unfilled placeholder in ' + a['slug']
     if strip:
@@ -400,14 +406,14 @@ def build_index(athletes, pills=None):
         out = '<button class="chip on" data-%s="">All</button>' % kind
         for v in vals: out += '<button class="chip" data-%s="%s">%s</button>' % (kind, esc(v), esc(v))
         return '    <div class="grp"><span class="lbl">%s</span>%s</div>\n' % (label, out)
-    groups = chips('school', 'School', schools) + chips('sport', 'Sport', sports)
+    groups = chips('sport', 'Sport', sports)   # no school filter
     filters = '  <div class="ath-filters">\n%s  </div>\n' % groups if groups else ''
     empty = 'No athletes match that filter yet.' if athletes else 'Athlete profiles open soon.'
     cards = ''
     for a in athletes:
         cards += ('    <a class="ath-card" href="/athletes/%s/" data-school="%s" data-sport="%s">\n'
                   '      <img src="/athletes/%s/photos/1.jpg" alt="%s" loading="lazy" style="object-position:%s">\n'
-                  '      <div class="cap"><div class="nm">%s</div><div class="ss">%s</div><div class="ss">%s</div>%s</div>\n'
+                  '      <div class="cap"><div class="nm">%s</div><div class="ss">%s NIL Athlete</div><div class="ss">%s</div>%s</div>\n'
                   '    </a>\n' % (a['slug'], esc(a['school']), esc(a['sport']), a['slug'], esc(a['name']), a['photos']['hero']['pos'],
                                   esc(a['name']), esc(a['school']), esc(a['sport']),
                                   (pills or {}).get(a['slug'], '')))

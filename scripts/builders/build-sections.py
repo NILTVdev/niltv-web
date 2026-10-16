@@ -318,15 +318,19 @@ def cells_ids(cells):
 import os as _os
 _tns = {}
 exec(io.open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "themed_rails.py"), encoding="utf-8").read(), _tns)
-THEMED, HOME_THEMED, FEAT_THEMED = _tns["THEMED"], _tns["HOME_THEMED"], _tns["FEAT_THEMED"]
-def themed_shelf(key, gold=False, exclude=None):
+THEMED, HOME_THEMED, FEAT_THEMED = _tns["THEMED"], _tns["HOME_CATEGORIES"], _tns["FEAT_THEMED"]
+RAIL_FLOOR = 8   # an editorial carousel never shows with fewer cells
+def themed_shelf(key, gold=False, exclude=None, floor=0):
     # exclude: canonical ids already claimed by earlier rails on the same
     # page (the featured live rails claim first) - a curated
     # entry that collides is simply skipped for this build.
+    # floor: below this many cells the rail renders nothing.
     title, sub, entries = THEMED[key]
     ex = exclude or set()
-    return shelf(title, sub, [reel_cell(v, c, t) for v, c, t in entries
-                              if _canon(v) not in ex], gold=gold)
+    cells = dedupe_cells([reel_cell(v, c, t) for v, c, t in entries if _canon(v) not in ex])
+    if len(cells) < floor:
+        return ""
+    return shelf(title, sub, cells, gold=gold)
 
 # Channel visibility rule: campus tiles and rails appear only once a
 # channel has at least CHANNEL_MIN_POSTS posts. Counts are live at every
@@ -486,8 +490,18 @@ def refresh_home():
     _sp_html = shelf("Sponsored Content", "", _sp_cells)
     t = _re.sub(r"<!-- AUTORAIL:sponsored -->.*?<!-- /AUTORAIL:sponsored -->",
                 (lambda h2: lambda m: "<!-- AUTORAIL:sponsored -->\n" + h2 + "\n<!-- /AUTORAIL:sponsored -->")(_sp_html), t, flags=_re.S)
+    # Timeless Category rails claim in render order: a clip the hero slides,
+    # Trending, the finalists or Sponsored already show is skipped, each clip
+    # lands in one rail, and a category under RAIL_FLOOR clips stays hidden
+    # until it fills.
+    _hero = t[t.index("<!-- HERO BILLBOARD"):t.index('<main class="shelves"')]
+    _claimed = {_canon(v) for v in _cell_id.findall(_hero + reel_html + _fin_html + _sp_html)}
+    _gold = True
     for _k in HOME_THEMED:
-        _html = themed_shelf(_k, gold=(_k == HOME_THEMED[0]))
+        _html = themed_shelf(_k, gold=_gold, exclude=_claimed, floor=RAIL_FLOOR)
+        if _html:
+            _gold = False
+            _claimed |= {_canon(v) for v in _cell_id.findall(_html)}
         t = _re.sub(r"<!-- AUTORAIL:theme-%s -->.*?<!-- /AUTORAIL:theme-%s -->" % (_k, _k),
                     (lambda h: lambda m: "<!-- AUTORAIL:theme-%s -->\n" % _k + h + "\n<!-- /AUTORAIL:theme-%s -->" % _k)(_html), t, flags=_re.S)
     # brand slider: title + slider. Leads the shelves, right under the

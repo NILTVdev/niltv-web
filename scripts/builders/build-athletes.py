@@ -312,7 +312,21 @@ def build_page(a, tpl, strip=''):
 DIR_CSS = """
 /* ---- athlete directory (build-athletes.py) ---- */
 .ath-filters{max-width:1280px;margin:0 auto 22px;padding:0 var(--gutter);display:grid;gap:12px}
-.ath-filters .grp{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ath-filters .grp{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;min-width:0}
+/* filter chips: one sliding row with edge arrows (shown only when there is more that way) */
+.chips-wrap{position:relative;flex:1;min-width:0}
+.chips{display:flex;gap:8px;overflow-x:auto;scroll-behavior:smooth;scrollbar-width:none;padding:2px 0}
+.chips::-webkit-scrollbar{display:none}
+.chips .chip{flex:0 0 auto;white-space:nowrap}
+.chip-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:32px;height:32px;border-radius:50%;border:1px solid var(--goldline);background:rgba(6,6,8,.92);color:var(--text);font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;visibility:hidden;transition:opacity .2s,background .2s,color .2s}
+.chip-arrow.prev{left:0}
+.chip-arrow.next{right:0}
+.chip-arrow.on{opacity:1;visibility:visible}
+.chip-arrow:hover{background:var(--gold);color:#060608}
+.chips-wrap::before,.chips-wrap::after{content:"";position:absolute;top:0;bottom:0;width:56px;pointer-events:none;opacity:0;transition:opacity .2s;z-index:1}
+.chips-wrap::before{left:0;background:linear-gradient(90deg,var(--bg),rgba(6,6,8,0))}
+.chips-wrap::after{right:0;background:linear-gradient(270deg,var(--bg),rgba(6,6,8,0))}
+.chips-wrap.more-left::before,.chips-wrap.more-right::after{opacity:1}
 .ath-filters .lbl{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-right:6px;min-width:52px}
 .chip{border:1px solid var(--border);background:transparent;color:var(--dim);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;transition:color .15s,border-color .15s}
 .chip:hover{color:var(--text)}
@@ -375,6 +389,28 @@ def wall_hero(athletes):
                   % (n, c['slug'], '' if n == 1 else ' tabindex="-1" aria-hidden="true"', c['slug'], c['photo'], c['pos'], extra))
     return '<section class="ath-hero" id="hero">\n  <div class="collage">%s</div>\n</section>' % cells
 
+CHIP_JS = r"""<script>
+/* filter chips: arrows slide the row; each arrow and edge fade shows only when
+   there is more that way; the selected chip is scrolled into view */
+(function(){
+  document.querySelectorAll(".chips-wrap").forEach(function(wrap){
+    var row = wrap.querySelector(".chips"), prev = wrap.querySelector(".chip-arrow.prev"), next = wrap.querySelector(".chip-arrow.next");
+    var update = function(){
+      var max = row.scrollWidth - row.clientWidth - 2;
+      prev.classList.toggle("on", row.scrollLeft > 2); wrap.classList.toggle("more-left", row.scrollLeft > 2);
+      next.classList.toggle("on", row.scrollLeft < max); wrap.classList.toggle("more-right", row.scrollLeft < max);
+    };
+    prev.addEventListener("click", function(){ row.scrollBy({left: -row.clientWidth * 0.7, behavior: "smooth"}); });
+    next.addEventListener("click", function(){ row.scrollBy({left: row.clientWidth * 0.7, behavior: "smooth"}); });
+    row.addEventListener("scroll", update, {passive: true});
+    window.addEventListener("resize", update);
+    var on = row.querySelector(".chip.on");
+    if (on && on.offsetLeft + on.offsetWidth > row.clientWidth) row.scrollLeft = on.offsetLeft - 40;
+    update();
+  });
+})();
+</script>"""
+
 def build_index(athletes, pills=None):
     s = io.open(INDEX, encoding='utf-8').read()
     # hero copy
@@ -400,7 +436,12 @@ def build_index(athletes, pills=None):
             return ''
         out = '<button class="chip on" data-%s="">All</button>' % kind
         for v in vals: out += '<button class="chip" data-%s="%s">%s</button>' % (kind, esc(v), esc(v))
-        return '    <div class="grp"><span class="lbl">%s</span>%s</div>\n' % (label, out)
+        # one row that slides; arrows show only when there is more that way
+        return ('    <div class="grp"><span class="lbl">%s</span><div class="chips-wrap">'
+                '<button type="button" class="chip-arrow prev" aria-label="Scroll filters back">&lsaquo;</button>'
+                '<div class="chips">%s</div>'
+                '<button type="button" class="chip-arrow next" aria-label="Scroll filters forward">&rsaquo;</button>'
+                '</div></div>\n' % (label, out))
     groups = chips('sport', 'Sport', sports)   # no school filter
     filters = '  <div class="ath-filters">\n%s  </div>\n' % groups if groups else ''
     empty = 'No athletes match that filter yet.' if athletes else 'Athlete profiles open soon.'
@@ -437,8 +478,9 @@ def build_index(athletes, pills=None):
             '  document.querySelectorAll(".chip").forEach(function(b){ b.addEventListener("click", function(){ if (b.dataset.school !== undefined) state.school = b.dataset.school; else state.sport = b.dataset.sport; apply(); }); });\n'
             '  apply();\n'
             '})();\n'
-            '</script>\n\n'
-            '</main>' % (filters, cards, empty))
+            '</script>\n'
+            '%s\n'
+            '</main>' % (filters, cards, empty, CHIP_JS))
     s2 = re.sub(r'<main class="shelves">.*?</main>', lambda m: main, s, count=1, flags=re.S)
     assert s2 != s or '<!-- ATHLETE DIRECTORY' in s, 'index: main block not replaced'
     io.open(INDEX, 'w', encoding='utf-8', newline='\n').write(s2)

@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Community Star | NIL TV</title>
-<meta name="description" content="Community Star is a national search for college athletes who show up for their community. Applications open Nov 2. Top 25 finalists announced Nov 25.">
+<title>NIL TV Community Star</title>
+<meta name="description" content="If you're a college athlete already doing something for a community you care about, you could receive a $5,000 grant to support a nonprofit or the community work you're already doing.">
 <link rel="canonical" href="https://dev.dkdfgvugisb3v.amplifyapp.com/communitystar/">
-<meta property="og:title" content="Community Star | NIL TV">
-<meta property="og:description" content="Community Star is a national search for college athletes who show up for their community. Applications open Nov 2. Top 25 finalists announced Nov 25.">
+<meta property="og:title" content="NIL TV Community Star">
+<meta property="og:description" content="If you're a college athlete already doing something for a community you care about, you could receive a $5,000 grant to support a nonprofit or the community work you're already doing.">
 <meta property="og:url" content="https://dev.dkdfgvugisb3v.amplifyapp.com/communitystar/">
 <meta property="og:image" content="https://dev.dkdfgvugisb3v.amplifyapp.com/assets/img/og-card.png">
 <meta property="og:type" content="website">
@@ -1135,62 +1135,270 @@ br.mbr{display:none}
   padding:12px 16px 2px;line-height:1}
 .athf-card .sp{font-size:11px;color:var(--dim);padding:0 16px 14px}
 
-/* ---------- COMMUNITY STAR (info page) ---------- */
-.cs-hero{position:relative;overflow:hidden;padding:120px 0 40px;isolation:isolate}
-.cs-hero + .shelves{margin-top:0;padding-top:4px}
-.cs-glow{position:absolute;z-index:-1;width:820px;height:820px;border-radius:50%;left:68%;top:50%;transform:translate(-50%,-50%);
-  background:radial-gradient(closest-side,rgba(217,178,91,.2),rgba(217,178,91,.05) 55%,transparent 75%);pointer-events:none}
-.cs-hero-in{max-width:1240px;margin:0 auto;padding:0 var(--gutter);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:center}
-.cs-hero .hero-kicker{margin-bottom:14px}
-.cs-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(54px,9vw,112px);line-height:.88;text-transform:uppercase;letter-spacing:.01em}
-.cs-dek{color:var(--dim);font-size:16px;max-width:44ch;margin:18px 0 0}
-.cs-ctas{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
-/* photo stack: three tilted 4:5 cards */
-.cs-stack{position:relative;height:clamp(380px,40vw,520px)}
-.cs-stack figure{position:absolute;margin:0;width:46%;aspect-ratio:4/5;border-radius:18px;overflow:hidden;
-  border:1px solid rgba(217,178,91,.35);box-shadow:0 28px 60px rgba(0,0,0,.65);background:#111}
-.cs-stack img{width:100%;height:100%;object-fit:cover}
-.cs-stack figure:nth-child(1){left:2%;top:12%;transform:rotate(-6deg)}
-.cs-stack figure:nth-child(2){left:27%;top:0;width:50%;z-index:2}
-.cs-stack figure:nth-child(3){right:2%;top:16%;transform:rotate(6deg)}
-.cs-stack figcaption{position:absolute;left:0;right:0;bottom:0;padding:26px 12px 10px;font-size:10px;font-weight:700;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--gold-bright);background:linear-gradient(to top,rgba(6,6,8,.9),rgba(6,6,8,0))}
-/* community videos: centered row above phone widths */
-@media (min-width:701px){
-  #community .rail{flex-wrap:wrap;justify-content:center;overflow:visible;scroll-snap-type:none}
+/* application form (shared with the old /communitystar/apply/ page) */
+.gf-req{font-size:12px;color:var(--red);margin-top:6px}
+.apply-form .q{display:flex;gap:14px;border:1px solid var(--border);background:rgba(23,23,28,.4);border-radius:14px;padding:20px 22px;margin-bottom:12px}
+.apply-form .qn{flex:none;width:28px;font-size:13px;color:var(--dim);padding-top:2px;font-variant-numeric:tabular-nums}
+.apply-form .qb{flex:1;min-width:0}
+.apply-form label,.apply-form .ql{display:block;font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px}
+.apply-form .mo{font-size:12px;font-style:italic;color:var(--dim);margin:-6px 0 10px}
+.apply-form input[type=text],.apply-form input[type=email],.apply-form input[type=tel],.apply-form input[type=url],.apply-form select,.apply-form textarea{
+  background:rgba(245,245,247,.06);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:10px;
+  font-family:inherit;font-size:13px;width:100%;max-width:420px}
+.apply-form textarea{max-width:none;min-height:96px;resize:vertical}
+.apply-form select option{color:#111}
+.apply-form input:-webkit-autofill,.apply-form input:-webkit-autofill:focus{-webkit-box-shadow:0 0 0 1000px #111116 inset;-webkit-text-fill-color:#f2f2f2;caret-color:#f2f2f2;transition:background-color 9999s ease-out 0s}
+.apply-form input:focus,.apply-form select:focus,.apply-form textarea:focus{outline:none;border-color:rgba(217,178,91,.6)}
+.apply-form .ovals{display:flex;flex-direction:column;gap:10px}
+.apply-form .ovals label{display:flex;gap:10px;align-items:center;font-weight:400;font-size:13.5px;margin:0;cursor:pointer;position:relative}
+.apply-form .ovals input{position:absolute;opacity:0;width:0;height:0}
+.apply-form .ovals span{width:30px;height:18px;border-radius:999px;border:1.5px solid var(--dim);flex:none;transition:background .15s,border-color .15s}
+.apply-form .ovals input:checked + span{background:var(--gold);border-color:var(--gold)}
+.apply-form .ovals input:focus-visible + span{outline:2px solid var(--gold);outline-offset:2px}
+.apply-form .chk{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:var(--dim);line-height:1.5;margin:0 0 12px;font-weight:400}
+.apply-form .chk input{margin-top:3px;flex:none;width:16px;height:16px;accent-color:var(--gold)}
+.apply-form .chk b{color:var(--text);font-weight:600}
+.apply-form .chk a{color:var(--gold-bright)}
+.apply-form .req{color:var(--gold)}
+.apply-form .hint{font-size:11.5px;color:var(--dim);margin:-4px 0 14px}
+.apply-form .submit-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:6px 0 60px}
+#apply-msg{font-size:12.5px;color:var(--red);min-height:18px}
+.apply-done{border:1px solid rgba(111,221,154,.45);background:rgba(23,23,28,.5);border-radius:14px;padding:26px;margin-bottom:60px}
+.apply-done h3{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:26px;text-transform:uppercase;margin-bottom:8px}
+.apply-done p{font-size:13px;color:var(--dim);margin-bottom:8px}
+.apply-done ol{font-size:13px;color:var(--dim);padding-left:20px;margin:6px 0 8px}
+.school-box{position:relative}
+.school-list{position:absolute;left:0;right:0;top:100%;z-index:20;margin:4px 0 0;padding:4px 0;list-style:none;max-height:260px;overflow:auto;background:#17171c;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,.5)}
+.school-list li{padding:8px 12px;font-size:13.5px;cursor:pointer;display:flex;justify-content:space-between;gap:12px}
+.school-list li small{color:var(--dim);white-space:nowrap}
+.school-list li:hover,.school-list li.on{background:rgba(217,178,91,.14)}
+.school-list li.none{color:var(--dim);cursor:default}
+.apply-done li{margin-bottom:4px}
+.apply-done pre{font-size:11px;line-height:1.45;color:var(--dim);background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:10px;padding:14px;overflow:auto;max-height:320px;margin-top:12px}
+
+/* ---------- COMMUNITY STAR (one URL, seven stages; brief of Oct 8) ----------
+   Look follows the campaign graphics: near-black card, warm gold glow from
+   the top, thin gold inset frame, faded star, Barlow Condensed headlines
+   split white and gold. Gold is the brief's #E8BD6E on this page only. */
+.cs-page{--gold:#e8bd6e;--gold-bright:#f2cf8c;--gold-light:#f1dcae;--frame:rgba(232,189,110,.42);--card:#0b0b0f}
+.cs-star{clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+
+/* hero */
+.csx-hero{padding:88px var(--gutter) 8px;
+  background:radial-gradient(110% 60% at 50% 0,rgba(232,189,110,.16),rgba(232,189,110,.04) 50%,rgba(6,6,8,0) 75%)}
+.csx-card{position:relative;overflow:hidden;isolation:isolate;max-width:1100px;margin:0 auto;border:1px solid var(--frame);
+  padding:40px 28px 38px;text-align:center;
+  background:linear-gradient(180deg,rgba(232,189,110,.12),rgba(11,11,15,0) 42%),var(--card)}
+.csx-bigstar{position:absolute;right:-7%;bottom:-16%;width:min(560px,72%);aspect-ratio:1;z-index:-1;background:rgba(232,189,110,.05)}
+.csx-brand{display:inline-block}
+.csx-brand img{height:38px;width:auto;margin:0 auto}
+.csx-tag{font-size:10.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold-light);margin-top:9px;font-weight:600}
+.csx-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;text-transform:uppercase;line-height:.86;letter-spacing:.005em;
+  font-size:clamp(56px,8vw,112px);margin:26px 0 0}
+.csx-title span{color:var(--gold)}
+.csx-dek{font-size:clamp(15px,1.45vw,18px);line-height:1.55;color:#d9d9df;max-width:52ch;margin:20px auto 0}
+.csx-dek b{color:var(--gold);font-weight:700}
+.csx-cta{margin-top:26px;display:flex;justify-content:center}
+.csx-cta[hidden]{display:none}
+.csx-btn{font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;padding:15px 34px}
+.csx-count{margin-top:24px}
+.csx-count[hidden]{display:none}
+.csx-count-lbl{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:10px}
+.csx-cells{display:inline-grid;grid-template-columns:repeat(4,minmax(66px,1fr));gap:8px}
+.csx-cells div{border:1px solid var(--frame);background:rgba(6,6,8,.6);padding:10px 6px 8px}
+.csx-cells b{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:34px;line-height:1;font-variant-numeric:tabular-nums}
+.csx-cells span{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-top:4px}
+.csx-note{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-top:12px;font-weight:600}
+.csx-note.solo{font-size:13px;color:var(--gold);margin-top:28px}
+.csx-note:empty{display:none}
+
+/* sections */
+.csx{max-width:1100px;margin:0 auto;padding:0 var(--gutter)}
+.csx-sec{padding-top:64px}
+.csx-sec[hidden]{display:none}
+.csx-h{font-family:'Barlow Condensed',sans-serif;font-weight:800;text-transform:uppercase;font-size:clamp(36px,4.6vw,58px);line-height:.92;margin-bottom:22px}
+.csx-h span{color:var(--gold)}
+.csx-h-sm{font-size:clamp(30px,3.4vw,42px);margin-bottom:12px}
+.csx-sub{font-size:14px;color:var(--dim);margin:-10px 0 22px}
+.csx-sub b{color:var(--gold-light);font-weight:600}
+.csx-copy{font-size:16px;color:#d9d9df;max-width:62ch;line-height:1.6}
+.csx-sample{display:inline-block;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#060608;background:var(--gold);padding:3px 8px;margin-left:8px;vertical-align:middle;font-weight:800}
+.csx-sub .csx-sample:first-child{margin-left:0}
+
+/* hosts and judges */
+.csx-hosts{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.csx-host{display:grid;grid-template-columns:148px 1fr;gap:20px;align-items:start;border:1px solid var(--frame);background:var(--card);padding:18px}
+.csx-host img{width:148px;height:148px;object-fit:cover;background:#111}
+.csx-host h3{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:30px;text-transform:uppercase;line-height:1;margin:2px 0 10px}
+.csx-host p{font-size:14.5px;color:#cfcfd6;line-height:1.55}
+
+/* who can apply */
+.csx-ticks li{display:flex;gap:14px;align-items:flex-start;font-size:17px;line-height:1.5;color:#ececf0;padding:16px 0;border-bottom:1px solid var(--border)}
+.csx-ticks li:first-child{border-top:1px solid var(--border)}
+.csx-ticks li::before{content:"";flex:none;width:18px;height:18px;margin-top:4px;background:var(--gold);
+  clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+
+/* where the $5,000 goes */
+.csx-grant{display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center;border:1px solid var(--frame);padding:30px 32px;
+  background:linear-gradient(180deg,rgba(232,189,110,.09),rgba(11,11,15,0) 60%),var(--card)}
+.csx-grant-fig{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(72px,9vw,118px);line-height:.85;color:var(--gold)}
+.csx-grant p{font-size:15px;color:#cfcfd6;line-height:1.6}
+.csx-grant p.lead{font-size:19px;color:#fff;font-weight:600;line-height:1.45;margin-bottom:12px}
+
+/* how to apply */
+.csx-steps{list-style:none;display:grid;gap:12px}
+.csx-steps li{display:flex;gap:16px;align-items:flex-start;border:1px solid var(--border);background:var(--card);padding:18px 20px;font-size:15.5px;line-height:1.6;color:#e4e4e9}
+.csx-steps .n{flex:none;width:34px;height:34px;display:grid;place-items:center;background:var(--gold);color:#060608;
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;line-height:1}
+.csx-steps .tx{flex:1;min-width:0}
+.csx-caption{margin-top:12px;display:flex;gap:10px 14px;align-items:center;flex-wrap:wrap;border:1px dashed var(--frame);padding:12px 14px;background:rgba(232,189,110,.05)}
+.csx-caption span{flex:1 1 240px;font-size:14px;color:var(--gold-light)}
+.csx-caption button{border:1px solid var(--frame);background:transparent;color:var(--text);font:700 11px 'Inter',sans-serif;letter-spacing:.14em;text-transform:uppercase;
+  padding:9px 14px;border-radius:999px;cursor:pointer}
+.csx-caption button:hover{background:var(--gold);color:#060608;border-color:var(--gold)}
+.csx-aside{margin-top:16px;font-size:15px;color:var(--gold-light)}
+
+/* the form below: notify (coming soon), application (open), closed */
+.csx-panel{border:1px solid var(--frame);padding:30px 30px 26px;
+  background:radial-gradient(90% 130% at 100% 0,rgba(232,189,110,.12),rgba(232,189,110,0) 60%),var(--card)}
+.csx-panel > p{font-size:15px;color:#cfcfd6}
+.csx-notify .row{display:flex;gap:10px;max-width:560px;margin:20px 0 16px}
+.csx-notify input[type=email]{flex:1;min-width:0;background:rgba(245,245,247,.06);border:1px solid var(--border);color:var(--text);
+  padding:13px 16px;border-radius:999px;font-family:inherit;font-size:16px}
+.csx-notify input[type=email]:focus{outline:none;border-color:var(--gold)}
+.csx-notify .chk{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:var(--dim);margin:0 0 10px;line-height:1.5}
+.csx-notify .chk input{margin-top:3px;width:16px;height:16px;accent-color:var(--gold);flex:none}
+.csx-notify .chk a{color:var(--gold-bright)}
+.csx-notify .msg{font-size:12.5px;color:var(--red);min-height:18px}
+.csx-done h3{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:32px;text-transform:uppercase;line-height:1;margin-bottom:8px}
+.csx-done p{font-size:14.5px;color:#cfcfd6;margin-bottom:8px}
+.csx-done b{color:var(--text)}
+.csx-done pre{font-size:11px;line-height:1.45;color:var(--dim);background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:10px;padding:14px;overflow:auto;max-height:300px;margin-top:10px}
+#csOpen .gf-req{margin:0 0 12px}
+.apply-form .q{border-radius:0;background:var(--card)}
+.apply-form input:focus,.apply-form select:focus,.apply-form textarea:focus{border-color:var(--gold)}
+.apply-form .at-wrap{position:relative;max-width:520px}
+.apply-form .at-wrap span{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:14px;pointer-events:none}
+.apply-form .at-wrap input{padding-left:28px!important}
+.apply-form .count{font-size:11.5px;color:var(--dim);text-align:right;margin-top:6px;font-variant-numeric:tabular-nums}
+.apply-form .count.over{color:var(--red)}
+.apply-form .q-opt .ql{margin-bottom:8px}
+.apply-form .q-opt .mo{margin:0 0 12px}
+.apply-form .submit-row{margin:6px 0 0}
+.apply-form .submit-row .btn{font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;padding:15px 34px}
+.apply-done{border-radius:0;margin-bottom:0}
+.apply-done h3{font-size:34px}
+.apply-done p{font-size:14.5px}
+.apply-done p b{color:var(--text)}
+
+/* how the 2 winners are chosen */
+.csx-flow{list-style:none;position:relative;padding-left:30px;display:grid;gap:18px}
+.csx-flow::before{content:"";position:absolute;left:7px;top:10px;bottom:10px;width:1px;background:var(--frame)}
+.csx-flow li{position:relative;font-size:16px;line-height:1.55;color:#e4e4e9}
+.csx-flow li::before{content:"";position:absolute;left:-30px;top:5px;width:15px;height:15px;background:var(--gold);
+  clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+.csx-flow b{color:var(--gold);font-weight:700}
+
+/* key dates */
+.csx-dates{list-style:none;border-top:1px solid var(--border)}
+.csx-dates li{display:grid;grid-template-columns:minmax(160px,250px) 1fr;gap:18px;padding:15px 0;border-bottom:1px solid var(--border);align-items:baseline;transition:opacity .2s}
+.csx-dates time{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:23px;text-transform:uppercase;color:var(--gold);line-height:1.1}
+.csx-dates span{font-size:15.5px;color:#e4e4e9}
+.csx-dates li.done{opacity:.4}
+.csx-dates li.next{box-shadow:inset 3px 0 0 var(--gold);padding-left:16px;background:linear-gradient(90deg,rgba(232,189,110,.08),rgba(232,189,110,0) 70%)}
+
+/* follow along */
+.csx-follow{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.csx-follow a{display:inline-flex;gap:10px;align-items:center;border:1px solid var(--frame);padding:12px 20px;border-radius:999px;font-weight:700;font-size:13px;letter-spacing:.06em;transition:background .18s,color .18s}
+.csx-follow a:hover{background:var(--gold);color:#060608;border-color:var(--gold)}
+.csx-follow svg{width:18px;height:18px}
+.csx-follow small{font-weight:500;color:var(--dim);letter-spacing:0}
+.csx-follow a:hover small{color:#060608}
+
+/* page footer line */
+.csx-foot{margin:64px 0 72px;padding-top:22px;border-top:1px solid var(--frame);display:flex;gap:10px 28px;flex-wrap:wrap;justify-content:center;font-size:13.5px;color:var(--dim)}
+.csx-foot a{color:var(--gold-bright);font-weight:600}
+
+/* finalists, leaderboard, winners (Nov 25 on) */
+.csx-fin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.csx-fin{border:1px solid var(--border);background:var(--card);padding:14px;display:flex;flex-direction:column;gap:12px}
+.csx-fin-top{display:flex;gap:12px;align-items:center}
+.csx-ph{flex:none;border:1px dashed var(--frame);display:grid;place-items:center;font-size:9px;letter-spacing:.14em;color:var(--gold);
+  text-transform:uppercase;text-align:center;overflow:hidden;background:rgba(232,189,110,.04)}
+.csx-ph img{width:100%;height:100%;object-fit:cover}
+.csx-fin .csx-ph{width:66px;height:66px}
+.csx-fin h3{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:23px;text-transform:uppercase;line-height:1}
+.csx-ss{font-family:'Barlow Condensed',sans-serif;font-size:14px;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin-top:4px;font-weight:600}
+.csx-cm{font-size:12.5px;color:var(--dim);margin-top:2px}
+.csx-fin .cause{font-size:13.5px;color:#d9d9df;line-height:1.45}
+.csx-vid{aspect-ratio:16/9;border:1px dashed var(--frame);display:grid;place-items:center;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);background:rgba(232,189,110,.03);text-align:center;padding:0 12px}
+.csx-vid iframe{width:100%;height:100%;border:0}
+.csx-fin .btn{width:100%;justify-content:center;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;padding:12px 18px;margin-top:auto}
+.csx-fin .btn[disabled]{background:transparent;color:var(--dim);border:1px solid var(--border);cursor:default;transform:none}
+.csx-vote{display:flex;flex-direction:column;gap:8px;margin-top:auto}
+.csx-vote .row{display:flex;gap:8px}
+.csx-vote input{flex:1;min-width:0;background:rgba(245,245,247,.06);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:999px;font-family:inherit;font-size:16px}
+.csx-vote .btn{width:auto;flex:none}
+.csx-vote p{font-size:12.5px;color:var(--gold-light);line-height:1.45}
+.csx-board{border:1px solid var(--frame);background:var(--card);padding:20px 24px 12px;margin-bottom:22px;max-width:620px}
+.csx-board h3{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.csx-live{width:8px;height:8px;border-radius:50%;background:#e0334a;box-shadow:0 0 0 0 rgba(224,51,74,.6);animation:csxpulse 1.6s infinite}
+@keyframes csxpulse{70%{box-shadow:0 0 0 8px rgba(224,51,74,0)}100%{box-shadow:0 0 0 0 rgba(224,51,74,0)}}
+.csx-board ol{list-style:none}
+.csx-board li{display:flex;gap:18px;align-items:center;padding:11px 0;border-bottom:1px solid var(--border)}
+.csx-board li:last-child{border-bottom:0}
+.csx-board .rk{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:32px;color:var(--gold);width:22px;line-height:1}
+.csx-board .nm{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:24px;text-transform:uppercase;line-height:1}
+.csx-winners{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.csx-win{border:1px solid var(--gold);padding:18px;background:linear-gradient(180deg,rgba(232,189,110,.14),rgba(11,11,15,0) 60%),var(--card)}
+.csx-win .csx-ph{width:100%;aspect-ratio:4/3;font-size:11px}
+.csx-win .k{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);font-weight:700;margin:16px 0 6px}
+.csx-win h3{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:38px;text-transform:uppercase;line-height:.95}
+.csx-win p{font-size:14.5px;color:#d9d9df;margin-top:8px}
+.csx-win p b{color:var(--gold)}
+
+/* stage preview bar (dev and local only, never on niltv.com) */
+.csx-stagebar{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:150;display:flex;gap:2px;align-items:center;
+  background:rgba(17,17,22,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--frame);border-radius:999px;padding:5px;
+  max-width:calc(100vw - 16px);overflow-x:auto;scrollbar-width:none;box-shadow:0 14px 40px rgba(0,0,0,.6)}
+.csx-stagebar::-webkit-scrollbar{display:none}
+.csx-stagebar span{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);padding:0 8px 0 10px;white-space:nowrap}
+.csx-stagebar button{border:0;background:transparent;color:var(--text);font:600 12px 'Inter',sans-serif;padding:7px 11px;border-radius:999px;white-space:nowrap;cursor:pointer}
+.csx-stagebar button:hover{background:rgba(232,189,110,.16)}
+.csx-stagebar button.on{background:var(--gold);color:#060608}
+.has-stagebar .footer{padding-bottom:84px}
+
+@media (max-width:820px){
+  .csx-hosts,.csx-winners{grid-template-columns:1fr}
+  .csx-grant{grid-template-columns:1fr;gap:14px;padding:24px 22px}
+  .csx-dates li{grid-template-columns:1fr;gap:3px}
 }
-/* giving back gallery */
-.cs-gallery{display:grid;grid-template-columns:1.1fr 1fr 1fr;grid-template-rows:auto auto;gap:12px;max-width:1240px;margin:0 auto;padding:6px var(--gutter) 10px}
-.cs-gallery figure{margin:0;border-radius:16px;overflow:hidden;border:1px solid var(--border);background:#111}
-.cs-gallery img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/5}
-.cs-gallery .big{grid-row:span 2}
-.cs-gallery .big img{aspect-ratio:auto}
-.cs-quote{grid-column:2 / span 2;display:flex;flex-direction:column;justify-content:center;border:1px solid rgba(217,178,91,.3);border-radius:16px;
-  padding:22px 26px;background:radial-gradient(90% 140% at 100% 0,rgba(217,178,91,.14),rgba(217,178,91,0) 60%),rgba(23,23,28,.4)}
-.cs-quote q{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(26px,3vw,38px);line-height:1;text-transform:uppercase;quotes:none}
-.cs-quote span{font-size:12px;color:var(--dim);margin-top:10px}
-.cs-state-line{font-size:12.5px;color:var(--dim);margin-top:14px}
-.cs-state-line b{color:var(--gold-bright);font-weight:600}
-.cs-rules{text-align:center;font-size:12.5px;color:var(--dim);margin:0 auto 70px;padding:0 var(--gutter)}
-.cs-rules a{color:var(--gold-bright)}
-.shelves.centered .faq{margin-bottom:24px}
-@media (max-width:900px){
-  .cs-hero-in{grid-template-columns:1fr;gap:26px}
-  .cs-glow{left:50%;top:70%}
-  .cs-stack{height:min(92vw,440px);max-width:520px;width:100%;margin:0 auto}
-}
-@media (max-width:700px){
-  .cs-hero{padding:96px 0 26px}
-  .cs-dek{font-size:14.5px}
-  .cs-gallery{grid-template-columns:1fr 1fr}
-  .cs-gallery .big{grid-row:auto;grid-column:span 2}
-  .cs-gallery .big img{aspect-ratio:4/5}
-  .cs-quote{grid-column:span 2}
+@media (max-width:600px){
+  .csx-hero{padding:76px 12px 4px}
+  .csx-card{padding:30px 16px 28px}
+  .csx-brand img{height:32px}
+  .csx-title{margin-top:24px}
+  .csx-cells{grid-template-columns:repeat(4,minmax(0,1fr));width:100%;max-width:340px}
+  .csx-cells b{font-size:30px}
+  .csx-sec{padding-top:52px}
+  .csx-host{grid-template-columns:96px 1fr;gap:14px;padding:14px}
+  .csx-host img{width:96px;height:96px}
+  .csx-host h3{font-size:25px;margin-bottom:6px}
+  .csx-host p{font-size:14px}
+  .csx-ticks li{font-size:16px}
+  .csx-steps li{padding:16px 14px;gap:12px;font-size:15px}
+  .csx-panel{padding:24px 16px 20px}
+  .csx-notify .row{flex-direction:column}
+  .csx-notify .row .btn{justify-content:center}
+  .csx-flow li{font-size:15.5px}
+  .apply-form .q{padding:16px 14px;gap:10px}
+  .apply-form .qn{width:22px}
+  .apply-form input[type=text],.apply-form input[type=email],.apply-form input[type=tel],.apply-form input[type=url],.apply-form select,.apply-form textarea{font-size:16px}
 }
 </style>
 <link rel="stylesheet" href="/assets/css/cinema-chrome.css">
 </head>
-<body>
+<body class="cs-page">
 <a class="skip-link" href="#main">Skip to content</a>
 
 <!-- NAV -->
@@ -1216,160 +1424,203 @@ br.mbr{display:none}
   <a href="/about/">About</a>
 </div>
 
-<section class="cs-hero" id="hero" aria-label="Community Star">
-  <div class="cs-glow" aria-hidden="true"></div>
-  <div class="cs-hero-in">
-   <div class="cs-copy">
-    <div class="hero-kicker">NIL TV</div>
-    <h1 class="cs-title">Community Star</h1>
-    <p class="cs-dek">A national search for college athletes who show up for their community. Show us where you make a difference. The top 25 finalists are announced Nov 25.</p>
-    <div class="cs-ctas">
-      <a class="btn btn-gold" id="csApply" href="/communitystar/apply/">Apply now</a>
-      <a class="btn btn-ghost" href="#how">How it works</a>
+<section class="csx-hero" id="hero" aria-label="NIL TV Community Star">
+  <div class="csx-card">
+    <div class="csx-bigstar cs-star" aria-hidden="true"></div>
+    <a class="csx-brand" href="/" aria-label="NIL TV home"><img src="/assets/img/niltv-logo.webp" alt="NIL TV" decoding="async"></a>
+    <p class="csx-tag">Real Name. Real Game. Real TV.</p>
+    <h1 class="csx-title">NIL TV<br>Community <span>Star</span></h1>
+    <p class="csx-dek">If you&rsquo;re a college athlete already doing something for a community you care about, you could receive a <b>$5,000 grant</b> to support a nonprofit or the community work you&rsquo;re already doing.</p>
+    <div class="csx-cta" id="csCta"><a class="btn btn-gold csx-btn" id="csBtn" href="#apply">Get notified</a></div>
+    <div class="csx-count" id="csCount">
+      <div class="csx-count-lbl" id="csCountLbl">Applications open in</div>
+      <div class="csx-cells" role="timer" aria-live="off">
+        <div><b id="cdD">00</b><span>Days</span></div>
+        <div><b id="cdH">00</b><span>Hrs</span></div>
+        <div><b id="cdM">00</b><span>Min</span></div>
+        <div><b id="cdS">00</b><span>Sec</span></div>
+      </div>
     </div>
-    <p class="cs-state-line" id="csStateLine">Applications open <b>Mon, Nov 2 at 9:00am ET</b>.</p>
-   </div>
-   <div class="cs-stack" aria-hidden="true">
-     <figure><img src="https://d1nm1d2txb83wa.cloudfront.net/library/communitystar/holiday-surprise.webp" alt="" decoding="async"><figcaption>Holiday surprise</figcaption></figure>
-     <figure><img src="https://d1nm1d2txb83wa.cloudfront.net/library/communitystar/giveback-2.webp" alt="" decoding="async"><figcaption>Giving back</figcaption></figure>
-     <figure><img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DSLY6ASE3aU/poster.jpg" alt="" decoding="async"><figcaption>Duke Children's</figcaption></figure>
-   </div>
+    <p class="csx-note" id="csNote">Mon, Nov 2 at 9am ET</p>
   </div>
 </section>
 
-<main class="shelves centered" id="main">
+<main class="csx" id="main">
 
-<section class="shelf" id="community">
-  <div class="shelf-head">
-    <h2 class="shelf-title">Community Looks Like This</h2>
-    <span class="shelf-sub">Athletes across the network, showing up off the field.</span>
+<!-- Dec 18 on: both winners featured at top -->
+<section class="csx-sec" id="winners" data-show="winners" hidden>
+  <h2 class="csx-h">Meet our <span>winners</span></h2>
+  <div class="csx-winners" id="winGrid"></div>
+</section>
+
+<!-- Nov 25 on: the 25 finalists (leaderboard on during voting, top 5 after) -->
+<section class="csx-sec" id="finalists" data-show="finalists voting top5 winners" hidden>
+  <h2 class="csx-h">Meet the <span>finalists</span></h2>
+  <p class="csx-sub" id="finSub"></p>
+  <div class="csx-board" id="board" hidden>
+    <h3 id="boardTitle"></h3>
+    <ol id="boardList"></ol>
   </div>
-  <div class="rail">
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18106477720644121/">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18106477720644121/poster.jpg" loading="lazy" decoding="async" alt="">
-        <span class="dur">1:05</span>
-      </a>
-      <p class="reel-caption">Holiday Surprise with Bruce Bolt</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DSLY6ASE3aU/">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DSLY6ASE3aU/poster.jpg" loading="lazy" decoding="async" alt="">
-        <span class="dur">0:52</span>
-      </a>
-      <p class="reel-caption">Sticks Up for Duke Children's</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DUUcvBrDN7m/">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DUUcvBrDN7m/poster.jpg" loading="lazy" decoding="async" alt="">
-        <span class="dur">0:51</span>
-      </a>
-      <p class="reel-caption">Patient Appreciation Day</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DWhvbuWkWYY/">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWhvbuWkWYY/poster.jpg" loading="lazy" decoding="async" alt="">
-        <span class="dur">1:10</span>
-      </a>
-      <p class="reel-caption">Bench to Beat Cancer</p>
-    </div>
+  <div class="csx-fin-grid" id="finGrid"></div>
+</section>
+
+<!-- 2. Your hosts and judges -->
+<section class="csx-sec" id="hosts">
+  <h2 class="csx-h">Your hosts and <span>judges</span></h2>
+  <div class="csx-hosts">
+    <article class="csx-host">
+      <img src="/assets/img/advisory/sion-james.webp" alt="Sion James" loading="lazy" decoding="async" style="object-position:50% 16%">
+      <div>
+        <h3>Sion James</h3>
+        <p>Charlotte Hornets guard who played at Tulane and Duke. He founded the Sion James Foundation, which strengthens local communities by supporting the disadvantaged groups within them.</p>
+      </div>
+    </article>
+    <article class="csx-host">
+      <img src="/assets/img/team/anthony-egbo.jpg" alt="Anthony Egbo" loading="lazy" decoding="async" style="object-position:50% 20%">
+      <div>
+        <h3>Anthony Egbo</h3>
+        <p>NIL TV Co-Founder, former Vice-Chair of NCAA Division I SAAC, and former Abilene Christian football captain. He volunteers in Abilene helping feed and clothe neighbors in need.</p>
+      </div>
+    </article>
   </div>
 </section>
 
-<section class="shelf" id="how" data-grid="phases">
-  <div class="shelf-head">
-    <h2 class="shelf-title">How to Apply</h2>
-    <span class="shelf-sub">Three steps. One application per email.</span>
-  </div>
-  <div class="rail">
-    <div class="phase-card">
-      <span class="ph">Step 1</span>
-      <span class="t">Post</span>
-      <p>Post your Community Star application on Instagram.</p>
-    </div>
-    <div class="phase-card">
-      <span class="ph">Step 2</span>
-      <span class="t">Collab</span>
-      <p>Invite @NILTV and @NILSTAR as collaborators on that post.</p>
-    </div>
-    <div class="phase-card">
-      <span class="ph">Step 3</span>
-      <span class="t">Apply</span>
-      <p>Fill out the <a href="/communitystar/apply/" style="color:var(--gold-bright)">application form</a> with the link to your post.</p>
-    </div>
-  </div>
+<!-- 3. Who can apply -->
+<section class="csx-sec" id="who" data-show="coming open">
+  <h2 class="csx-h">Who can <span>apply</span></h2>
+  <ul class="csx-ticks">
+    <li>Any current college athlete, any sport</li>
+    <li>You&rsquo;re already active in a community that matters to you: your college town or your hometown</li>
+  </ul>
 </section>
 
-<section class="shelf" id="timeline" data-grid="phases">
-  <div class="shelf-head">
-    <h2 class="shelf-title">Timeline</h2>
-  </div>
-  <div class="rail">
-    <div class="phase-card">
-      <span class="ph">Nov 2</span>
-      <span class="t">Applications Open</span>
-      <p>The form goes live Monday, November 2 at 9:00am ET.</p>
-    </div>
-    <div class="phase-card">
-      <span class="ph">Nov 23</span>
-      <span class="t">Applications Close</span>
-      <p>The last day to apply is Monday, November 23. The form closes at 11:59pm PT.</p>
-    </div>
-    <div class="phase-card">
-      <span class="ph">Nov 25</span>
-      <span class="t">Top 25 Announced</span>
-      <p>NIL TV reviews every application and announces the 25 finalists.</p>
+<!-- 4. Where the $5,000 goes -->
+<section class="csx-sec" id="grant">
+  <h2 class="csx-h">Where the <span>$5,000</span> goes</h2>
+  <div class="csx-grant">
+    <div class="csx-grant-fig" aria-hidden="true">$5,000</div>
+    <div>
+      <p class="lead">Two athletes will each receive a $5,000 grant to support a nonprofit or the community work they&rsquo;re already doing.</p>
+      <p>You have to already be active in your community, but you don&rsquo;t need your own nonprofit to apply. The winner&rsquo;s round 2 plan decides how the money is used.</p>
     </div>
   </div>
 </section>
 
-<section class="shelf" id="giving-back">
-  <div class="shelf-head">
-    <h2 class="shelf-title">Giving Back</h2>
-    <span class="shelf-sub">Thanksgiving 2025 on TrueBlueTV.</span>
+<!-- 5. How to apply -->
+<section class="csx-sec" id="how" data-show="coming open">
+  <h2 class="csx-h">How to <span>apply</span></h2>
+  <ol class="csx-steps">
+    <li><b class="n">1</b><div class="tx">Record a video, up to 90 seconds, vertical. Show us your name, school, sport, and community; what you&rsquo;re already doing there and why it matters to you; and how people can help. Close with: &ldquo;This is my application to be a NIL TV Community Star.&rdquo;</div></li>
+    <li><b class="n">2</b><div class="tx">Post it on your Instagram with the caption &ldquo;My application to be a NIL TV Community Star, a $5,000 grant for college athletes by @NILTV&rdquo; and invite @NILTV and @NILSTAR as collaborators.
+      <div class="csx-caption"><span id="capText">My application to be a NIL TV Community Star, a $5,000 grant for college athletes by @NILTV</span><button type="button" id="capCopy">Copy caption</button></div></div></li>
+    <li><b class="n">3</b><div class="tx">Fill out the form below with the link to your post.</div></li>
+  </ol>
+  <p class="csx-aside">A phone is all you need. Your video doesn&rsquo;t have to be polished.</p>
+</section>
+
+<!-- the form below: email signup before Nov 2, the application while open, closed after -->
+<section class="csx-sec" id="apply" data-show="coming open closed">
+  <div class="csx-panel" id="csNotify" hidden>
+    <h2 class="csx-h csx-h-sm">Applications open <span>Nov 2</span></h2>
+    <p>Get an email when the form opens Monday, November 2 at 9am ET.</p>
+    <form class="csx-notify" id="notifyForm" novalidate>
+      <div aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden"><label>Leave empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+      <div class="row">
+        <input type="email" id="notifyEmail" name="email" placeholder="Your email" autocomplete="email" aria-label="Email address" maxlength="200" required>
+        <button class="btn btn-gold csx-btn" type="submit" id="notifyBtn">Get notified</button>
+      </div>
+      <label class="chk"><input type="checkbox" name="confirmAge" required> <span>I am 18 or older and agree to get emails about Community Star. <a href="/legal/privacy/" target="_blank" rel="noopener">Privacy Policy</a></span></label>
+      <label class="chk"><input type="checkbox" name="consentEmail"> <span>Also email me about NIL TV competitions, content, and updates. Optional.</span></label>
+      <div class="msg" id="notifyMsg" role="status"></div>
+    </form>
+    <div class="csx-done" id="notifyDone" hidden></div>
   </div>
-  <div class="cs-gallery">
-    <figure class="big"><img src="https://d1nm1d2txb83wa.cloudfront.net/library/communitystar/giveback-1.webp" loading="lazy" decoding="async" alt=""></figure>
-    <figure><img src="https://d1nm1d2txb83wa.cloudfront.net/library/communitystar/giveback-6.webp" loading="lazy" decoding="async" alt=""></figure>
-    <figure><img src="https://d1nm1d2txb83wa.cloudfront.net/library/communitystar/giveback-4.webp" loading="lazy" decoding="async" alt=""></figure>
-    <div class="cs-quote"><q>When we serve others, we grow together.</q><span>From the TrueBlueTV post. Athletes packed and handed out care kits for neighbors in need.</span></div>
+
+  <div id="csOpen" hidden>
+    <h2 class="csx-h csx-h-sm">Your <span>application</span></h2>
+    <div class="gf-req">* Indicates required question</div>
+    <form class="apply-form" id="applyForm" novalidate>
+    <div aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden"><label>Leave empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+      <div class="q"><div class="qn">1.</div><div class="qb"><label for="q-fullName">Full name <span class="req">*</span></label><input type="text" id="q-fullName" name="fullName" required autocomplete="name" maxlength="120"></div></div>
+      <div class="q"><div class="qn">2.</div><div class="qb"><label for="q-email">Email <span class="req">*</span></label><div class="mo">One application per email. Your confirmation goes here.</div><input type="email" id="q-email" name="email" required autocomplete="email" maxlength="200"></div></div>
+      <div class="q"><div class="qn">3.</div><div class="qb"><label for="q-phone">Phone <span class="req">*</span></label><input type="tel" id="q-phone" name="phone" required autocomplete="tel" inputmode="tel" maxlength="30"></div></div>
+      <div class="q"><div class="qn">4.</div><div class="qb"><label for="q-school">School <span class="req">*</span></label><div class="mo">Start typing and pick your school from the list.</div><div class="school-box"><input type="text" id="q-school" name="school" required autocomplete="off" spellcheck="false" placeholder="e.g. Duke University" maxlength="160"><ul class="school-list" id="schoolList" hidden></ul></div><input type="hidden" id="q-schoolState" name="schoolState"><input type="hidden" id="q-schoolDomain" name="schoolDomain"></div></div>
+      <div class="q"><div class="qn">5.</div><div class="qb"><label for="q-sport">Sport <span class="req">*</span></label><input type="text" id="q-sport" name="sport" required maxlength="80" placeholder="e.g. Women's Soccer"></div></div>
+      <div class="q"><div class="qn">6.</div><div class="qb"><label for="q-classYear">Class year <span class="req">*</span></label><select id="q-classYear" name="classYear" required><option value="">Choose</option><option>Fr</option><option>So</option><option>Jr</option><option>Sr</option><option>Grad</option></select></div></div>
+      <div class="q"><div class="qn">7.</div><div class="qb"><label for="q-instagram">Instagram handle <span class="req">*</span></label><div class="at-wrap"><span aria-hidden="true">@</span><input type="text" id="q-instagram" name="instagram" required autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="31" placeholder="yourhandle"></div></div></div>
+      <div class="q"><div class="qn">8.</div><div class="qb"><label for="q-postUrl">Link to your application post <span class="req">*</span></label><div class="mo">Open the post on Instagram, tap Share, then Copy link.</div><input type="url" id="q-postUrl" name="postUrl" required inputmode="url" autocapitalize="off" spellcheck="false" placeholder="https://www.instagram.com/p/..." maxlength="300"></div></div>
+      <div class="q"><div class="qn">9.</div><div class="qb"><label for="q-community">Community you're focused on <span class="req">*</span></label><div class="mo">A city, a town, or a group.</div><input type="text" id="q-community" name="community" required maxlength="160"></div></div>
+      <div class="q"><div class="qn">10.</div><div class="qb"><label for="q-work">What you're already doing there <span class="req">*</span></label><textarea id="q-work" name="work" required rows="5" maxlength="500"></textarea><div class="count" id="workCount">0 / 500</div></div></div>
+      <div class="q"><div class="qn">11.</div><div class="qb"><label for="q-organization">Group or organization you do this work with, if any</label><input type="text" id="q-organization" name="organization" maxlength="160"></div></div>
+    <div class="q q-consent"><div class="qn">12.</div><div class="qb">
+      <div class="ql">Confirm <span class="req">*</span></div>
+      <label class="chk"><input type="checkbox" name="collabInvited" required> <span>I invited @NILTV and @NILSTAR as collaborators on my post <span class="req">*</span></span></label>
+      <label class="chk"><input type="checkbox" name="eligibleAndRules" required> <span>I'm a current college athlete and agree to the <a href="/communitystar/rules/" target="_blank" rel="noopener">official rules</a> <span class="req">*</span></span></label>
+      <label class="chk"><input type="checkbox" name="confirmAge" required> <span>I am 18 or older <span class="req">*</span></span></label>
+      <label class="chk"><input type="checkbox" name="consentPrivacy" required> <span>I have read the <a href="/legal/privacy/" target="_blank" rel="noopener">Privacy Policy</a>. NIL TV will email me about my application. <span class="req">*</span></span></label>
+    </div></div>
+
+    <div class="q q-consent q-opt"><div class="qn">13.</div><div class="qb">
+      <div class="ql">Stay in touch</div>
+      <div class="mo">Optional. Your application counts the same either way.</div>
+      <label class="chk"><input type="checkbox" name="consentEmail"> <span>Email me about NIL TV competitions, content, and updates.</span></label>
+      <label class="chk"><input type="checkbox" name="consentSms"> <span>Text me about NIL TV competitions and updates. Msg and data rates may apply. Reply STOP to opt out.</span></label>
+      <label class="chk"><input type="checkbox" name="consentPartners"> <span>Send me offers from NIL TV brand partners, and use my information for relevant partner marketing.</span></label>
+    </div></div>
+
+    <div class="submit-row"><button class="btn btn-gold" type="submit" id="applySubmit">Submit application</button><div id="apply-msg" role="status"></div></div>
+    </form>
+  </div>
+  <div class="csx-panel apply-done" id="applyDone" hidden></div>
+
+  <div class="csx-panel" id="csClosed" hidden>
+    <h2 class="csx-h csx-h-sm">Applications are <span>closed</span></h2>
+    <p>Applications are closed. Finalists announced Nov 25.</p>
   </div>
 </section>
 
-<div class="cta-band cta-band--peak" id="ready">
-  <div class="tx">
-    <h2>Have These Ready</h2>
-    <p>The form asks for a few basics and two short answers about your community.</p>
-    <ul class="pm-spec">
-      <li>Your school, sport, and class year</li>
-      <li>Your Instagram handle</li>
-      <li>The link to your application post</li>
-      <li>The community you're focused on: a city, a town, or a group</li>
-      <li>What you're already doing there, in 500 characters or less</li>
-      <li>Any group or organization you do this work with</li>
-    </ul>
-    <div class="cta-row"><a class="btn btn-gold" href="/communitystar/apply/">Go to the form</a></div>
+<!-- 6. How the 2 winners are chosen -->
+<section class="csx-sec" id="chosen">
+  <h2 class="csx-h">How the 2 winners are <span>chosen</span></h2>
+  <ol class="csx-flow">
+    <li><b>Round 1:</b> Sion and Anthony pick the top 25 finalists</li>
+    <li><b>Round 2:</b> finalists submit a second video, under 3 minutes, on their plan for the $5,000</li>
+    <li>Fans vote on NILTV.com, one vote per email, with a live leaderboard; the top 5 move on</li>
+    <li>Sion and Anthony choose the 2 winners from the top 5</li>
+    <li>NIL TV will follow both winners&rsquo; stories and share what the money made possible</li>
+  </ol>
+</section>
+
+<!-- 7. Key dates -->
+<section class="csx-sec" id="dates">
+  <h2 class="csx-h">Key <span>dates</span></h2>
+  <ol class="csx-dates" id="csDates">
+    <li data-at="2026-11-02T14:00:00Z"><time>Mon, Nov 2</time><span>Applications open</span></li>
+    <li data-at="2026-11-24T08:00:00Z"><time>Mon, Nov 23</time><span>Applications close</span></li>
+    <li data-at="2026-11-25T23:00:00Z"><time>Wed, Nov 25</time><span>Top 25 finalists announced</span></li>
+    <li data-at="2026-12-10T08:00:00Z"><time>Wed, Dec 9</time><span>Round 2 videos due</span></li>
+    <li data-at="2026-12-14T08:00:00Z"><time>Fri, Dec 11 to Sun, Dec 13</time><span>Fan voting (closes 11:59pm PT)</span></li>
+    <li data-at="2026-12-15T08:00:00Z"><time>Mon, Dec 14</time><span>Top 5 announced</span></li>
+    <li data-at="2026-12-19T08:00:00Z"><time>Fri, Dec 18</time><span>Winners announced</span></li>
+  </ol>
+</section>
+
+<!-- 8. Follow along -->
+<section class="csx-sec" id="follow">
+  <h2 class="csx-h">Follow <span>along</span></h2>
+  <p class="csx-copy">Instagram @NILTV and @NILSTAR, YouTube @NILTV. Follow all three so you don&rsquo;t miss the launch, the finalists, or the vote.</p>
+  <div class="csx-follow">
+    <a href="https://www.instagram.com/niltv" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>@NILTV <small>Instagram</small></a>
+    <a href="https://www.instagram.com/nilstar" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>@NILSTAR <small>Instagram</small></a>
+    <a href="https://www.youtube.com/@niltv" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="3.5"/><path d="M10 9.2l5 2.8-5 2.8z" fill="currentColor" stroke="none"/></svg>@NILTV <small>YouTube</small></a>
   </div>
-  <div class="pm-frame" aria-hidden="true" style="background-image:url('https://d1nm1d2txb83wa.cloudfront.net/library/communitystar/giveback-2.webp')">
-    <div class="pm-top"><i></i><span>yourhandle and 2 others<small>with niltv and nilstar</small></span></div>
-    <div class="pm-lower"><b>My Community Star application</b><span>Collab post</span></div>
-  </div>
+</section>
+
+<!-- 9. Footer -->
+<div class="csx-foot">
+  <a href="/communitystar/rules/">Official rules</a>
+  <span>Questions: message <a href="https://ig.me/m/niltv" target="_blank" rel="noopener">@NILTV on Instagram</a>.</span>
 </div>
-
-<section class="shelf" id="faq">
-  <div class="shelf-head">
-    <h2 class="shelf-title">Questions</h2>
-  </div>
-  <div class="faq">
-    <details><summary>Who can apply?</summary><p>Current college athletes who are 18 or older. The official rules have the full eligibility terms.</p></details>
-    <details><summary>Do I need a NIL TV account?</summary><p>No. Fill out the form with your email. You get a confirmation at that address.</p></details>
-    <details><summary>Can I apply more than once?</summary><p>No. There is one application per email.</p></details>
-    <details><summary>Where do I find my post link?</summary><p>Open your post on Instagram, tap Share, then Copy link. The form only accepts instagram.com links.</p></details>
-    <details><summary>How do I know my collab invite went through?</summary><p>Once @NILTV and @NILSTAR accept, both show as collaborators on your post. Send the invites when you post so they are in before you apply.</p></details>
-    <details><summary>When are finalists announced?</summary><p>The top 25 finalists are announced Nov 25.</p></details>
-  </div>
-</section>
-<p class="cs-rules">Read the <a href="/communitystar/rules/">official rules</a>.</p>
 
 </main>
 
@@ -2018,18 +2269,386 @@ document.querySelectorAll('.shelf').forEach(function(sh){
 });
 </script>
 <script>
-/* Community Star info page: the hero button and state line follow the
-   application window. */
+/* Community Star: one URL through seven stages (brief of Oct 8). The clock
+   picks the stage; nobody deploys at 9am on Nov 2. All times are UTC:
+     opens       Mon Nov 2   9:00am ET  (EST, after the Nov 1 clock change)
+     closes      Mon Nov 23 11:59pm PT
+     finalists   Wed Nov 25  6:00pm ET  (announcement time from the graphics)
+     voteOpens   Fri Dec 11  9:00am ET
+     voteCloses  Sun Dec 13 11:59pm PT
+     winners     Fri Dec 18  9:00am ET  (time not set yet; placeholder)
+   ?stage=coming|open|closed|finalists|voting|top5|winners previews a stage
+   on dev and locally, with a stage bar; niltv.com ignores it. The API is
+   what enforces the windows for real. */
 (function(){
-  var CS_OPENS=Date.parse('2026-11-02T14:00:00Z'),CS_CLOSES=Date.parse('2026-11-24T08:00:00Z');
-  var now = Date.now(), a = document.getElementById('csApply'), l = document.getElementById('csStateLine');
-  if (now >= CS_CLOSES) {
-    a.textContent = 'See the timeline'; a.setAttribute('href', '#timeline');
-    l.innerHTML = 'Applications are closed. <b>Finalists announced Nov 25.</b>';
-  } else if (now >= CS_OPENS) {
-    l.innerHTML = 'Applications are open until <b>Mon, Nov 23 at 11:59pm PT</b>.';
-  } else {
-    a.textContent = 'Get ready to apply';
+  var T = {
+    opens: Date.parse('2026-11-02T14:00:00Z'),
+    closes: Date.parse('2026-11-24T08:00:00Z'),
+    finalists: Date.parse('2026-11-25T23:00:00Z'),
+    voteOpens: Date.parse('2026-12-11T14:00:00Z'),
+    voteCloses: Date.parse('2026-12-14T08:00:00Z'),
+    winners: Date.parse('2026-12-18T14:00:00Z')
+  };
+  var STAGES = ['coming', 'open', 'closed', 'finalists', 'voting', 'top5', 'winners'];
+  var LABELS = {coming: 'Coming soon', open: 'Open', closed: 'Closed', finalists: 'Finalists', voting: 'Voting', top5: 'Top 5', winners: 'Winners'};
+  /* a moment inside each stage, so previews show real countdowns and dates */
+  var SAMPLE = {coming: '2026-10-20T16:00:00Z', open: '2026-11-10T16:00:00Z', closed: '2026-11-24T16:00:00Z',
+    finalists: '2026-12-01T16:00:00Z', voting: '2026-12-12T16:00:00Z', top5: '2026-12-15T16:00:00Z', winners: '2026-12-19T16:00:00Z'};
+  var HERO = {
+    coming:    {btn: 'Get notified', href: '#apply', count: T.opens, lbl: 'Applications open in', note: 'Mon, Nov 2 at 9am ET'},
+    open:      {btn: 'Apply now', href: '#apply', count: T.closes, lbl: 'Applications close in', note: 'Mon, Nov 23 at 11:59pm PT'},
+    closed:    {note: 'Finalists announced Nov 25.'},
+    finalists: {btn: 'Meet the finalists', href: '#finalists', note: 'Voting opens Dec 11'},
+    voting:    {btn: 'Vote now', href: '#finalists', note: 'Voting closes Sun, Dec 13, 11:59pm PT'},
+    top5:      {note: 'Winners announced Dec 18.'},
+    winners:   {}
+  };
+  var PROD = /^(www\.)?niltv\.com$/.test(location.hostname);
+  var cfg = window.NILTV_CONFIG || {};
+  var offset = 0, stage = null, preview = false;
+  function now(){ return Date.now() + offset; }
+  function stageAt(t){
+    if (t < T.opens) return 'coming';
+    if (t < T.closes) return 'open';
+    if (t < T.finalists) return 'closed';
+    if (t < T.voteOpens) return 'finalists';
+    if (t < T.voteCloses) return 'voting';
+    if (t < T.winners) return 'top5';
+    return 'winners';
+  }
+  function $(id){ return document.getElementById(id); }
+  function esc(v){ return String(v == null ? '' : v).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+
+  /* ---- finalists: sample cards until the team adds the real 25 ---- */
+  var FINALISTS = window.CS_FINALISTS || [];
+  var sample = !FINALISTS.length;
+  if (sample) for (var i = 0; i < 25; i++) FINALISTS.push({name: 'Athlete Name', school: 'School', sport: 'Sport',
+    community: 'City, State', cause: 'One line on what they are doing.', photo: '', youtube: ''});
+  var TOP5 = FINALISTS.slice(0, 5), WINNERS = FINALISTS.slice(0, 2);
+  function photo(f, label){ return '<div class="csx-ph">' + (f.photo ? '<img src="' + esc(f.photo) + '" alt="" loading="lazy">' : label) + '</div>'; }
+  function renderFinalists(){
+    var vote = stage === 'voting', before = stage === 'finalists';
+    $('finGrid').innerHTML = FINALISTS.map(function(f, n){
+      var vid = f.youtube
+        ? '<div class="csx-vid"><iframe src="https://www.youtube-nocookie.com/embed/' + esc(f.youtube) + '" title="' + esc(f.name) + ' round 2 video" loading="lazy" allowfullscreen></iframe></div>'
+        : '<div class="csx-vid">Round 2 video posts Dec 10</div>';
+      var btn = vote ? '<button class="btn btn-gold" type="button" data-vote="' + n + '">Vote</button>'
+        : before ? '<button class="btn" type="button" disabled>Voting opens Dec 11.</button>' : '';
+      return '<article class="csx-fin"><div class="csx-fin-top">' + photo(f, 'Photo') + '<div><h3>' + esc(f.name) + '</h3>' +
+        '<div class="csx-ss">' + esc(f.school) + ' &middot; ' + esc(f.sport) + '</div><div class="csx-cm">' + esc(f.community) + '</div></div></div>' +
+        '<p class="cause">' + esc(f.cause) + '</p>' + vid + btn + '</article>';
+    }).join('');
+    var b = $('board');
+    b.hidden = !(stage === 'voting' || stage === 'top5');
+    $('boardTitle').innerHTML = stage === 'voting' ? '<i class="csx-live"></i>Live leaderboard' : 'The top 5';
+    $('boardList').innerHTML = TOP5.map(function(f, n){ return '<li><span class="rk">' + (n + 1) + '</span><span class="nm">' + esc(f.name) + '</span></li>'; }).join('');
+    $('winGrid').innerHTML = WINNERS.map(function(f){
+      return '<article class="csx-win">' + photo(f, 'Winner photo') + '<div class="k">NIL TV Community Star</div><h3>' + esc(f.name) + '</h3>' +
+        '<div class="csx-ss">' + esc(f.school) + ' &middot; ' + esc(f.sport) + ' &middot; ' + esc(f.community) + '</div>' +
+        '<p><b>$5,000</b> for ' + esc(f.cause.replace(/\.$/, '').toLowerCase()) + '</p></article>';
+    }).join('');
+    var sub = {finalists: 'Chosen by Sion James and Anthony Egbo. Voting opens <b>Fri, Dec 11 at 9am ET</b>.',
+      voting: 'One vote per email. Voting closes <b>Sun, Dec 13 at 11:59pm PT</b>.',
+      top5: 'Voting is closed. Sion and Anthony choose the 2 winners from the top 5.', winners: ''}[stage] || '';
+    if (sample && preview) sub += '<span class="csx-sample">Sample cards</span>';
+    $('finSub').innerHTML = sub;
+    $('finSub').hidden = !sub;
+  }
+  /* voting (Dec 4 build): the email gets a link to a page with a Confirm my
+     vote button; opening the link alone never counts (mail scanners click) */
+  $('finGrid').addEventListener('click', function(e){
+    var b = e.target.closest('[data-vote]');
+    if (!b) return;
+    var box = document.createElement('form');
+    box.className = 'csx-vote';
+    box.noValidate = true;
+    box.innerHTML = '<div class="row"><input type="email" placeholder="Your email" aria-label="Your email" autocomplete="email" required><button class="btn btn-gold" type="submit">Vote</button></div><p></p>';
+    b.replaceWith(box);
+    box.querySelector('input').focus();
+    box.addEventListener('submit', function(ev){
+      ev.preventDefault();
+      var v = box.querySelector('input').value.trim();
+      var p = box.querySelector('p');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) { p.textContent = 'Please enter a valid email.'; return; }
+      box.querySelector('.row').remove();
+      p.innerHTML = 'Check <b>' + esc(v) + '</b>. Your vote counts when you tap Confirm my vote in that email.' + (cfg.communityStarVoteApi ? '' : ' (Demo mode: nothing was sent.)');
+    });
+  });
+
+  /* ---- render one stage ---- */
+  var formReady = false;
+  function render(s){
+    stage = s;
+    var h = HERO[s];
+    $('csCta').hidden = !h.btn;
+    if (h.btn) { $('csBtn').textContent = h.btn; $('csBtn').setAttribute('href', h.href); }
+    $('csCount').hidden = !h.count;
+    if (h.count) $('csCountLbl').textContent = h.lbl;
+    $('csNote').textContent = h.note || '';
+    $('csNote').classList.toggle('solo', !h.btn);
+    document.querySelectorAll('[data-show]').forEach(function(sec){
+      sec.hidden = sec.getAttribute('data-show').split(' ').indexOf(s) < 0;
+    });
+    $('csNotify').hidden = s !== 'coming';
+    $('csClosed').hidden = s !== 'closed';
+    var applied = !$('applyDone').hidden;
+    $('csOpen').hidden = s !== 'open' || applied;
+    if (s !== 'open') $('applyDone').hidden = true;
+    if (s === 'open' && !formReady) { formReady = true; csInitForm(); }
+    if (['finalists', 'voting', 'top5', 'winners'].indexOf(s) >= 0) renderFinalists();
+    var t = now(), next = false;
+    document.querySelectorAll('#csDates li').forEach(function(li){
+      var done = t >= Date.parse(li.getAttribute('data-at'));
+      li.classList.toggle('done', done);
+      li.classList.toggle('next', !done && !next);
+      if (!done) next = true;
+    });
+    document.querySelectorAll('.csx-stagebar button').forEach(function(b){
+      b.classList.toggle('on', (b.getAttribute('data-stage') || '') === (preview ? s : ''));
+    });
+    tick();
+  }
+  function tick(){
+    var h = HERO[stage];
+    if (!h.count) return;
+    var ms = Math.max(0, h.count - now()), s = Math.floor(ms / 1000);
+    $('cdD').textContent = pad(Math.floor(s / 86400));
+    $('cdH').textContent = pad(Math.floor(s % 86400 / 3600));
+    $('cdM').textContent = pad(Math.floor(s % 3600 / 60));
+    $('cdS').textContent = pad(s % 60);
+    if (ms === 0 && !preview) render(stageAt(now()));
+  }
+  setInterval(tick, 1000);
+  /* a tab left open across a boundary (e.g. 6pm ET on Nov 25) moves on */
+  setInterval(function(){ if (!preview && stageAt(now()) !== stage) render(stageAt(now())); }, 30000);
+
+  function go(s){
+    preview = !!s;
+    offset = s ? Date.parse(SAMPLE[s]) - Date.now() : 0;
+    render(s || stageAt(now()));
+  }
+
+  /* ---- stage bar: dev and local only ---- */
+  var q = (location.search.match(/[?&]stage=([a-z0-9]+)/) || [])[1];
+  if (!PROD) {
+    var bar = document.createElement('div');
+    bar.className = 'csx-stagebar';
+    bar.setAttribute('aria-label', 'Preview a stage');
+    bar.innerHTML = '<span>Preview</span><button type="button" data-stage="">Today</button>' +
+      STAGES.map(function(s){ return '<button type="button" data-stage="' + s + '">' + LABELS[s] + '</button>'; }).join('');
+    document.body.appendChild(bar);
+    document.body.classList.add('has-stagebar');
+    bar.addEventListener('click', function(e){
+      var b = e.target.closest('button');
+      if (!b) return;
+      var s = b.getAttribute('data-stage');
+      history.replaceState(null, '', location.pathname + (s ? '?stage=' + s : '') + location.hash);
+      go(s);
+    });
+  }
+  go(!PROD && STAGES.indexOf(q) >= 0 ? q : '');
+
+  /* ---- hero button: smooth scroll; Get notified focuses the email field ---- */
+  $('csBtn').addEventListener('click', function(e){
+    var target = document.querySelector(this.getAttribute('href'));
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView({behavior: 'smooth', block: 'start'});
+    if (stage === 'coming') setTimeout(function(){ $('notifyEmail').focus({preventScroll: true}); }, 450);
+  });
+
+  /* ---- copy caption ---- */
+  $('capCopy').addEventListener('click', function(){
+    var b = this, txt = $('capText').textContent;
+    function ok(){ b.textContent = 'Copied'; setTimeout(function(){ b.textContent = 'Copy caption'; }, 1800); }
+    if (navigator.clipboard) navigator.clipboard.writeText(txt).then(ok, function(){});
+    else { var r = document.createRange(); r.selectNodeContents($('capText')); var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
+  });
+
+  /* ---- coming soon: email signup. Posts to communityStarNotifyApi; empty =
+     demo mode. Same export as the applications (brief, Admin). ---- */
+  var nf = $('notifyForm');
+  nf.addEventListener('submit', function(e){
+    e.preventDefault();
+    var m = $('notifyMsg'), email = nf.elements.email.value.trim().toLowerCase();
+    m.textContent = '';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { nf.elements.email.focus(); m.textContent = 'Please enter a valid email.'; return; }
+    if (!nf.elements.confirmAge.checked) { m.textContent = 'Please tick the first box to confirm.'; return; }
+    var body = {email: email, confirmAge: true, consentEmail: !!nf.elements.consentEmail.checked, website: nf.elements.website.value,
+      program: 'community-star', season: '2026', kind: 'notify', source: 'communitystar', consentVersion: '2026-10-20',
+      submittedAt: new Date().toISOString()};
+    var utm = {};
+    location.search.replace(/[?&](utm_[a-z]+)=([^&]*)/g, function(_, k, v){ utm[k] = decodeURIComponent(v); });
+    if (Object.keys(utm).length) body.utm = utm;
+    function done(mode){
+      nf.hidden = true;
+      var d = $('notifyDone');
+      d.hidden = false;
+      d.innerHTML = '<h3>You&rsquo;re on the list</h3><p>We&rsquo;ll email <b>' + esc(email) + '</b> when applications open Monday, Nov 2 at 9am ET.</p>' +
+        (mode === 'demo' ? '<p><b>Demo mode.</b> No backend is connected on this environment. This is what the signup endpoint would store:</p><pre>' + esc(JSON.stringify(body, null, 2)) + '</pre>' : '');
+      if (window.gtag) gtag('event', 'community_star_notify', {mode: mode});
+    }
+    if (!cfg.communityStarNotifyApi) { done('demo'); return; }
+    $('notifyBtn').disabled = true;
+    fetch(cfg.communityStarNotifyApi, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)})
+    .then(function(r){
+      if (r.status === 429) { $('notifyBtn').disabled = false; m.textContent = 'Too many tries from this connection. Wait a bit and try again.'; return; }
+      if (!r.ok && r.status !== 409) throw new Error('http ' + r.status);
+      done('live');
+    }).catch(function(){ $('notifyBtn').disabled = false; m.textContent = 'Could not send. Check your connection and try again.'; });
+  });
+
+  /* ---- open: the application form (moved here from /communitystar/apply/) ---- */
+  function csInitForm(){
+  var form = $('applyForm'), msg = $('apply-msg'), done = $('applyDone'), btn = $('applySubmit');
+  function say(text){ msg.textContent = text; }
+  /* ---- school search (same list and ranking as /athlete-signup/) ---- */
+  var schools = null, loading = null;
+  var uni = document.getElementById('q-school');
+  var list = document.getElementById('schoolList');
+  var uniDomain = document.getElementById('q-schoolDomain');
+  var uniState = document.getElementById('q-schoolState');
+  var picked = '';
+  function loadSchools(){
+    if (schools || loading) return loading;
+    loading = fetch('/athlete-signup/schools.json').then(function(r){ return r.json(); }).then(function(d){ schools = d; return d; }).catch(function(){ schools = []; return schools; });
+    return loading;
+  }
+  function norm(v){ return String(v || '').toLowerCase().replace(/[^a-z0-9& ]+/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function rank(q, sch){
+    var name = norm(sch.n), alias = norm(sch.a);
+    if (!q) return 0;
+    if (name === q) return 100;
+    if (alias && alias.split('|').indexOf(q) >= 0) return 95;
+    if (name.indexOf(q) === 0) return 80;
+    if (alias && alias.indexOf(q) === 0) return 75;
+    var words = name.split(' ');
+    for (var i = 0; i < words.length; i++) if (words[i].indexOf(q) === 0) return 60 - i;
+    if (alias && alias.indexOf(q) >= 0) return 40;
+    if (name.indexOf(' ' + q) >= 0) return 30;
+    return 0;
+  }
+  function search(qraw){
+    var q = norm(qraw);
+    if (q.length < 2) return [];
+    var out = [];
+    for (var i = 0; i < schools.length; i++) { var r = rank(q, schools[i]); if (r > 0) out.push([r, schools[i]]); }
+    out.sort(function(a, b){ return b[0] - a[0] || a[1].n.localeCompare(b[1].n); });
+    return out.slice(0, 8).map(function(x){ return x[1]; });
+  }
+  var cur = -1, items = [];
+  function paint(){
+    list.innerHTML = '';
+    if (!items.length) { list.hidden = true; return; }
+    items.forEach(function(sch, i){
+      var li = document.createElement('li');
+      if (sch.none) { li.className = 'none'; li.textContent = 'No match. Type your school\'s full name and we will match it by hand.'; }
+      else {
+        li.innerHTML = '<span>' + esc(sch.n) + '</span><small>' + esc((sch.c ? sch.c + ', ' : '') + sch.s) + '</small>';
+        li.addEventListener('mousedown', function(e){ e.preventDefault(); choose(sch); });
+      }
+      if (i === cur) li.className += ' on';
+      list.appendChild(li);
+    });
+    list.hidden = false;
+  }
+  function choose(sch){
+    picked = sch.n; uni.value = sch.n; uniDomain.value = sch.d || ''; uniState.value = sch.s || '';
+    items = []; cur = -1; paint();
+  }
+  uni.addEventListener('focus', function(){ loadSchools(); });
+  uni.addEventListener('input', function(){
+    picked = ''; uniDomain.value = ''; uniState.value = '';
+    loadSchools().then(function(){
+      var q = uni.value;
+      items = search(q);
+      if (!items.length && norm(q).length >= 3) items = [{ none: true }];
+      cur = -1; paint();
+    });
+  });
+  uni.addEventListener('keydown', function(e){
+    if (list.hidden) return;
+    if (e.key === 'ArrowDown') { cur = Math.min(cur + 1, items.length - 1); paint(); e.preventDefault(); }
+    else if (e.key === 'ArrowUp') { cur = Math.max(cur - 1, 0); paint(); e.preventDefault(); }
+    else if (e.key === 'Enter' && cur >= 0 && !items[cur].none) { choose(items[cur]); e.preventDefault(); }
+    else if (e.key === 'Escape') { items = []; paint(); }
+  });
+  uni.addEventListener('blur', function(){ setTimeout(function(){ items = []; paint(); }, 120); });
+
+  /* ---- field helpers ---- */
+  var ig = document.getElementById('q-instagram');
+  ig.addEventListener('input', function(){ var v = ig.value.replace(/^\s*@+/, '').replace(/\s+/g, ''); if (v !== ig.value) ig.value = v; });
+  var work = document.getElementById('q-work'), count = document.getElementById('workCount');
+  function tally(){ var n = work.value.length; count.textContent = n + ' / 500'; count.classList.toggle('over', n >= 500); }
+  work.addEventListener('input', tally); tally();
+
+  var HANDLE = /^[A-Za-z0-9._]{1,30}$/;
+  var POST = /^https?:\/\/(www\.|m\.)?instagram\.com\/(?:[A-Za-z0-9._]+\/)?(p|reel|reels|tv)\/([A-Za-z0-9_-]+)\/?(?:[?#].*)?$/i;
+  function cleanPost(v){
+    var m = String(v).trim().match(POST);
+    return m ? 'https://www.instagram.com/' + (m[2].toLowerCase() === 'reels' ? 'reel' : m[2].toLowerCase()) + '/' + m[3] + '/' : '';
+  }
+  function digits(v){ return String(v).replace(/\D+/g, ''); }
+
+  /* ---- submit ---- */
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    say('');
+    var bad = form.querySelector(':invalid');
+    if (bad){
+      bad.focus();
+      say(bad.type === 'checkbox' ? 'Please tick the required boxes.' : (bad.type === 'email' ? 'Please enter a valid email.' : (bad.type === 'url' ? 'Paste the full post link, starting with https://' : 'Please fill in the required fields.')));
+      return;
+    }
+    var d = digits(form.elements.phone.value);
+    if (d.length < 10 || d.length > 15){ form.elements.phone.focus(); say('Please enter a phone number with area code.'); return; }
+    if (!HANDLE.test(ig.value)){ ig.focus(); say('Instagram handles use letters, numbers, periods, and underscores only.'); return; }
+    var post = cleanPost(form.elements.postUrl.value);
+    if (!post){ form.elements.postUrl.focus(); say('The post link must be an instagram.com post or reel link.'); return; }
+
+    var fd = new FormData(form), body = {};
+    fd.forEach(function(v, k){ v = typeof v === 'string' ? v.trim() : v; if (v !== '') body[k] = v; });
+    ['collabInvited','eligibleAndRules','confirmAge','consentPrivacy','consentEmail','consentSms','consentPartners'].forEach(function(k){ body[k] = !!form.elements[k].checked; });
+    body.email = body.email.toLowerCase();
+    body.instagram = '@' + ig.value.toLowerCase();
+    body.postUrl = post;
+    body.schoolMatched = !!picked;
+    body.program = 'community-star';
+    body.season = '2026';
+    body.source = 'communitystar';
+    body.consentVersion = '2026-10-11';
+    body.submittedAt = new Date().toISOString();
+    body.userAgent = navigator.userAgent;
+    var utm = {};
+    location.search.replace(/[?&](utm_[a-z]+)=([^&]*)/g, function(_, k, v){ utm[k] = decodeURIComponent(v); });
+    if (Object.keys(utm).length) body.utm = utm;
+
+    btn.disabled = true;
+    function finish(mode){
+      document.getElementById('csOpen').hidden = true;
+      done.hidden = false;
+      done.innerHTML =
+        '<h3>You\'re in!</h3>' +
+        '<p>Make sure <b>@NILTV</b> and <b>@NILSTAR</b> accepted your collab invite. Finalists are announced Nov 25.</p>' +
+        '<p>We sent a copy of this to <b>' + esc(body.email) + '</b>.</p>' +
+        (mode === 'demo'
+          ? '<p><b>Demo mode.</b> No backend is connected on this environment. This is the payload the Community Star endpoint would store:</p><pre>' + esc(JSON.stringify(body, null, 2)) + '</pre>'
+          : '');
+      done.scrollIntoView({behavior:'smooth', block:'start'});
+      if (window.gtag) gtag('event', 'community_star_submit', {mode: mode});
+    }
+    if (!cfg.communityStarApi){ finish('demo'); return; }
+    fetch(cfg.communityStarApi, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)})
+    .then(function(r){
+      if (r.status === 409) { btn.disabled = false; form.elements.email.focus(); say('This email already has an application. One application per email.'); return; }
+      if (r.status === 410) { location.reload(); return; }
+      if (r.status === 429) { btn.disabled = false; say('Too many tries from this connection. Wait a bit and try again.'); return; }
+      if (!r.ok) throw new Error('http ' + r.status);
+      finish('live');
+    }).catch(function(){ btn.disabled = false; say('Could not send. Check your connection and try again.'); });
+  });
+
   }
 })();
 </script>

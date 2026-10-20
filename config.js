@@ -13,6 +13,9 @@ window.NILTV_CONFIG = {
   // Community Star intake (POST, public, one entry per email). Empty = the
   // /communitystar/ form runs in demo mode and shows the payload instead.
   communityStarApi: "",
+  // Community Star "Get notified" signups before Nov 2 (POST, public; same
+  // export as the applications). Empty = the signup runs in demo mode.
+  communityStarNotifyApi: "",
   cognito: {
     // niltv-dev pool + the niltv-dev-web client (SRP, no secret - browser
     // safe). deploy.ps1 -Env prod writes the prod pool and client instead.

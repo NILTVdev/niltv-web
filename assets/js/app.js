@@ -508,6 +508,9 @@ window.NILTV = (function () {
   /* ══ Search overlay (client-side over the live catalog) ══ */
 
   var searchEl = null, searchIndex = null;
+  // Bumped by every runSearch; an async result renders only if it's still the
+  // latest, so slow index loads can't stack old result sets into the list.
+  var searchSeq = 0;
 
   // Index records pair each channel/item with its matchable fields, lowercased
   // once at build time instead of on every keystroke. The \u0001 separator
@@ -535,6 +538,8 @@ window.NILTV = (function () {
         };
       });
     });
+    // Don't keep a failed build: the next keystroke or open retries.
+    searchIndex.catch(function () { searchIndex = null; });
     return searchIndex;
   }
 
@@ -569,7 +574,8 @@ window.NILTV = (function () {
     searchEl.classList.add("open");
     document.body.style.overflow = "hidden";
     document.getElementById("search-input").focus();
-    buildSearchIndex().then(function () { runSearch(document.getElementById("search-input").value); });
+    buildSearchIndex().catch(function () {}); // warm the index; runSearch reports failures
+    runSearch(document.getElementById("search-input").value);
   }
   function closeSearch() {
     if (searchEl) { searchEl.classList.remove("open"); document.body.style.overflow = ""; }
@@ -578,6 +584,7 @@ window.NILTV = (function () {
   function runSearch(q) {
     var out = document.getElementById("search-results");
     if (!out) return;
+    var seq = ++searchSeq;
     q = String(q || "").trim().toLowerCase();
     out.textContent = "";
     if (q.length < 2) {
@@ -585,7 +592,11 @@ window.NILTV = (function () {
       return;
     }
     buildSearchIndex().then(function (idx) {
+      if (seq !== searchSeq) return;
       renderSearchResults(out, querySearchIndex(idx, q));
+    }, function () {
+      if (seq !== searchSeq) return;
+      out.appendChild(el("div", "search-hint", "Search couldn't load. Check your connection and keep typing to retry."));
     });
   }
 

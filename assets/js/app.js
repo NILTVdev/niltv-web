@@ -509,6 +509,13 @@ window.NILTV = (function () {
 
   var searchEl = null, searchIndex = null;
 
+  // Index records pair each channel/item with its matchable fields, lowercased
+  // once at build time instead of on every keystroke. The \u0001 separator
+  // keeps a query from matching across two fields.
+  function searchKey(fields) {
+    return fields.map(function (f) { return String(f || "").toLowerCase(); }).join("\u0001");
+  }
+
   function buildSearchIndex() {
     if (searchIndex) return searchIndex;
     searchIndex = api("/v1/channels").then(function (res) {
@@ -518,10 +525,25 @@ window.NILTV = (function () {
       })).then(function (lists) {
         var items = [];
         lists.forEach(function (l) { items = items.concat(l); });
-        return { channels: channels, items: items };
+        return {
+          channels: channels.map(function (c) {
+            return { channel: c, key: searchKey([c.name]) };
+          }),
+          items: items.map(function (it) {
+            return { item: it, key: searchKey([it.title, it.channelName, it.creatorName]) };
+          }),
+        };
       });
     });
     return searchIndex;
+  }
+
+  function querySearchIndex(idx, q) {
+    var match = function (r) { return r.key.indexOf(q) >= 0; };
+    return {
+      channels: idx.channels.filter(match).map(function (r) { return r.channel; }),
+      items: idx.items.filter(match).slice(0, 24).map(function (r) { return r.item; }),
+    };
   }
 
   function openSearch() {
@@ -563,38 +585,37 @@ window.NILTV = (function () {
       return;
     }
     buildSearchIndex().then(function (idx) {
-      var chanHits = idx.channels.filter(function (c) { return c.name.toLowerCase().indexOf(q) >= 0; });
-      var itemHits = idx.items.filter(function (it) {
-        return it.title.toLowerCase().indexOf(q) >= 0 ||
-               it.channelName.toLowerCase().indexOf(q) >= 0 ||
-               (it.creatorName || "").toLowerCase().indexOf(q) >= 0;
-      }).slice(0, 24);
-      chanHits.forEach(function (c) {
-        var row = el("a", "search-row");
-        row.href = "/channels/" + channelSlug(c.id) + "/";
-        row.appendChild(el("span", "search-kicker", "Channel"));
-        row.appendChild(el("span", "search-title", c.name));
-        out.appendChild(row);
-      });
-      itemHits.forEach(function (it, i) {
-        var row = el("button", "search-row");
-        var th = el("span", "search-thumb");
-        th.appendChild(thumbNode(it));
-        row.appendChild(th);
-        var txt = el("span", "search-text");
-        txt.appendChild(el("span", "search-title", it.title));
-        txt.appendChild(el("span", "search-kicker", it.channelName + (it.duration != null ? " · " + fmtDuration(it.duration) : "")));
-        row.appendChild(txt);
-        row.addEventListener("click", function () {
-          closeSearch();
-          openPlayer(itemHits, i);
-        });
-        out.appendChild(row);
-      });
-      if (!chanHits.length && !itemHits.length) {
-        out.appendChild(el("div", "search-hint", "No matches. Try an athlete, school, or channel name."));
-      }
+      renderSearchResults(out, querySearchIndex(idx, q));
     });
+  }
+
+  function renderSearchResults(out, hits) {
+    var chanHits = hits.channels, itemHits = hits.items;
+    chanHits.forEach(function (c) {
+      var row = el("a", "search-row");
+      row.href = "/channels/" + channelSlug(c.id) + "/";
+      row.appendChild(el("span", "search-kicker", "Channel"));
+      row.appendChild(el("span", "search-title", c.name));
+      out.appendChild(row);
+    });
+    itemHits.forEach(function (it, i) {
+      var row = el("button", "search-row");
+      var th = el("span", "search-thumb");
+      th.appendChild(thumbNode(it));
+      row.appendChild(th);
+      var txt = el("span", "search-text");
+      txt.appendChild(el("span", "search-title", it.title));
+      txt.appendChild(el("span", "search-kicker", it.channelName + (it.duration != null ? " · " + fmtDuration(it.duration) : "")));
+      row.appendChild(txt);
+      row.addEventListener("click", function () {
+        closeSearch();
+        openPlayer(itemHits, i);
+      });
+      out.appendChild(row);
+    });
+    if (!chanHits.length && !itemHits.length) {
+      out.appendChild(el("div", "search-hint", "No matches. Try an athlete, school, or channel name."));
+    }
   }
 
   /* ══ Auth modal ══════════════════════════════════════════ */

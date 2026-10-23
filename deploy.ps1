@@ -183,7 +183,10 @@ window.NILTV_CONFIG = {
   # athlete pages are generated from the PRIVATE data folder (never in git):
   # regenerate them so the dev artifact carries the current records + photos.
   # --require makes a missing private folder a hard failure.
-  Write-Host "Building athlete pages from private data..."
+  # dev shows every athlete record for review (prod never runs this builder);
+  # set NILTV_ATHLETES_REVIEW=0 to preview the gated, publish-only set instead
+  if (-not $env:NILTV_ATHLETES_REVIEW) { $env:NILTV_ATHLETES_REVIEW = "1" }
+  Write-Host "Building athlete pages from private data (review mode: $env:NILTV_ATHLETES_REVIEW)..."
   python (Join-Path $src "scripts/builders/build-athletes.py") --require
   if ($LASTEXITCODE -ne 0) { Write-Error "dev deploy refused: athlete pages could not be built. The private data folder is missing - set NILTV_PRIVATE_DATA or create ../private-data/niltv-web beside the repo (see DEVELOPING.md)."; exit 1 }
   # athlete-signup and payments ship to prod too (they are in $pages); the dev

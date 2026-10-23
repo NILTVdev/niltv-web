@@ -5,7 +5,8 @@ Athlete records + photos, API fixture snapshots, the brand roster and the
 ambassador roster are kept OUTSIDE the repo. Resolution order:
 
   1. the NILTV_PRIVATE_DATA environment variable, if set
-  2. ../private-data/niltv-web next to the repo checkout, if it exists
+  2. ../private-data/niltv-web next to the repo checkout, or one level up for
+     a worktree kept in a subfolder, if it exists
 
 `private_root()` returns None when nothing is found; callers print a one-line
 note and skip the private-data part of their build instead of crashing.
@@ -14,6 +15,8 @@ import os
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 SIBLING = os.path.join(os.path.dirname(REPO), "private-data", "niltv-web")
+# a worktree kept one folder down (e.g. <hub>/_wt/<name>) finds <hub>/private-data
+NESTED = os.path.join(os.path.dirname(os.path.dirname(REPO)), "private-data", "niltv-web")
 HOWTO = "set NILTV_PRIVATE_DATA to the private data folder (see DEVELOPING.md)"
 
 
@@ -26,7 +29,7 @@ def private_root(create=False):
         if create:
             os.makedirs(env, exist_ok=True)
         return env if os.path.isdir(env) else None
-    for cand in (SIBLING,):
+    for cand in (SIBLING, NESTED):
         if os.path.isdir(cand):
             return cand
     if create:

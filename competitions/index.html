@@ -1693,6 +1693,16 @@ br.mbr{display:none}
   var dots = document.querySelectorAll('.hero-dot');
   var i = 0, timer = null, soundHold = false;
 
+  /* reels load in CORS mode (the media edge stamps ACAO * on /video/*), so
+     they get their own connection to the CDN and the rail posters keep the
+     other one. On a shared connection every poster queued behind the 5 MB
+     loop (10/26) */
+  function attach(v){
+    if (v.src || !v.dataset.src) return;
+    v.crossOrigin = 'anonymous';
+    v.src = v.dataset.src;
+  }
+
   /* Decision 2: only the active slide's reel plays, as a cropped-wide muted
      loop; sources attach lazily on first activation. Reduced-motion visitors
      keep the still posters. */
@@ -1707,7 +1717,7 @@ br.mbr{display:none}
       // wide slide: desktop plays the wide cut, phones play the vertical cut
       if (v.closest('.v-wide-mobile')) return;
       if (on){
-        if (!v.src && v.dataset.src) v.src = v.dataset.src;
+        attach(v);
         v.play().catch(function(){});
       } else {
         v.pause();
@@ -1716,13 +1726,30 @@ br.mbr{display:none}
   }
 
   /* pre-buffer the NEXT slide's reel while the current one plays so every
-     rotation starts on frame one instead of fetching from zero (9/3) */
+     rotation starts on frame one instead of fetching from zero (9/3). It
+     waits for the page load and for the playing reel to buffer
+     (canplaythrough, or 4 s at most), so it never takes bandwidth from the
+     posters or the reel on screen (10/26) */
+  var warmGen = 0;
   function warmNext(n){
     if (reduceMotion || slides.length < 2) return;
-    slides[(n + 1) % slides.length].querySelectorAll('.hero-video').forEach(function(v){
-      if (v.closest('.v-wide-mobile')) return;
-      if (!v.src && v.dataset.src){ v.preload = 'auto'; v.src = v.dataset.src; }
-    });
+    var gen = ++warmGen;
+    function go(){
+      if (gen !== warmGen) return;
+      slides[(n + 1) % slides.length].querySelectorAll('.hero-video').forEach(function(v){
+        if (v.closest('.v-wide-mobile') || v.src || !v.dataset.src) return;
+        v.preload = 'auto';
+        attach(v);
+      });
+    }
+    function afterLoad(){
+      var cur = slides[n].querySelector('.hero-video[src]');
+      if (!cur || cur.readyState >= 4) return go();
+      cur.addEventListener('canplaythrough', go, {once: true});
+      setTimeout(go, 4000);
+    }
+    if (document.readyState === 'complete') afterLoad();
+    else window.addEventListener('load', afterLoad, {once: true});
   }
 
   function show(n){
@@ -1769,7 +1796,7 @@ br.mbr{display:none}
   function setSound(st, on){
     st.v.muted = !on;
     if (on){
-      if (!st.v.src && st.v.dataset.src) st.v.src = st.v.dataset.src;
+      attach(st.v);
       st.v.play().catch(function(){});
     }
     st.b.innerHTML = on ? SOUND_IC : MUTED_IC;

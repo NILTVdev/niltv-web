@@ -904,6 +904,7 @@ window.NILTV = (function () {
             vid.loop = true;
             vid.playsInline = true;
             vid.className = "card-preview";
+            corsMedia(vid, detail.playbackUrl);
             vid.src = detail.playbackUrl;
             wrap.appendChild(vid);
           }
@@ -1495,14 +1496,23 @@ window.NILTV = (function () {
     }).catch(function () {});
   }
 
-  // provider:"hls" does not guarantee .m3u8 (social-ingest rows are mp4) - 
+  // Our own /video/* mp4s play in CORS mode (the media edge stamps ACAO *),
+  // which gives them their own connection to the CDN, so a playing reel
+  // no longer queues the page's posters behind it. Other hosts keep the
+  // default mode. Call before setting src.
+  function corsMedia(video, url) {
+    if (API && url && url.indexOf(API + "/video/") === 0) video.crossOrigin = "anonymous";
+    else video.removeAttribute("crossorigin");
+  }
+
+  // provider:"hls" does not guarantee .m3u8 (social-ingest rows are mp4) -
   // sniff the URL, not the provider field.
   // Resolves once a playable source is attached (hls.js loads lazily).
   function attachSource(video, url, fallbackUrl) {
     if (video.dataset.attached) return Promise.resolve();
     video.dataset.attached = "1";
     var isHls = /\.m3u8($|\?)/.test(url);
-    if (!isHls) { video.src = url; return Promise.resolve(); }
+    if (!isHls) { corsMedia(video, url); video.src = url; return Promise.resolve(); }
     // Safari plays HLS natively
     if (video.canPlayType("application/vnd.apple.mpegurl")) { video.src = url; return Promise.resolve(); }
     return loadHls().then(function () {
@@ -1514,6 +1524,7 @@ window.NILTV = (function () {
         h.destroy();
         video._hls = null;
         if (fallbackUrl) {
+          corsMedia(video, fallbackUrl);
           video.src = fallbackUrl;
           video.play().catch(function () {});
         }
@@ -1525,6 +1536,7 @@ window.NILTV = (function () {
       // hls.js blocked/unavailable: an .m3u8 in video.src silently does
       // nothing in Chrome, so use the mp4 fallback.
       console.warn("hls unavailable (" + e.message + "); falling back to mp4");
+      corsMedia(video, fallbackUrl || url);
       video.src = fallbackUrl || url;
     });
   }

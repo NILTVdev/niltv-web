@@ -833,11 +833,18 @@ br.mbr{display:none}
   color:var(--gold-bright);border:1px solid rgba(217,178,91,.4);padding:3px 9px;border-radius:999px;white-space:nowrap}
 .shelves.centered [data-grid="advisory"] .rail{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;
   overflow:visible;scroll-snap-type:none;max-width:1360px;margin:0 auto;padding:14px var(--gutter) 22px}
+/* every card spans two half-columns so a short last row sits centered (10/13) */
 @media (min-width:1100px){
-  .shelves.centered [data-grid="advisory"] .rail{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+  .shelves.centered [data-grid="advisory"] .rail{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:14px}
+  .shelves.centered [data-grid="advisory"] .adv-card{grid-column:span 2}
+  .shelves.centered [data-grid="advisory"] .adv-card:nth-child(4n+1):nth-last-child(3){grid-column:2 / span 2}
+  .shelves.centered [data-grid="advisory"] .adv-card:nth-child(4n+1):nth-last-child(2){grid-column:3 / span 2}
+  .shelves.centered [data-grid="advisory"] .adv-card:nth-child(4n+1):last-child{grid-column:4 / span 2}
 }
 @media (max-width:700px){
-  .shelves.centered [data-grid="advisory"] .rail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;overflow:visible;padding:10px var(--gutter) 16px}
+  .shelves.centered [data-grid="advisory"] .rail{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;overflow:visible;padding:10px var(--gutter) 16px}
+  .shelves.centered [data-grid="advisory"] .adv-card{grid-column:span 2}
+  .shelves.centered [data-grid="advisory"] .adv-card:nth-child(odd):last-child{grid-column:2 / span 2}
   .adv-card{max-width:none}
   .adv-card .nm{font-size:19px}
   .adv-card .bio{font-size:11.5px}
@@ -1788,130 +1795,291 @@ br.mbr{display:none}
 </section>
 <!-- /AUTORAIL:sponsored -->
 
-<!-- AUTORAIL:theme-sport-baseball -->
+<!-- AUTORAIL:theme-cat-music -->
 <section class="shelf">
   <div class="shelf-head">
-    <h2 class="shelf-title gold">Baseball</h2>
+    <h2 class="shelf-title gold">Music</h2>
   </div>
   <div class="rail">
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DVXDuOtDyIi/" aria-label="A closer look at an ACC pitcher's pre-game routine">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVXDuOtDyIi/poster.jpg" loading="lazy" decoding="async" alt="A closer look at an ACC pitcher's pre-game routine">
-        <span class="dur">1:19</span>
-      </a>
-      <p class="reel-caption">A closer look at an ACC pitcher's pre-game routine</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DVEsqlZETgh/" aria-label="Have a day Andy, 4 IP, 7 K's, 0 hits">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVEsqlZETgh/poster.jpg" loading="lazy" decoding="async" alt="Have a day Andy, 4 IP, 7 K's, 0 hits">
-        <span class="dur">0:10</span>
-      </a>
-      <p class="reel-caption">Have a day Andy, 4 IP, 7 K's, 0 hits</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DT6k3LCjHN7/" aria-label="Step into the pen with @cider.canon">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DT6k3LCjHN7/poster.jpg" loading="lazy" decoding="async" alt="Step into the pen with @cider.canon">
-        <span class="dur">1:45</span>
-      </a>
-      <p class="reel-caption">Step into the pen with @cider.canon</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DSwTzcOjEb8/" aria-label="85% intent in today's bullpen">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DSwTzcOjEb8/poster.jpg" loading="lazy" decoding="async" alt="85% intent in today's bullpen">
-        <span class="dur">0:46</span>
-      </a>
-      <p class="reel-caption">85% intent in today's bullpen</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DU_bYSkkv3p/" aria-label="Player spotlight of the week, Bobby Marsh">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DU_bYSkkv3p/poster.jpg" loading="lazy" decoding="async" alt="Player spotlight of the week, Bobby Marsh">
-        <span class="dur">2:27</span>
-      </a>
-      <p class="reel-caption">Player spotlight of the week, Bobby Marsh</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DUt0AbWj2-C/" aria-label="Keep an eye out this season for Duke SS Jake">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DUt0AbWj2-C/poster.jpg" loading="lazy" decoding="async" alt="Keep an eye out this season for Duke SS Jake">
-        <span class="dur">0:16</span>
-      </a>
-      <p class="reel-caption">Keep an eye out this season for Duke SS Jake</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DXaahs3M833/" aria-label="That's 10 homers this season">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DXaahs3M833/poster.jpg" loading="lazy" decoding="async" alt="That's 10 homers this season">
-        <span class="dur">0:14</span>
-      </a>
-      <p class="reel-caption">That's 10 homers this season</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-17942549967185006/" aria-label="Around the Bases with Tyler Albright">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17942549967185006/poster.jpg" loading="lazy" decoding="async" alt="Around the Bases with Tyler Albright">
+      <a class="card card-reel" href="/watch/ig-18115553744471923/" aria-label="the best concert i’ve been to yettt alo lululemon eatwellatx">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18115553744471923/poster.jpg" loading="lazy" decoding="async" alt="the best concert i’ve been to yettt alo lululemon eatwellatx">
         <span class="dur">1:41</span>
       </a>
-      <p class="reel-caption">Around the Bases with Tyler Albright</p>
+      <p class="reel-caption">the best concert i’ve been to yettt alo lululemon eatwellatx</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18080986981975952/" aria-label="Duke Baseball vibes with the guys">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18080986981975952/poster.jpg" loading="lazy" decoding="async" alt="Duke Baseball vibes with the guys">
-        <span class="dur">0:47</span>
+      <a class="card card-reel" href="/watch/ig-17991369239868220/" aria-label="zaralarsson we tried">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17991369239868220/poster.jpg" loading="lazy" decoding="async" alt="zaralarsson we tried">
+        <span class="dur">0:15</span>
       </a>
-      <p class="reel-caption">Duke Baseball vibes with the guys</p>
+      <p class="reel-caption">zaralarsson we tried</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18152658184431323/" aria-label="Bullpen POV with Meta glasses">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18152658184431323/poster-fill.jpg" loading="lazy" decoding="async" alt="Bullpen POV with Meta glasses">
-        <span class="dur">0:31</span>
+      <a class="card card-reel" href="/watch/ig-18117969514937438/" aria-label="nilstar Grand Prize winner… no big deal">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18117969514937438/poster.jpg" loading="lazy" decoding="async" alt="nilstar Grand Prize winner… no big deal">
+        <span class="dur">0:30</span>
       </a>
-      <p class="reel-caption">Bullpen POV with Meta glasses</p>
+      <p class="reel-caption">nilstar Grand Prize winner… no big deal</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DTqYplaErVc/" aria-label="Welcome to Durham, Kaden Smith">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DTqYplaErVc/poster.jpg" loading="lazy" decoding="async" alt="Welcome to Durham, Kaden Smith">
-        <span class="dur">0:27</span>
+      <a class="card card-reel" href="/watch/ig-17932046301353606/" aria-label="blame it on the boogayeee">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17932046301353606/poster.jpg" loading="lazy" decoding="async" alt="blame it on the boogayeee">
+        <span class="dur">0:12</span>
       </a>
-      <p class="reel-caption">Welcome to Durham, Kaden Smith</p>
+      <p class="reel-caption">blame it on the boogayeee</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18016885730923936/" aria-label="More carbs needed next time, but not a bad day">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18016885730923936/poster.jpg" loading="lazy" decoding="async" alt="More carbs needed next time, but not a bad day">
-        <span class="dur">0:45</span>
+      <a class="card card-reel" href="/watch/ig-17887789479415221/" aria-label="so it turns out…">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17887789479415221/poster.jpg" loading="lazy" decoding="async" alt="so it turns out…">
+        <span class="dur">2:15</span>
       </a>
-      <p class="reel-caption">More carbs needed next time, but not a bad day</p>
+      <p class="reel-caption">so it turns out…</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18110280751814341/" aria-label="Something different today from a submarine pitcher">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18110280751814341/poster.jpg" loading="lazy" decoding="async" alt="Something different today from a submarine pitcher">
-        <span class="dur">0:32</span>
+      <a class="card card-reel" href="/watch/ig-17959556736138023/" aria-label="Jersey Giant- Cover (Sam Barber Version) sambarber_music sambar...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17959556736138023/poster-fill.jpg" loading="lazy" decoding="async" alt="Jersey Giant- Cover (Sam Barber Version) sambarber_music sambar...">
+        <span class="dur">3:47</span>
       </a>
-      <p class="reel-caption">Something different today from a submarine pitcher</p>
+      <p class="reel-caption">Jersey Giant- Cover (Sam Barber Version) sambarber_music sambar...</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18367237138237652/" aria-label="Sights and sounds of the Reds and Jon Pardi">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18367237138237652/poster.jpg" loading="lazy" decoding="async" alt="Sights and sounds of the Reds and Jon Pardi">
-        <span class="dur">0:25</span>
+      <a class="card card-reel" href="/watch/ig-17919562527182213/" aria-label="My Audition for NIL Star 10k Caden Redmond RB Defiance college">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17919562527182213/poster.jpg" loading="lazy" decoding="async" alt="My Audition for NIL Star 10k Caden Redmond RB Defiance college">
+        <span class="dur">1:26</span>
       </a>
-      <p class="reel-caption">Sights and sounds of the Reds and Jon Pardi</p>
+      <p class="reel-caption">My Audition for NIL Star 10k Caden Redmond RB Defiance college</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18139394128487699/" aria-label="Easy chicken nugget quesadilla with 50 grams of protein">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18139394128487699/poster.jpg" loading="lazy" decoding="async" alt="Easy chicken nugget quesadilla with 50 grams of protein">
-        <span class="dur">0:27</span>
+      <a class="card card-reel" href="/watch/ig-18357164767245153/" aria-label="My audition for NIL STAR $10,000">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18357164767245153/poster.jpg" loading="lazy" decoding="async" alt="My audition for NIL STAR $10,000">
+        <span class="dur">3:48</span>
       </a>
-      <p class="reel-caption">Easy chicken nugget quesadilla with 50 grams of protein</p>
+      <p class="reel-caption">My audition for NIL STAR $10,000</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18125800360715592/" aria-label="Recover with me">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18125800360715592/poster.jpg" loading="lazy" decoding="async" alt="Recover with me">
-        <span class="dur">0:31</span>
+      <a class="card card-reel" href="/watch/ig-17935214622271611/" aria-label="Ephesians 5:19 NIV">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17935214622271611/poster.jpg" loading="lazy" decoding="async" alt="Ephesians 5:19 NIV">
+        <span class="dur">1:03</span>
       </a>
-      <p class="reel-caption">Recover with me</p>
+      <p class="reel-caption">Ephesians 5:19 NIV</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DYIovnpTmNP/" aria-label="The MVP of our travel routine">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DYIovnpTmNP/poster.jpg" loading="lazy" decoding="async" alt="The MVP of our travel routine">
-        <span class="dur">1:02</span>
+      <a class="card card-reel" href="/watch/ig-18025761827840117/" aria-label="Tom Lardner, Bowdoin College Football Anna Lardner, Middlebury...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18025761827840117/poster.jpg" loading="lazy" decoding="async" alt="Tom Lardner, Bowdoin College Football Anna Lardner, Middlebury...">
+        <span class="dur">0:56</span>
       </a>
-      <p class="reel-caption">The MVP of our travel routine</p>
+      <p class="reel-caption">Tom Lardner, Bowdoin College Football Anna Lardner, Middlebury...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17897946027496513/" aria-label="Assumption University field hockey">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17897946027496513/poster.jpg" loading="lazy" decoding="async" alt="Assumption University field hockey">
+        <span class="dur">1:21</span>
+      </a>
+      <p class="reel-caption">Assumption University field hockey</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17959643186965122/" aria-label="Anyone who knows me knows I love to sing… hope this isn’t cringe">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17959643186965122/poster.jpg" loading="lazy" decoding="async" alt="Anyone who knows me knows I love to sing… hope this isn’t cringe">
+        <span class="dur">1:04</span>
+      </a>
+      <p class="reel-caption">Anyone who knows me knows I love to sing… hope this isn’t cringe</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18180934726405773/" aria-label="Hi my name is Abby Cunningham I throw javelin at the University...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18180934726405773/poster.jpg" loading="lazy" decoding="async" alt="Hi my name is Abby Cunningham I throw javelin at the University...">
+        <span class="dur">2:22</span>
+      </a>
+      <p class="reel-caption">Hi my name is Abby Cunningham I throw javelin at the University...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18101160227134530/" aria-label="Hi! My name is Mia Zenere and I play Women’s Basketball at the...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18101160227134530/poster.jpg" loading="lazy" decoding="async" alt="Hi! My name is Mia Zenere and I play Women’s Basketball at the...">
+        <span class="dur">0:50</span>
+      </a>
+      <p class="reel-caption">Hi! My name is Mia Zenere and I play Women’s Basketball at the...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18166221412439513/" aria-label="Hi! My name is Taylee Chirrick and I play basketball for Montan...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18166221412439513/poster.jpg" loading="lazy" decoding="async" alt="Hi! My name is Taylee Chirrick and I play basketball for Montan...">
+        <span class="dur">0:56</span>
+      </a>
+      <p class="reel-caption">Hi! My name is Taylee Chirrick and I play basketball for Montan...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18094567163165109/" aria-label="Hi! My name is Robin and I’m a sophomore at Wake Forest Univers...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18094567163165109/poster.jpg" loading="lazy" decoding="async" alt="Hi! My name is Robin and I’m a sophomore at Wake Forest Univers...">
+        <span class="dur">0:55</span>
+      </a>
+      <p class="reel-caption">Hi! My name is Robin and I’m a sophomore at Wake Forest Univers...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18112296895940804/" aria-label="My audition for nilstar for a chance to win $10,000 covering “I...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18112296895940804/poster.jpg" loading="lazy" decoding="async" alt="My audition for nilstar for a chance to win $10,000 covering “I...">
+        <span class="dur">0:51</span>
+      </a>
+      <p class="reel-caption">My audition for nilstar for a chance to win $10,000 covering “I...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18113933899902354/" aria-label="Hi! I’m Noah Sentnor and I’m a graduating senior playing Ultima...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18113933899902354/poster.jpg" loading="lazy" decoding="async" alt="Hi! I’m Noah Sentnor and I’m a graduating senior playing Ultima...">
+        <span class="dur">0:55</span>
+      </a>
+      <p class="reel-caption">Hi! I’m Noah Sentnor and I’m a graduating senior playing Ultima...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18132846328607840/" aria-label="audition">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18132846328607840/poster.jpg" loading="lazy" decoding="async" alt="audition">
+        <span class="dur">1:27</span>
+      </a>
+      <p class="reel-caption">audition</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17884755516665461/" aria-label="Teddy Tolbert, Wesleyan University, Field Hockey, 2028!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17884755516665461/poster.jpg" loading="lazy" decoding="async" alt="Teddy Tolbert, Wesleyan University, Field Hockey, 2028!">
+        <span class="dur">1:05</span>
+      </a>
+      <p class="reel-caption">Teddy Tolbert, Wesleyan University, Field Hockey, 2028!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18085619087451279/" aria-label="I Miss the Mountains- Next to Normal">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18085619087451279/poster.jpg" loading="lazy" decoding="async" alt="I Miss the Mountains- Next to Normal">
+        <span class="dur">3:44</span>
+      </a>
+      <p class="reel-caption">I Miss the Mountains- Next to Normal</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17927751360125852/" aria-label="My nilstar audition Song: When I was your man, Bruno Mars">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17927751360125852/poster.jpg" loading="lazy" decoding="async" alt="My nilstar audition Song: When I was your man, Bruno Mars">
+        <span class="dur">1:10</span>
+      </a>
+      <p class="reel-caption">My nilstar audition Song: When I was your man, Bruno Mars</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18111491878848263/" aria-label="Mia Girgis, UMass Lowell, Soccer, Junior, Song: Read all about...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18111491878848263/poster.jpg" loading="lazy" decoding="async" alt="Mia Girgis, UMass Lowell, Soccer, Junior, Song: Read all about...">
+        <span class="dur">0:54</span>
+      </a>
+      <p class="reel-caption">Mia Girgis, UMass Lowell, Soccer, Junior, Song: Read all about...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18539419810078105/" aria-label="Some inspo for your next carpool karaoke session College athlet...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18539419810078105/poster.jpg" loading="lazy" decoding="async" alt="Some inspo for your next carpool karaoke session College athlet...">
+        <span class="dur">0:33</span>
+      </a>
+      <p class="reel-caption">Some inspo for your next carpool karaoke session College athlet...</p>
+    </div>
+  </div>
+</section>
+<!-- /AUTORAIL:theme-cat-music -->
+
+<!-- AUTORAIL:theme-cat-romance -->
+
+<!-- /AUTORAIL:theme-cat-romance -->
+
+<!-- AUTORAIL:theme-cat-competitions -->
+<section class="shelf">
+  <div class="shelf-head">
+    <h2 class="shelf-title">Competitions</h2>
+  </div>
+  <div class="rail">
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17881762032690952/" aria-label="Duke Lacrosse Plays Guess The Movie From The Emoji!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17881762032690952/poster.jpg" loading="lazy" decoding="async" alt="Duke Lacrosse Plays Guess The Movie From The Emoji!">
+        <span class="dur">1:41</span>
+      </a>
+      <p class="reel-caption">Duke Lacrosse Plays Guess The Movie From The Emoji!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18117983930052481/" aria-label="Duke Wrestling Plays Guess The Movie From The Emoji!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18117983930052481/poster.jpg" loading="lazy" decoding="async" alt="Duke Wrestling Plays Guess The Movie From The Emoji!">
+        <span class="dur">1:41</span>
+      </a>
+      <p class="reel-caption">Duke Wrestling Plays Guess The Movie From The Emoji!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18097238531414462/" aria-label="Duke Athletes Play Guess The Movie From The Emoji!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18097238531414462/poster.jpg" loading="lazy" decoding="async" alt="Duke Athletes Play Guess The Movie From The Emoji!">
+        <span class="dur">1:47</span>
+      </a>
+      <p class="reel-caption">Duke Athletes Play Guess The Movie From The Emoji!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18019916825730630/" aria-label="Camilla + Sadie Attempt A Guinness World Record!!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18019916825730630/poster.jpg" loading="lazy" decoding="async" alt="Camilla + Sadie Attempt A Guinness World Record!!">
+        <span class="dur">1:10</span>
+      </a>
+      <p class="reel-caption">Camilla + Sadie Attempt A Guinness World Record!!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18105628745607615/" aria-label="How To Break A Guinness World Record with Duke WLAX!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18105628745607615/poster.jpg" loading="lazy" decoding="async" alt="How To Break A Guinness World Record with Duke WLAX!">
+        <span class="dur">1:10</span>
+      </a>
+      <p class="reel-caption">How To Break A Guinness World Record with Duke WLAX!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18135626587710822/" aria-label="Duke Cross Country vs Tennis in Trivia!!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18135626587710822/poster.jpg" loading="lazy" decoding="async" alt="Duke Cross Country vs Tennis in Trivia!!">
+        <span class="dur">2:08</span>
+      </a>
+      <p class="reel-caption">Duke Cross Country vs Tennis in Trivia!!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17909185407556868/" aria-label="College volleyball players x college basketball!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17909185407556868/poster.jpg" loading="lazy" decoding="async" alt="College volleyball players x college basketball!">
+        <span class="dur">0:59</span>
+      </a>
+      <p class="reel-caption">College volleyball players x college basketball!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18198182203375881/" aria-label="Duke Cross Country vs Tennis… Who Wins Training Table Trivia?">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18198182203375881/poster.jpg" loading="lazy" decoding="async" alt="Duke Cross Country vs Tennis… Who Wins Training Table Trivia?">
+        <span class="dur">1:49</span>
+      </a>
+      <p class="reel-caption">Duke Cross Country vs Tennis… Who Wins Training Table Trivia?</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18107303912182131/" aria-label="Duke Men’s Soccer vs Women’s Lacrosse!!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18107303912182131/poster.jpg" loading="lazy" decoding="async" alt="Duke Men’s Soccer vs Women’s Lacrosse!!">
+        <span class="dur">2:16</span>
+      </a>
+      <p class="reel-caption">Duke Men’s Soccer vs Women’s Lacrosse!!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18106650674233570/" aria-label="We asked Duke athletes to compete against each other in answeri...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18106650674233570/poster.jpg" loading="lazy" decoding="async" alt="We asked Duke athletes to compete against each other in answeri...">
+        <span class="dur">2:37</span>
+      </a>
+      <p class="reel-caption">We asked Duke athletes to compete against each other in answeri...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18130304830664937/" aria-label="Can Duke WLAX get 500 shots in 10 minutes?">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18130304830664937/poster.jpg" loading="lazy" decoding="async" alt="Can Duke WLAX get 500 shots in 10 minutes?">
+        <span class="dur">0:26</span>
+      </a>
+      <p class="reel-caption">Can Duke WLAX get 500 shots in 10 minutes?</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18411201364086158/" aria-label="TRAINING TABLE TRIVIA EP">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18411201364086158/poster.jpg" loading="lazy" decoding="async" alt="TRAINING TABLE TRIVIA EP">
+        <span class="dur">1:15</span>
+      </a>
+      <p class="reel-caption">TRAINING TABLE TRIVIA EP</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18029942009850394/" aria-label="DUKE ATHLETE TRAINING TABLE TRIVIA Ep 1">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18029942009850394/poster.jpg" loading="lazy" decoding="async" alt="DUKE ATHLETE TRAINING TABLE TRIVIA Ep 1">
+        <span class="dur">0:34</span>
+      </a>
+      <p class="reel-caption">DUKE ATHLETE TRAINING TABLE TRIVIA Ep 1</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17883362205685294/" aria-label="We asked Duke athletes basic trivia questions… with one catch:...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17883362205685294/poster.jpg" loading="lazy" decoding="async" alt="We asked Duke athletes basic trivia questions… with one catch:...">
+        <span class="dur">1:04</span>
+      </a>
+      <p class="reel-caption">We asked Duke athletes basic trivia questions… with one catch:...</p>
     </div>
     <div class="reel-cell">
       <a class="card card-reel" href="/watch/tbtv-DXXqKfUjoDU/" aria-label="Fungo Golf Classic part 2, who will come out victorious?">
@@ -1921,161 +2089,189 @@ br.mbr{display:none}
       <p class="reel-caption">Fungo Golf Classic part 2, who will come out victorious?</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DXFlywbO8yM/" aria-label="Only certified dingers, Kaden wins it in the ninth">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DXFlywbO8yM/poster.jpg" loading="lazy" decoding="async" alt="Only certified dingers, Kaden wins it in the ninth">
-        <span class="dur">0:23</span>
+      <a class="card card-reel" href="/watch/tbtv-DUrbH56DJaU/" aria-label="Closest to the pin showdown on our training trip">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DUrbH56DJaU/poster.jpg" loading="lazy" decoding="async" alt="Closest to the pin showdown on our training trip">
+        <span class="dur">0:18</span>
       </a>
-      <p class="reel-caption">Only certified dingers, Kaden wins it in the ninth</p>
+      <p class="reel-caption">Closest to the pin showdown on our training trip</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DWKCBqSRW9h/" aria-label="The sweet sounds of BP">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWKCBqSRW9h/poster.jpg" loading="lazy" decoding="async" alt="The sweet sounds of BP">
-        <span class="dur">0:21</span>
+      <a class="card card-reel" href="/watch/tbtv-DTLsJS3Elkd/" aria-label="The part 2 you’ve all been waiting for">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DTLsJS3Elkd/poster.jpg" loading="lazy" decoding="async" alt="The part 2 you’ve all been waiting for">
+        <span class="dur">1:51</span>
       </a>
-      <p class="reel-caption">The sweet sounds of BP</p>
+      <p class="reel-caption">The part 2 you’ve all been waiting for</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DV6N63_tgfO/" aria-label="Time for the rubber match">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DV6N63_tgfO/poster.jpg" loading="lazy" decoding="async" alt="Time for the rubber match">
-        <span class="dur">0:16</span>
+      <a class="card card-reel" href="/watch/tbtv-DRxbAz-ifGt/" aria-label="Challenge accepted dukewlax truebluetvnet">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DRxbAz-ifGt/poster.jpg" loading="lazy" decoding="async" alt="Challenge accepted dukewlax truebluetvnet">
+        <span class="dur">0:11</span>
       </a>
-      <p class="reel-caption">Time for the rubber match</p>
+      <p class="reel-caption">Challenge accepted dukewlax truebluetvnet</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DV2G9JKD2cV/" aria-label="How to create your own hop on a ground ball">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DV2G9JKD2cV/poster.jpg" loading="lazy" decoding="async" alt="How to create your own hop on a ground ball">
-        <span class="dur">1:00</span>
+      <a class="card card-reel" href="/watch/tbtv-DWozyBhEefT/" aria-label="Put jacksonspells on a game show ASAP">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWozyBhEefT/poster.jpg" loading="lazy" decoding="async" alt="Put jacksonspells on a game show ASAP">
+        <span class="dur">1:51</span>
       </a>
-      <p class="reel-caption">How to create your own hop on a ground ball</p>
+      <p class="reel-caption">Put jacksonspells on a game show ASAP</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DU8_U32iAG2/" aria-label="The difference between high school and portal recruiting">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DU8_U32iAG2/poster.jpg" loading="lazy" decoding="async" alt="The difference between high school and portal recruiting">
-        <span class="dur">1:43</span>
+      <a class="card card-reel" href="/watch/tbtv-DTgK2lVkSU7/" aria-label="Might need to set up a LeBron James trivia quiz for owen.gaffne...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DTgK2lVkSU7/poster.jpg" loading="lazy" decoding="async" alt="Might need to set up a LeBron James trivia quiz for owen.gaffne...">
+        <span class="dur">0:59</span>
       </a>
-      <p class="reel-caption">The difference between high school and portal recruiting</p>
+      <p class="reel-caption">Might need to set up a LeBron James trivia quiz for owen.gaffne...</p>
     </div>
   </div>
 </section>
-<!-- /AUTORAIL:theme-sport-baseball -->
+<!-- /AUTORAIL:theme-cat-competitions -->
 
-<!-- AUTORAIL:theme-sport-track -->
+<!-- AUTORAIL:theme-cat-comedy -->
 <section class="shelf">
   <div class="shelf-head">
-    <h2 class="shelf-title">Track &amp; Field</h2>
+    <h2 class="shelf-title">Comedy</h2>
   </div>
   <div class="rail">
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DWbiIssDllH/" aria-label="Raleigh Relays 5k vlog, a one second PR of 16:03">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWbiIssDllH/poster.jpg" loading="lazy" decoding="async" alt="Raleigh Relays 5k vlog, a one second PR of 16:03">
-        <span class="dur">0:53</span>
+      <a class="card card-reel" href="/watch/ig-18115616696090389/" aria-label="Bringing the mics out to ask the real questions">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18115616696090389/poster.jpg" loading="lazy" decoding="async" alt="Bringing the mics out to ask the real questions">
+        <span class="dur">1:04</span>
       </a>
-      <p class="reel-caption">Raleigh Relays 5k vlog, a one second PR of 16:03</p>
+      <p class="reel-caption">Bringing the mics out to ask the real questions</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DSbJLF-DhTL/" aria-label="Women's sports are not charity, speaking before Congress">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DSbJLF-DhTL/poster.jpg" loading="lazy" decoding="async" alt="Women's sports are not charity, speaking before Congress">
-        <span class="dur">0:36</span>
+      <a class="card card-reel" href="/watch/ig-17964829304980927/" aria-label="What’s the wildest thing you’ve seen your coach do?">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17964829304980927/poster.jpg" loading="lazy" decoding="async" alt="What’s the wildest thing you’ve seen your coach do?">
+        <span class="dur">0:18</span>
       </a>
-      <p class="reel-caption">Women's sports are not charity, speaking before Congress</p>
+      <p class="reel-caption">What’s the wildest thing you’ve seen your coach do?</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DWnGV6FkphB/" aria-label="Ballher of the week, Julia Magliaro on Duke's ACC title run">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWnGV6FkphB/poster.jpg" loading="lazy" decoding="async" alt="Ballher of the week, Julia Magliaro on Duke's ACC title run">
-        <span class="dur">0:38</span>
+      <a class="card card-reel" href="/watch/ig-17957874798215481/" aria-label="halfway through, i realized i could’ve just taken the boots off...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17957874798215481/poster.jpg" loading="lazy" decoding="async" alt="halfway through, i realized i could’ve just taken the boots off...">
+        <span class="dur">0:12</span>
       </a>
-      <p class="reel-caption">Ballher of the week, Julia Magliaro on Duke's ACC title run</p>
+      <p class="reel-caption">halfway through, i realized i could’ve just taken the boots off...</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18030826340830062/" aria-label="A broken hip before Wake Forest, the comeback story">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18030826340830062/poster.jpg" loading="lazy" decoding="async" alt="A broken hip before Wake Forest, the comeback story">
-        <span class="dur">0:27</span>
+      <a class="card card-reel" href="/watch/ig-18107741284922556/" aria-label="Sums up my golf game pretty good here">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18107741284922556/poster.jpg" loading="lazy" decoding="async" alt="Sums up my golf game pretty good here">
+        <span class="dur">0:04</span>
       </a>
-      <p class="reel-caption">A broken hip before Wake Forest, the comeback story</p>
+      <p class="reel-caption">Sums up my golf game pretty good here</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18123209011767397/" aria-label="Once the workout's over 200, you lost me Coach">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18123209011767397/poster.jpg" loading="lazy" decoding="async" alt="Once the workout's over 200, you lost me Coach">
+      <a class="card card-reel" href="/watch/ig-18168582064460953/" aria-label="Finna be cooked after the age of 25">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18168582064460953/poster.jpg" loading="lazy" decoding="async" alt="Finna be cooked after the age of 25">
         <span class="dur">0:06</span>
       </a>
-      <p class="reel-caption">Once the workout's over 200, you lost me Coach</p>
+      <p class="reel-caption">Finna be cooked after the age of 25</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DT3vvhoEsXS/" aria-label="Punching our National Indoors ticket tomorrow">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DT3vvhoEsXS/poster.jpg" loading="lazy" decoding="async" alt="Punching our National Indoors ticket tomorrow">
-        <span class="dur">0:31</span>
+      <a class="card card-reel" href="/watch/ig-18557627440077528/" aria-label="Now he acting like he can’t hear me">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18557627440077528/poster.jpg" loading="lazy" decoding="async" alt="Now he acting like he can’t hear me">
+        <span class="dur">0:09</span>
       </a>
-      <p class="reel-caption">Punching our National Indoors ticket tomorrow</p>
+      <p class="reel-caption">Now he acting like he can’t hear me</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-17969960216939711/" aria-label="What I eat in a day as a D1 runner at Duke">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17969960216939711/poster.jpg" loading="lazy" decoding="async" alt="What I eat in a day as a D1 runner at Duke">
-        <span class="dur">0:30</span>
+      <a class="card card-reel" href="/watch/ig-18394525912201542/" aria-label="You know your cooked">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18394525912201542/poster.jpg" loading="lazy" decoding="async" alt="You know your cooked">
+        <span class="dur">0:12</span>
       </a>
-      <p class="reel-caption">What I eat in a day as a D1 runner at Duke</p>
+      <p class="reel-caption">You know your cooked</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-17902782330462507/" aria-label="POV, you're coming to track practice with me today">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17902782330462507/poster.jpg" loading="lazy" decoding="async" alt="POV, you're coming to track practice with me today">
-        <span class="dur">0:46</span>
+      <a class="card card-reel" href="/watch/ig-17929798689404132/" aria-label="Cosplaying as a NARP…">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17929798689404132/poster.jpg" loading="lazy" decoding="async" alt="Cosplaying as a NARP…">
+        <span class="dur">0:07</span>
       </a>
-      <p class="reel-caption">POV, you're coming to track practice with me today</p>
+      <p class="reel-caption">Cosplaying as a NARP…</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-17895050985424670/" aria-label="What do you mean I have to use blocks?">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17895050985424670/poster.jpg" loading="lazy" decoding="async" alt="What do you mean I have to use blocks?">
+      <a class="card card-reel" href="/watch/ig-18097713827077219/" aria-label="We’re back to no chair">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18097713827077219/poster.jpg" loading="lazy" decoding="async" alt="We’re back to no chair">
+        <span class="dur">0:06</span>
+      </a>
+      <p class="reel-caption">We’re back to no chair</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18090959588354135/" aria-label="Crazy part is that bat started moving before we walked out">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18090959588354135/poster.jpg" loading="lazy" decoding="async" alt="Crazy part is that bat started moving before we walked out">
+        <span class="dur">0:10</span>
+      </a>
+      <p class="reel-caption">Crazy part is that bat started moving before we walked out</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17995703729824912/" aria-label="Way to set us back …">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17995703729824912/poster.jpg" loading="lazy" decoding="async" alt="Way to set us back …">
+        <span class="dur">0:28</span>
+      </a>
+      <p class="reel-caption">Way to set us back …</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18142782814571934/" aria-label="Just because you wanted to be on it so bad jdolinshek24">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18142782814571934/poster.jpg" loading="lazy" decoding="async" alt="Just because you wanted to be on it so bad jdolinshek24">
+        <span class="dur">0:10</span>
+      </a>
+      <p class="reel-caption">Just because you wanted to be on it so bad jdolinshek24</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18224183704333148/" aria-label="Wonder why I cramped after">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18224183704333148/poster.jpg" loading="lazy" decoding="async" alt="Wonder why I cramped after">
         <span class="dur">0:08</span>
       </a>
-      <p class="reel-caption">What do you mean I have to use blocks?</p>
+      <p class="reel-caption">Wonder why I cramped after</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18108576370921903/" aria-label="Googling, is it normal my ankles and calves feel strained?">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18108576370921903/poster.jpg" loading="lazy" decoding="async" alt="Googling, is it normal my ankles and calves feel strained?">
+      <a class="card card-reel" href="/watch/ig-18369190300214689/" aria-label="Having the same clothes doesn’t give you permission to be a cop...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18369190300214689/poster.jpg" loading="lazy" decoding="async" alt="Having the same clothes doesn’t give you permission to be a cop...">
+        <span class="dur">0:09</span>
+      </a>
+      <p class="reel-caption">Having the same clothes doesn’t give you permission to be a cop...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18114288956053489/" aria-label="straight rage bait">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18114288956053489/poster.jpg" loading="lazy" decoding="async" alt="straight rage bait">
+        <span class="dur">0:10</span>
+      </a>
+      <p class="reel-caption">straight rage bait</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18067900664565666/" aria-label="it's a bad day to have a low jersey number">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18067900664565666/poster.jpg" loading="lazy" decoding="async" alt="it's a bad day to have a low jersey number">
+        <span class="dur">1:03</span>
+      </a>
+      <p class="reel-caption">it's a bad day to have a low jersey number</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DconTncuyfQ/" aria-label="what dolly said!! trust that everything happens for a reason">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DconTncuyfQ/poster.jpg" loading="lazy" decoding="async" alt="what dolly said!! trust that everything happens for a reason">
+        <span class="dur">0:08</span>
+      </a>
+      <p class="reel-caption">what dolly said!! trust that everything happens for a reason</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18184493152406746/" aria-label="Mostly j to be performative though">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18184493152406746/poster.jpg" loading="lazy" decoding="async" alt="Mostly j to be performative though">
+        <span class="dur">0:05</span>
+      </a>
+      <p class="reel-caption">Mostly j to be performative though</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18103458889939692/" aria-label="She(zanebaltz) is really just something special">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18103458889939692/poster.jpg" loading="lazy" decoding="async" alt="She(zanebaltz) is really just something special">
         <span class="dur">0:06</span>
       </a>
-      <p class="reel-caption">Googling, is it normal my ankles and calves feel strained?</p>
+      <p class="reel-caption">She(zanebaltz) is really just something special</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DSq5ZjIEqxI/" aria-label="Christmas Eve looks a little different in Jamaica">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DSq5ZjIEqxI/poster.jpg" loading="lazy" decoding="async" alt="Christmas Eve looks a little different in Jamaica">
-        <span class="dur">1:02</span>
+      <a class="card card-reel" href="/watch/ig-17879163804523144/" aria-label="Yeah basically I just stab people…">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17879163804523144/poster.jpg" loading="lazy" decoding="async" alt="Yeah basically I just stab people…">
+        <span class="dur">0:09</span>
       </a>
-      <p class="reel-caption">Christmas Eve looks a little different in Jamaica</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DUONtwtDSKs/" aria-label="What's your hype song before a race?">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DUONtwtDSKs/poster.jpg" loading="lazy" decoding="async" alt="What's your hype song before a race?">
-        <span class="dur">0:52</span>
-      </a>
-      <p class="reel-caption">What's your hype song before a race?</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18129042823665799/" aria-label="Quick workout before class">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18129042823665799/poster.jpg" loading="lazy" decoding="async" alt="Quick workout before class">
-        <span class="dur">0:59</span>
-      </a>
-      <p class="reel-caption">Quick workout before class</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-17912446026264428/" aria-label="Just because I'm off the track doesn't mean recovery stops">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17912446026264428/poster.jpg" loading="lazy" decoding="async" alt="Just because I'm off the track doesn't mean recovery stops">
-        <span class="dur">0:34</span>
-      </a>
-      <p class="reel-caption">Just because I'm off the track doesn't mean recovery stops</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18095012111564166/" aria-label="A friendly reminder to runner girls, food is fuel">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18095012111564166/poster.jpg" loading="lazy" decoding="async" alt="A friendly reminder to runner girls, food is fuel">
-        <span class="dur">0:23</span>
-      </a>
-      <p class="reel-caption">A friendly reminder to runner girls, food is fuel</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18164823031466741/" aria-label="The way running makes me feel is unlike anything else">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18164823031466741/poster.jpg" loading="lazy" decoding="async" alt="The way running makes me feel is unlike anything else">
-        <span class="dur">0:14</span>
-      </a>
-      <p class="reel-caption">The way running makes me feel is unlike anything else</p>
+      <p class="reel-caption">Yeah basically I just stab people…</p>
     </div>
     <div class="reel-cell">
       <a class="card card-reel" href="/watch/ig-18426545242183996/" aria-label="If your name is Coach Jet or Coach Mann, this is a joke">
@@ -2085,740 +2281,11 @@ br.mbr{display:none}
       <p class="reel-caption">If your name is Coach Jet or Coach Mann, this is a joke</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18133976851609783/" aria-label="Who's excited for cross country season?">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18133976851609783/poster.jpg" loading="lazy" decoding="async" alt="Who's excited for cross country season?">
-        <span class="dur">0:08</span>
-      </a>
-      <p class="reel-caption">Who's excited for cross country season?</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-17863686453637328/" aria-label="Making her proud">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17863686453637328/poster.jpg" loading="lazy" decoding="async" alt="Making her proud">
-        <span class="dur">0:16</span>
-      </a>
-      <p class="reel-caption">Making her proud</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18133267705580744/" aria-label="Try this before your next run">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18133267705580744/poster.jpg" loading="lazy" decoding="async" alt="Try this before your next run">
-        <span class="dur">0:14</span>
-      </a>
-      <p class="reel-caption">Try this before your next run</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18022587869832891/" aria-label="The literal ups and downs of pole vault">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18022587869832891/poster.jpg" loading="lazy" decoding="async" alt="The literal ups and downs of pole vault">
-        <span class="dur">0:13</span>
-      </a>
-      <p class="reel-caption">The literal ups and downs of pole vault</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18106682875737198/" aria-label="Good luck to everyone racing this weekend">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18106682875737198/poster.jpg" loading="lazy" decoding="async" alt="Good luck to everyone racing this weekend">
-        <span class="dur">0:07</span>
-      </a>
-      <p class="reel-caption">Good luck to everyone racing this weekend</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DWy8WKSEsJf/" aria-label="Julia Magliaro on what she loves about Duke track and field">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWy8WKSEsJf/poster.jpg" loading="lazy" decoding="async" alt="Julia Magliaro on what she loves about Duke track and field">
-        <span class="dur">0:15</span>
-      </a>
-      <p class="reel-caption">Julia Magliaro on what she loves about Duke track and field</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DVoNpwkkSIx/" aria-label="A spring training day before racing the 5k at Raleigh Relays">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVoNpwkkSIx/poster.jpg" loading="lazy" decoding="async" alt="A spring training day before racing the 5k at Raleigh Relays">
-        <span class="dur">0:34</span>
-      </a>
-      <p class="reel-caption">A spring training day before racing the 5k at Raleigh Relays</p>
-    </div>
-  </div>
-</section>
-<!-- /AUTORAIL:theme-sport-track -->
-
-<!-- AUTORAIL:theme-sport-lacrosse -->
-<section class="shelf">
-  <div class="shelf-head">
-    <h2 class="shelf-title">Lacrosse</h2>
-  </div>
-  <div class="rail">
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DT_fgCyCagS/" aria-label="100 Shots a Day with Paul Rabil">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DT_fgCyCagS/poster.jpg" loading="lazy" decoding="async" alt="100 Shots a Day with Paul Rabil">
-        <span class="dur">0:21</span>
-      </a>
-      <p class="reel-caption">100 Shots a Day with Paul Rabil</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DVY-U_sE754/" aria-label="Midfielder mic'd up from Upstate NY">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVY-U_sE754/poster.jpg" loading="lazy" decoding="async" alt="Midfielder mic'd up from Upstate NY">
-        <span class="dur">1:15</span>
-      </a>
-      <p class="reel-caption">Midfielder mic'd up from Upstate NY</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DW4wt_Ykx1v/" aria-label="Triple citizen, one goal, Bella Perry">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DW4wt_Ykx1v/poster.jpg" loading="lazy" decoding="async" alt="Triple citizen, one goal, Bella Perry">
-        <span class="dur">1:00</span>
-      </a>
-      <p class="reel-caption">Triple citizen, one goal, Bella Perry</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DUa9NI4DtYr/" aria-label="Positive vibes, it's game 1 of the season!">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DUa9NI4DtYr/poster.jpg" loading="lazy" decoding="async" alt="Positive vibes, it's game 1 of the season!">
-        <span class="dur">1:30</span>
-      </a>
-      <p class="reel-caption">Positive vibes, it's game 1 of the season!</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18103911470178883/" aria-label="Running is so much better with Duke W Lax">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18103911470178883/poster.jpg" loading="lazy" decoding="async" alt="Running is so much better with Duke W Lax">
-        <span class="dur">0:09</span>
-      </a>
-      <p class="reel-caption">Running is so much better with Duke W Lax</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-17954224887012117/" aria-label="Duke women's lacrosse fall gear">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17954224887012117/poster.jpg" loading="lazy" decoding="async" alt="Duke women's lacrosse fall gear">
-        <span class="dur">1:12</span>
-      </a>
-      <p class="reel-caption">Duke women's lacrosse fall gear</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18102134167760374/" aria-label="Senior szn for Syd Smith">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18102134167760374/poster.jpg" loading="lazy" decoding="async" alt="Senior szn for Syd Smith">
-        <span class="dur">1:17</span>
-      </a>
-      <p class="reel-caption">Senior szn for Syd Smith</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DUDthvHjvtJ/" aria-label="These are quickly becoming my favorite days">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DUDthvHjvtJ/poster.jpg" loading="lazy" decoding="async" alt="These are quickly becoming my favorite days">
-        <span class="dur">0:19</span>
-      </a>
-      <p class="reel-caption">These are quickly becoming my favorite days</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18026514830905320/" aria-label="Trust that everything happens for a reason">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18026514830905320/poster.jpg" loading="lazy" decoding="async" alt="Trust that everything happens for a reason">
-        <span class="dur">0:08</span>
-      </a>
-      <p class="reel-caption">Trust that everything happens for a reason</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18106253795336685/" aria-label="Live love laugh, back to school">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18106253795336685/poster.jpg" loading="lazy" decoding="async" alt="Live love laugh, back to school">
-        <span class="dur">0:09</span>
-      </a>
-      <p class="reel-caption">Live love laugh, back to school</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18452677021191688/" aria-label="Can't wait to be back, but she won't be there anymore">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18452677021191688/poster.jpg" loading="lazy" decoding="async" alt="Can't wait to be back, but she won't be there anymore">
-        <span class="dur">0:10</span>
-      </a>
-      <p class="reel-caption">Can't wait to be back, but she won't be there anymore</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18162134794414122/" aria-label="Get ready for college conditioning">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18162134794414122/poster.jpg" loading="lazy" decoding="async" alt="Get ready for college conditioning">
-        <span class="dur">0:30</span>
-      </a>
-      <p class="reel-caption">Get ready for college conditioning</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18045307940794841/" aria-label="Cleats are going to have to stay outside for a while">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18045307940794841/poster.jpg" loading="lazy" decoding="async" alt="Cleats are going to have to stay outside for a while">
-        <span class="dur">0:09</span>
-      </a>
-      <p class="reel-caption">Cleats are going to have to stay outside for a while</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DYP2awaucJT/" aria-label="Back at it in the hometown">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DYP2awaucJT/poster.jpg" loading="lazy" decoding="async" alt="Back at it in the hometown">
-        <span class="dur">0:57</span>
-      </a>
-      <p class="reel-caption">Back at it in the hometown</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DX15nujBRbM/" aria-label="Should we audition for part 2?">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DX15nujBRbM/poster.jpg" loading="lazy" decoding="async" alt="Should we audition for part 2?">
-        <span class="dur">0:35</span>
-      </a>
-      <p class="reel-caption">Should we audition for part 2?</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DXr0Y9XOZpM/" aria-label="Sometimes we forget the good that is all around us">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DXr0Y9XOZpM/poster.jpg" loading="lazy" decoding="async" alt="Sometimes we forget the good that is all around us">
-        <span class="dur">0:26</span>
-      </a>
-      <p class="reel-caption">Sometimes we forget the good that is all around us</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DWpQKY9DuMZ/" aria-label="The morning routine that transformed my entire days">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWpQKY9DuMZ/poster.jpg" loading="lazy" decoding="async" alt="The morning routine that transformed my entire days">
-        <span class="dur">1:02</span>
-      </a>
-      <p class="reel-caption">The morning routine that transformed my entire days</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DWZDEoCjgt9/" aria-label="The best decision I've ever made">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWZDEoCjgt9/poster.jpg" loading="lazy" decoding="async" alt="The best decision I've ever made">
-        <span class="dur">0:36</span>
-      </a>
-      <p class="reel-caption">The best decision I've ever made</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DVWTyWIjiqg/" aria-label="Game day get ready with me">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVWTyWIjiqg/poster.jpg" loading="lazy" decoding="async" alt="Game day get ready with me">
-        <span class="dur">0:36</span>
-      </a>
-      <p class="reel-caption">Game day get ready with me</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DVCLBgUksk6/" aria-label="Signature moves require signature snacks">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVCLBgUksk6/poster.jpg" loading="lazy" decoding="async" alt="Signature moves require signature snacks">
-        <span class="dur">0:30</span>
-      </a>
-      <p class="reel-caption">Signature moves require signature snacks</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DUJ23H5k4kQ/" aria-label="Loudest on the field? Goalie mic'd up">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DUJ23H5k4kQ/poster.jpg" loading="lazy" decoding="async" alt="Loudest on the field? Goalie mic'd up">
-        <span class="dur">1:08</span>
-      </a>
-      <p class="reel-caption">Loudest on the field? Goalie mic'd up</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DUQwECeDqhP/" aria-label="What goes on in people's minds all day?">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DUQwECeDqhP/poster.jpg" loading="lazy" decoding="async" alt="What goes on in people's minds all day?">
-        <span class="dur">1:31</span>
-      </a>
-      <p class="reel-caption">What goes on in people's minds all day?</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DSLY6ASE3aU/" aria-label="Some of the best plays happen off the field">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DSLY6ASE3aU/poster.jpg" loading="lazy" decoding="async" alt="Some of the best plays happen off the field">
-        <span class="dur">0:52</span>
-      </a>
-      <p class="reel-caption">Some of the best plays happen off the field</p>
-    </div>
-  </div>
-</section>
-<!-- /AUTORAIL:theme-sport-lacrosse -->
-
-<!-- AUTORAIL:theme-sport-soccer -->
-<section class="shelf">
-  <div class="shelf-head">
-    <h2 class="shelf-title">Soccer</h2>
-  </div>
-  <div class="rail">
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18138746563511713/" aria-label="Season opener baby!">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18138746563511713/poster.jpg" loading="lazy" decoding="async" alt="Season opener baby!">
-        <span class="dur">0:17</span>
-      </a>
-      <p class="reel-caption">Season opener baby!</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-17907940149431231/" aria-label="A typical training week, minus the beep test">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17907940149431231/poster.jpg" loading="lazy" decoding="async" alt="A typical training week, minus the beep test">
-        <span class="dur">0:40</span>
-      </a>
-      <p class="reel-caption">A typical training week, minus the beep test</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18101037461262306/" aria-label="Game day TikToks are back">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18101037461262306/poster.jpg" loading="lazy" decoding="async" alt="Game day TikToks are back">
-        <span class="dur">0:10</span>
-      </a>
-      <p class="reel-caption">Game day TikToks are back</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DSc3ElUESUJ/" aria-label="Next level, VAMOS MIAMI">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DSc3ElUESUJ/poster.jpg" loading="lazy" decoding="async" alt="Next level, VAMOS MIAMI">
-        <span class="dur">0:22</span>
-      </a>
-      <p class="reel-caption">Next level, VAMOS MIAMI</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18087898862367539/" aria-label="Vandy soccer is back, did you miss us?">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18087898862367539/poster.jpg" loading="lazy" decoding="async" alt="Vandy soccer is back, did you miss us?">
-        <span class="dur">0:06</span>
-      </a>
-      <p class="reel-caption">Vandy soccer is back, did you miss us?</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DXXadIQk-Ti/" aria-label="Kinda good, reacting to two goals in a 4-0 win">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DXXadIQk-Ti/poster.jpg" loading="lazy" decoding="async" alt="Kinda good, reacting to two goals in a 4-0 win">
-        <span class="dur">0:39</span>
-      </a>
-      <p class="reel-caption">Kinda good, reacting to two goals in a 4-0 win</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18126886900775731/" aria-label="FDOC, putting the student in student athlete">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18126886900775731/poster.jpg" loading="lazy" decoding="async" alt="FDOC, putting the student in student athlete">
-        <span class="dur">0:13</span>
-      </a>
-      <p class="reel-caption">FDOC, putting the student in student athlete</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DSlYzKACTUp/" aria-label="Built for the big league">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DSlYzKACTUp/poster.jpg" loading="lazy" decoding="async" alt="Built for the big league">
-        <span class="dur">0:21</span>
-      </a>
-      <p class="reel-caption">Built for the big league</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-17928150768394197/" aria-label="Asking my team their relationship status">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17928150768394197/poster.jpg" loading="lazy" decoding="async" alt="Asking my team their relationship status">
-        <span class="dur">2:07</span>
-      </a>
-      <p class="reel-caption">Asking my team their relationship status</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18331279657258021/" aria-label="Never been more tired after a workout in my life">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18331279657258021/poster.jpg" loading="lazy" decoding="async" alt="Never been more tired after a workout in my life">
-        <span class="dur">1:56</span>
-      </a>
-      <p class="reel-caption">Never been more tired after a workout in my life</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-17905958217539491/" aria-label="POV: you have a great training day">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17905958217539491/poster.jpg" loading="lazy" decoding="async" alt="POV: you have a great training day">
-        <span class="dur">0:15</span>
-      </a>
-      <p class="reel-caption">POV: you have a great training day</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18004445420977388/" aria-label="Because what else would we do in preseason">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18004445420977388/poster.jpg" loading="lazy" decoding="async" alt="Because what else would we do in preseason">
-        <span class="dur">0:11</span>
-      </a>
-      <p class="reel-caption">Because what else would we do in preseason</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18092465114545510/" aria-label="Recovery day at the beach">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18092465114545510/poster.jpg" loading="lazy" decoding="async" alt="Recovery day at the beach">
-        <span class="dur">1:07</span>
-      </a>
-      <p class="reel-caption">Recovery day at the beach</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-17914633977430860/" aria-label="Duke women's soccer relationship status">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17914633977430860/poster.jpg" loading="lazy" decoding="async" alt="Duke women's soccer relationship status">
-        <span class="dur">1:42</span>
-      </a>
-      <p class="reel-caption">Duke women's soccer relationship status</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18073294409448351/" aria-label="Team question, who would you choose in the purge">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18073294409448351/poster.jpg" loading="lazy" decoding="async" alt="Team question, who would you choose in the purge">
-        <span class="dur">2:14</span>
-      </a>
-      <p class="reel-caption">Team question, who would you choose in the purge</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-17960991297183277/" aria-label="The best friends and teammates ever">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17960991297183277/poster.jpg" loading="lazy" decoding="async" alt="The best friends and teammates ever">
-        <span class="dur">0:16</span>
-      </a>
-      <p class="reel-caption">The best friends and teammates ever</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18011240618750760/" aria-label="Always with each other">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18011240618750760/poster.jpg" loading="lazy" decoding="async" alt="Always with each other">
-        <span class="dur">0:06</span>
-      </a>
-      <p class="reel-caption">Always with each other</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-17909147277446918/" aria-label="Season's here for Vanderbilt soccer">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17909147277446918/poster.jpg" loading="lazy" decoding="async" alt="Season's here for Vanderbilt soccer">
-        <span class="dur">0:07</span>
-      </a>
-      <p class="reel-caption">Season's here for Vanderbilt soccer</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18105645176021602/" aria-label="Thank you, I came up with that joke all by myself">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18105645176021602/poster.jpg" loading="lazy" decoding="async" alt="Thank you, I came up with that joke all by myself">
-        <span class="dur">0:09</span>
-      </a>
-      <p class="reel-caption">Thank you, I came up with that joke all by myself</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DXkzKyDE6HE/" aria-label="The best place to eat on Duke's campus">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DXkzKyDE6HE/poster.jpg" loading="lazy" decoding="async" alt="The best place to eat on Duke's campus">
-        <span class="dur">0:53</span>
-      </a>
-      <p class="reel-caption">The best place to eat on Duke's campus</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DXSMDFrEwYE/" aria-label="In life you gotta believe in yourself">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DXSMDFrEwYE/poster.jpg" loading="lazy" decoding="async" alt="In life you gotta believe in yourself">
-        <span class="dur">1:13</span>
-      </a>
-      <p class="reel-caption">In life you gotta believe in yourself</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DXxxF97zEZZ/" aria-label="So clutch with Kokada">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DXxxF97zEZZ/poster.jpg" loading="lazy" decoding="async" alt="So clutch with Kokada">
-        <span class="dur">0:32</span>
-      </a>
-      <p class="reel-caption">So clutch with Kokada</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DSc7ugeCTbX/" aria-label="Drew Kerr on legacy, discipline and Duke soccer">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DSc7ugeCTbX/poster.jpg" loading="lazy" decoding="async" alt="Drew Kerr on legacy, discipline and Duke soccer">
-        <span class="dur">0:56</span>
-      </a>
-      <p class="reel-caption">Drew Kerr on legacy, discipline and Duke soccer</p>
-    </div>
-  </div>
-</section>
-<!-- /AUTORAIL:theme-sport-soccer -->
-
-<!-- AUTORAIL:theme-sport-basketball -->
-<section class="shelf">
-  <div class="shelf-head">
-    <h2 class="shelf-title">Basketball</h2>
-  </div>
-  <div class="rail">
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DWcNhsRE--T/" aria-label="Ashlon Jackson wins it when it matters most">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWcNhsRE--T/poster.jpg" loading="lazy" decoding="async" alt="Ashlon Jackson wins it when it matters most">
-        <span class="dur">0:35</span>
-      </a>
-      <p class="reel-caption">Ashlon Jackson wins it when it matters most</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DRgIafUEWNf/" aria-label="Surprising my family with Duke vs Arkansas tickets">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DRgIafUEWNf/poster-fill.jpg" loading="lazy" decoding="async" alt="Surprising my family with Duke vs Arkansas tickets">
-        <span class="dur">1:19</span>
-      </a>
-      <p class="reel-caption">Surprising my family with Duke vs Arkansas tickets</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DVbYsn0Ed7X/" aria-label="Ranking the tents before Duke vs UNC">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVbYsn0Ed7X/poster.jpg" loading="lazy" decoding="async" alt="Ranking the tents before Duke vs UNC">
-        <span class="dur">1:24</span>
-      </a>
-      <p class="reel-caption">Ranking the tents before Duke vs UNC</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18504485662065965/" aria-label="Are you really a Cameron Crazie?">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18504485662065965/poster.jpg" loading="lazy" decoding="async" alt="Are you really a Cameron Crazie?">
-        <span class="dur">1:18</span>
-      </a>
-      <p class="reel-caption">Are you really a Cameron Crazie?</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DVtwGC4ETsR/" aria-label="Five players to watch at the ACC men's tournament">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVtwGC4ETsR/poster.jpg" loading="lazy" decoding="async" alt="Five players to watch at the ACC men's tournament">
-        <span class="dur">1:30</span>
-      </a>
-      <p class="reel-caption">Five players to watch at the ACC men's tournament</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18167945704446888/" aria-label="A summer day in my life at NBA Summer League">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18167945704446888/poster-fill.jpg" loading="lazy" decoding="async" alt="A summer day in my life at NBA Summer League">
-        <span class="dur">1:47</span>
-      </a>
-      <p class="reel-caption">A summer day in my life at NBA Summer League</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18449499679185128/" aria-label="Come lift with UNC women's basketball">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18449499679185128/poster.jpg" loading="lazy" decoding="async" alt="Come lift with UNC women's basketball">
-        <span class="dur">2:48</span>
-      </a>
-      <p class="reel-caption">Come lift with UNC women's basketball</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18123520852684724/" aria-label="Recovery day, hip mobility for everything on the court">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18123520852684724/poster.jpg" loading="lazy" decoding="async" alt="Recovery day, hip mobility for everything on the court">
-        <span class="dur">0:27</span>
-      </a>
-      <p class="reel-caption">Recovery day, hip mobility for everything on the court</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DVeVmrBAYo3/" aria-label="Top five to watch at the ACC women's tournament">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVeVmrBAYo3/poster.jpg" loading="lazy" decoding="async" alt="Top five to watch at the ACC women's tournament">
-        <span class="dur">1:37</span>
-      </a>
-      <p class="reel-caption">Top five to watch at the ACC women's tournament</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18371423269231239/" aria-label="A joy filled summer of travel, strength, and new friends">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18371423269231239/poster.jpg" loading="lazy" decoding="async" alt="A joy filled summer of travel, strength, and new friends">
-        <span class="dur">1:00</span>
-      </a>
-      <p class="reel-caption">A joy filled summer of travel, strength, and new friends</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18094113346917655/" aria-label="The hard decision not to play high school ball">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18094113346917655/poster.jpg" loading="lazy" decoding="async" alt="The hard decision not to play high school ball">
-        <span class="dur">0:56</span>
-      </a>
-      <p class="reel-caption">The hard decision not to play high school ball</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18129644020643497/" aria-label="She touched the line, in time lapse form">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18129644020643497/poster.jpg" loading="lazy" decoding="async" alt="She touched the line, in time lapse form">
-        <span class="dur">0:29</span>
-      </a>
-      <p class="reel-caption">She touched the line, in time lapse form</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18100859243199271/" aria-label="Back in the weight room gearing up for preseason">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18100859243199271/poster.jpg" loading="lazy" decoding="async" alt="Back in the weight room gearing up for preseason">
-        <span class="dur">0:33</span>
-      </a>
-      <p class="reel-caption">Back in the weight room gearing up for preseason</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18102834068256815/" aria-label="The last of summer session">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18102834068256815/poster.jpg" loading="lazy" decoding="async" alt="The last of summer session">
-        <span class="dur">0:26</span>
-      </a>
-      <p class="reel-caption">The last of summer session</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18104372204596434/" aria-label="Stackin points at an HBCU near you, coming soon">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18104372204596434/poster.jpg" loading="lazy" decoding="async" alt="Stackin points at an HBCU near you, coming soon">
-        <span class="dur">0:07</span>
-      </a>
-      <p class="reel-caption">Stackin points at an HBCU near you, coming soon</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-17991401967037138/" aria-label="Join me for a day in the life">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17991401967037138/poster.jpg" loading="lazy" decoding="async" alt="Join me for a day in the life">
-        <span class="dur">0:33</span>
-      </a>
-      <p class="reel-caption">Join me for a day in the life</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18110144225517913/" aria-label="Friday work featuring some of my awesome teammates">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18110144225517913/poster.jpg" loading="lazy" decoding="async" alt="Friday work featuring some of my awesome teammates">
-        <span class="dur">0:44</span>
-      </a>
-      <p class="reel-caption">Friday work featuring some of my awesome teammates</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DVl1RXDEdPU/" aria-label="Duke is rolling into a season finale clash with UNC">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVl1RXDEdPU/poster.jpg" loading="lazy" decoding="async" alt="Duke is rolling into a season finale clash with UNC">
-        <span class="dur">0:46</span>
-      </a>
-      <p class="reel-caption">Duke is rolling into a season finale clash with UNC</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18126745645679753/" aria-label="Day 9 of stacking good days, documenting the journey">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18126745645679753/poster.jpg" loading="lazy" decoding="async" alt="Day 9 of stacking good days, documenting the journey">
-        <span class="dur">1:02</span>
-      </a>
-      <p class="reel-caption">Day 9 of stacking good days, documenting the journey</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DVMgYkxgYZK/" aria-label="Three reasons Duke basketball is ready for March">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVMgYkxgYZK/poster.jpg" loading="lazy" decoding="async" alt="Three reasons Duke basketball is ready for March">
-        <span class="dur">1:01</span>
-      </a>
-      <p class="reel-caption">Three reasons Duke basketball is ready for March</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18401960380094490/" aria-label="Loving the positivity, lift with me">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18401960380094490/poster.jpg" loading="lazy" decoding="async" alt="Loving the positivity, lift with me">
-        <span class="dur">1:28</span>
-      </a>
-      <p class="reel-caption">Loving the positivity, lift with me</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DVQ5r3UkwWu/" aria-label="Now this is how a halftime is done">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVQ5r3UkwWu/poster.jpg" loading="lazy" decoding="async" alt="Now this is how a halftime is done">
-        <span class="dur">1:08</span>
-      </a>
-      <p class="reel-caption">Now this is how a halftime is done</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18009450335869521/" aria-label="Come visit Chapel Hill for the best campus tour">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18009450335869521/poster.jpg" loading="lazy" decoding="async" alt="Come visit Chapel Hill for the best campus tour">
-        <span class="dur">0:07</span>
-      </a>
-      <p class="reel-caption">Come visit Chapel Hill for the best campus tour</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-17925353421145604/" aria-label="Keep us in your prayers">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17925353421145604/poster.jpg" loading="lazy" decoding="async" alt="Keep us in your prayers">
-        <span class="dur">0:05</span>
-      </a>
-      <p class="reel-caption">Keep us in your prayers</p>
-    </div>
-  </div>
-</section>
-<!-- /AUTORAIL:theme-sport-basketball -->
-
-<!-- AUTORAIL:theme-sport-golf -->
-<section class="shelf">
-  <div class="shelf-head">
-    <h2 class="shelf-title">Golf</h2>
-  </div>
-  <div class="rail">
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DWXNA0XAQfP/" aria-label="BK flips the mic for Ethan's blind music rankings">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWXNA0XAQfP/poster.jpg" loading="lazy" decoding="async" alt="BK flips the mic for Ethan's blind music rankings">
-        <span class="dur">1:05</span>
-      </a>
-      <p class="reel-caption">BK flips the mic for Ethan's blind music rankings</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DX9pD_jRvG4/" aria-label="Hear some Swing Thoughts from Alexander Weinberg">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DX9pD_jRvG4/poster.jpg" loading="lazy" decoding="async" alt="Hear some Swing Thoughts from Alexander Weinberg">
-        <span class="dur">0:59</span>
-      </a>
-      <p class="reel-caption">Hear some Swing Thoughts from Alexander Weinberg</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DUb-W9LDFK7/" aria-label="When Duke Golf travels">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DUb-W9LDFK7/poster.jpg" loading="lazy" decoding="async" alt="When Duke Golf travels">
-        <span class="dur">2:04</span>
-      </a>
-      <p class="reel-caption">When Duke Golf travels</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DXPYxm2EbyW/" aria-label="Q&A and perspective on Swing Thoughts with John Hiller">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DXPYxm2EbyW/poster.jpg" loading="lazy" decoding="async" alt="Q&A and perspective on Swing Thoughts with John Hiller">
-        <span class="dur">0:51</span>
-      </a>
-      <p class="reel-caption">Q&A and perspective on Swing Thoughts with John Hiller</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DWuADuEkdY5/" aria-label="Great vibes and Swing Thoughts with Ollie">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWuADuEkdY5/poster.jpg" loading="lazy" decoding="async" alt="Great vibes and Swing Thoughts with Ollie">
-        <span class="dur">1:12</span>
-      </a>
-      <p class="reel-caption">Great vibes and Swing Thoughts with Ollie</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DVhcm0fjJTN/" aria-label="Squad rolling out for The Hayt">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVhcm0fjJTN/poster.jpg" loading="lazy" decoding="async" alt="Squad rolling out for The Hayt">
-        <span class="dur">0:19</span>
-      </a>
-      <p class="reel-caption">Squad rolling out for The Hayt</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DUrbH56DJaU/" aria-label="Closest to the pin showdown in Luling, Texas">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DUrbH56DJaU/poster.jpg" loading="lazy" decoding="async" alt="Closest to the pin showdown in Luling, Texas">
-        <span class="dur">0:18</span>
-      </a>
-      <p class="reel-caption">Closest to the pin showdown in Luling, Texas</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DVbUNKQERl1/" aria-label="Welcome to Swing Thoughts, first up with Ethan Evans">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVbUNKQERl1/poster.jpg" loading="lazy" decoding="async" alt="Welcome to Swing Thoughts, first up with Ethan Evans">
-        <span class="dur">0:58</span>
-      </a>
-      <p class="reel-caption">Welcome to Swing Thoughts, first up with Ethan Evans</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-17950544214229583/" aria-label="A good hole with every shot tracked">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17950544214229583/poster.jpg" loading="lazy" decoding="async" alt="A good hole with every shot tracked">
-        <span class="dur">1:08</span>
-      </a>
-      <p class="reel-caption">A good hole with every shot tracked</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18013895390866844/" aria-label="One of two pars today, but who's counting">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18013895390866844/poster.jpg" loading="lazy" decoding="async" alt="One of two pars today, but who's counting">
-        <span class="dur">0:21</span>
-      </a>
-      <p class="reel-caption">One of two pars today, but who's counting</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18058405259780658/" aria-label="Something slight with Dawson Knowles">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18058405259780658/poster.jpg" loading="lazy" decoding="async" alt="Something slight with Dawson Knowles">
-        <span class="dur">0:32</span>
-      </a>
-      <p class="reel-caption">Something slight with Dawson Knowles</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DXFbRbEAdKJ/" aria-label="Swing Thoughts with BK, a Q&amp;A while he works his game">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DXFbRbEAdKJ/poster.jpg" loading="lazy" decoding="async" alt="Swing Thoughts with BK, a Q&amp;A while he works his game">
-        <span class="dur">0:52</span>
-      </a>
-      <p class="reel-caption">Swing Thoughts with BK, a Q&amp;A while he works his game</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DWZwBSNhS6R/" aria-label="William Love joins the latest edition of Swing Thoughts">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWZwBSNhS6R/poster.jpg" loading="lazy" decoding="async" alt="William Love joins the latest edition of Swing Thoughts">
-        <span class="dur">1:17</span>
-      </a>
-      <p class="reel-caption">William Love joins the latest edition of Swing Thoughts</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DVxAxL8DyCo/" aria-label="Daniel Choi is next up on Swing Thoughts">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVxAxL8DyCo/poster.jpg" loading="lazy" decoding="async" alt="Daniel Choi is next up on Swing Thoughts">
-        <span class="dur">0:45</span>
-      </a>
-      <p class="reel-caption">Daniel Choi is next up on Swing Thoughts</p>
-    </div>
-  </div>
-</section>
-<!-- /AUTORAIL:theme-sport-golf -->
-
-<!-- AUTORAIL:theme-sport-volleyball -->
-<section class="shelf">
-  <div class="shelf-head">
-    <h2 class="shelf-title">Volleyball</h2>
-  </div>
-  <div class="rail">
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-17933785914362471/" aria-label="The million dollar match">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17933785914362471/poster.jpg" loading="lazy" decoding="async" alt="The million dollar match">
-        <span class="dur">0:12</span>
-      </a>
-      <p class="reel-caption">The million dollar match</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18601698592059847/" aria-label="A summer full of training and my internship">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18601698592059847/poster.jpg" loading="lazy" decoding="async" alt="A summer full of training and my internship">
-        <span class="dur">0:14</span>
-      </a>
-      <p class="reel-caption">A summer full of training and my internship</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18094851788545268/" aria-label="Making herstory with Husker volleyball">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18094851788545268/poster.jpg" loading="lazy" decoding="async" alt="Making herstory with Husker volleyball">
-        <span class="dur">0:15</span>
-      </a>
-      <p class="reel-caption">Making herstory with Husker volleyball</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DVTw9rPjoNe/" aria-label="Fueled by Kokada">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVTw9rPjoNe/poster.jpg" loading="lazy" decoding="async" alt="Fueled by Kokada">
-        <span class="dur">0:36</span>
-      </a>
-      <p class="reel-caption">Fueled by Kokada</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18122118952870372/" aria-label="Making noise this season">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18122118952870372/poster.jpg" loading="lazy" decoding="async" alt="Making noise this season">
-        <span class="dur">0:17</span>
-      </a>
-      <p class="reel-caption">Making noise this season</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18097989860343139/" aria-label="Recovery is so important">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18097989860343139/poster.jpg" loading="lazy" decoding="async" alt="Recovery is so important">
-        <span class="dur">1:11</span>
-      </a>
-      <p class="reel-caption">Recovery is so important</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18121260613806693/" aria-label="Four days till preseason">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18121260613806693/poster.jpg" loading="lazy" decoding="async" alt="Four days till preseason">
-        <span class="dur">2:14</span>
-      </a>
-      <p class="reel-caption">Four days till preseason</p>
+      <a class="card card-reel" href="/watch/ig-18137657242578464/" aria-label="sooo what sport do I try next?">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18137657242578464/poster.jpg" loading="lazy" decoding="async" alt="sooo what sport do I try next?">
+        <span class="dur">0:31</span>
+      </a>
+      <p class="reel-caption">sooo what sport do I try next?</p>
     </div>
     <div class="reel-cell">
       <a class="card card-reel" href="/watch/ig-17997105605809898/" aria-label="Dancing into preseason">
@@ -2828,6 +2295,995 @@ br.mbr{display:none}
       <p class="reel-caption">Dancing into preseason</p>
     </div>
     <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18106955224869294/" aria-label="I love my grass and this trend!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18106955224869294/poster.jpg" loading="lazy" decoding="async" alt="I love my grass and this trend!">
+        <span class="dur">0:09</span>
+      </a>
+      <p class="reel-caption">I love my grass and this trend!</p>
+    </div>
+  </div>
+</section>
+<!-- /AUTORAIL:theme-cat-comedy -->
+
+<!-- AUTORAIL:theme-cat-food -->
+<section class="shelf">
+  <div class="shelf-head">
+    <h2 class="shelf-title">Food</h2>
+  </div>
+  <div class="rail">
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18126158434853416/" aria-label="(MINI) GROCERY HAUL AS A D1 TENNIS PLAYER (in 45 seconds) trade...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18126158434853416/poster.jpg" loading="lazy" decoding="async" alt="(MINI) GROCERY HAUL AS A D1 TENNIS PLAYER (in 45 seconds) trade...">
+        <span class="dur">0:49</span>
+      </a>
+      <p class="reel-caption">(MINI) GROCERY HAUL AS A D1 TENNIS PLAYER (in 45 seconds) trade...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18392849044163025/" aria-label="favorite part of the week walmart samsclub">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18392849044163025/poster.jpg" loading="lazy" decoding="async" alt="favorite part of the week walmart samsclub">
+        <span class="dur">0:46</span>
+      </a>
+      <p class="reel-caption">favorite part of the week walmart samsclub</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18125692315644304/" aria-label="D1 Athlete Meal Prep">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18125692315644304/poster.jpg" loading="lazy" decoding="async" alt="D1 Athlete Meal Prep">
+        <span class="dur">0:53</span>
+      </a>
+      <p class="reel-caption">D1 Athlete Meal Prep</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18115086200100803/" aria-label="Wieiad on TUF team retreat!!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18115086200100803/poster.jpg" loading="lazy" decoding="async" alt="Wieiad on TUF team retreat!!">
+        <span class="dur">0:10</span>
+      </a>
+      <p class="reel-caption">Wieiad on TUF team retreat!!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18029077496849391/" aria-label="mamakabowls JUST DROPPED A FALL DRINK MENU AND YOU NEED TO GO L...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18029077496849391/poster.jpg" loading="lazy" decoding="async" alt="mamakabowls JUST DROPPED A FALL DRINK MENU AND YOU NEED TO GO L...">
+        <span class="dur">0:23</span>
+      </a>
+      <p class="reel-caption">mamakabowls JUST DROPPED A FALL DRINK MENU AND YOU NEED TO GO L...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DcluFflv8ov/" aria-label="Dline Dinners ep.2- High Protein Honey Butter Steak bites and C...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DcluFflv8ov/poster.jpg" loading="lazy" decoding="async" alt="Dline Dinners ep.2- High Protein Honey Butter Steak bites and C...">
+        <span class="dur">2:05</span>
+      </a>
+      <p class="reel-caption">Dline Dinners ep.2- High Protein Honey Butter Steak bites and C...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17909074113530111/" aria-label="As a former big back I think it was delicious zanebaltz">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17909074113530111/poster.jpg" loading="lazy" decoding="async" alt="As a former big back I think it was delicious zanebaltz">
+        <span class="dur">0:46</span>
+      </a>
+      <p class="reel-caption">As a former big back I think it was delicious zanebaltz</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DcOSOPII-kZ/" aria-label="What I eat in a day as a d1 runner at duke!!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DcOSOPII-kZ/poster.jpg" loading="lazy" decoding="async" alt="What I eat in a day as a d1 runner at duke!!">
+        <span class="dur">0:30</span>
+      </a>
+      <p class="reel-caption">What I eat in a day as a d1 runner at duke!!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DcE8waBShXM/" aria-label="Erewhon review!!!!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DcE8waBShXM/poster.jpg" loading="lazy" decoding="async" alt="Erewhon review!!!!">
+        <span class="dur">2:15</span>
+      </a>
+      <p class="reel-caption">Erewhon review!!!!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17940162501325495/" aria-label="theres a method to the madness">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17940162501325495/poster-fill.jpg" loading="lazy" decoding="async" alt="theres a method to the madness">
+        <span class="dur">0:29</span>
+      </a>
+      <p class="reel-caption">theres a method to the madness</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18096379253347645/" aria-label="Best tasting meal I make easily">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18096379253347645/poster.jpg" loading="lazy" decoding="async" alt="Best tasting meal I make easily">
+        <span class="dur">1:16</span>
+      </a>
+      <p class="reel-caption">Best tasting meal I make easily</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18105642542517916/" aria-label="Let me not be the only one">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18105642542517916/poster.jpg" loading="lazy" decoding="async" alt="Let me not be the only one">
+        <span class="dur">0:09</span>
+      </a>
+      <p class="reel-caption">Let me not be the only one</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18106814999516260/" aria-label="Another great meal option">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18106814999516260/poster.jpg" loading="lazy" decoding="async" alt="Another great meal option">
+        <span class="dur">0:31</span>
+      </a>
+      <p class="reel-caption">Another great meal option</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18133267705580744/" aria-label="Try this before your next run">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18133267705580744/poster.jpg" loading="lazy" decoding="async" alt="Try this before your next run">
+        <span class="dur">0:14</span>
+      </a>
+      <p class="reel-caption">Try this before your next run</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18139394128487699/" aria-label="Easy chicken nugget quesadilla with 50 grams of protein">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18139394128487699/poster.jpg" loading="lazy" decoding="async" alt="Easy chicken nugget quesadilla with 50 grams of protein">
+        <span class="dur">0:27</span>
+      </a>
+      <p class="reel-caption">Easy chicken nugget quesadilla with 50 grams of protein</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18087982559115449/" aria-label="Back with another easy meal">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18087982559115449/poster.jpg" loading="lazy" decoding="async" alt="Back with another easy meal">
+        <span class="dur">0:30</span>
+      </a>
+      <p class="reel-caption">Back with another easy meal</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17896967286535625/" aria-label="recent eatsss">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17896967286535625/poster.jpg" loading="lazy" decoding="async" alt="recent eatsss">
+        <span class="dur">0:24</span>
+      </a>
+      <p class="reel-caption">recent eatsss</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18079410575265105/" aria-label="And the food was fireeee">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18079410575265105/poster.jpg" loading="lazy" decoding="async" alt="And the food was fireeee">
+        <span class="dur">0:12</span>
+      </a>
+      <p class="reel-caption">And the food was fireeee</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18118891624776521/" aria-label="Pretty good sandwich">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18118891624776521/poster.jpg" loading="lazy" decoding="async" alt="Pretty good sandwich">
+        <span class="dur">0:53</span>
+      </a>
+      <p class="reel-caption">Pretty good sandwich</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DW48e21svDj/" aria-label="my current hyperfixation! finally decided to hop on the cottage...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DW48e21svDj/poster.jpg" loading="lazy" decoding="async" alt="my current hyperfixation! finally decided to hop on the cottage...">
+        <span class="dur">0:24</span>
+      </a>
+      <p class="reel-caption">my current hyperfixation! finally decided to hop on the cottage...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DWpQKY9DuMZ/" aria-label="The morning routine that transformed my entire days">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWpQKY9DuMZ/poster.jpg" loading="lazy" decoding="async" alt="The morning routine that transformed my entire days">
+        <span class="dur">1:02</span>
+      </a>
+      <p class="reel-caption">The morning routine that transformed my entire days</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DVcRiVziV0A/" aria-label="How I fuel for training + how I train on an easy practice day!!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVcRiVziV0A/poster.jpg" loading="lazy" decoding="async" alt="How I fuel for training + how I train on an easy practice day!!">
+        <span class="dur">0:39</span>
+      </a>
+      <p class="reel-caption">How I fuel for training + how I train on an easy practice day!!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DURua8nCQ24/" aria-label="Duke Dining is Fire">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DURua8nCQ24/poster-fill.jpg" loading="lazy" decoding="async" alt="Duke Dining is Fire">
+        <span class="dur">0:14</span>
+      </a>
+      <p class="reel-caption">Duke Dining is Fire</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18062731331161503/" aria-label="Tolbert’s Table is back! Let’s make pasta salad">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18062731331161503/poster.jpg" loading="lazy" decoding="async" alt="Tolbert’s Table is back! Let’s make pasta salad">
+        <span class="dur">0:21</span>
+      </a>
+      <p class="reel-caption">Tolbert’s Table is back! Let’s make pasta salad</p>
+    </div>
+  </div>
+</section>
+<!-- /AUTORAIL:theme-cat-food -->
+
+<!-- AUTORAIL:theme-cat-style -->
+<section class="shelf">
+  <div class="shelf-head">
+    <h2 class="shelf-title">Style</h2>
+  </div>
+  <div class="rail">
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18073038776723384/" aria-label="fall gear drop 2026!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18073038776723384/poster.jpg" loading="lazy" decoding="async" alt="fall gear drop 2026!">
+        <span class="dur">0:53</span>
+      </a>
+      <p class="reel-caption">fall gear drop 2026!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18087636173409011/" aria-label="I GEAR DAY &amp; TUF">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18087636173409011/poster.jpg" loading="lazy" decoding="async" alt="I GEAR DAY &amp; TUF">
+        <span class="dur">0:25</span>
+      </a>
+      <p class="reel-caption">I GEAR DAY &amp; TUF</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18118169999489710/" aria-label="Fencing in sparkly shoes is more fun anyways!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18118169999489710/poster.jpg" loading="lazy" decoding="async" alt="Fencing in sparkly shoes is more fun anyways!">
+        <span class="dur">0:20</span>
+      </a>
+      <p class="reel-caption">Fencing in sparkly shoes is more fun anyways!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18587544124066132/" aria-label="HAPPY GEAR DAYYYYY templefencing">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18587544124066132/poster.jpg" loading="lazy" decoding="async" alt="HAPPY GEAR DAYYYYY templefencing">
+        <span class="dur">0:18</span>
+      </a>
+      <p class="reel-caption">HAPPY GEAR DAYYYYY templefencing</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DcoeoOJolnT/" aria-label="d1 cross country gear haul!!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DcoeoOJolnT/poster.jpg" loading="lazy" decoding="async" alt="d1 cross country gear haul!!">
+        <span class="dur">0:44</span>
+      </a>
+      <p class="reel-caption">d1 cross country gear haul!!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17947790583050744/" aria-label="Syracuse gear haul!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17947790583050744/poster.jpg" loading="lazy" decoding="async" alt="Syracuse gear haul!">
+        <span class="dur">0:25</span>
+      </a>
+      <p class="reel-caption">Syracuse gear haul!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18023102321698490/" aria-label="Almost practice time, shoutout Coach Blew">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18023102321698490/poster.jpg" loading="lazy" decoding="async" alt="Almost practice time, shoutout Coach Blew">
+        <span class="dur">0:32</span>
+      </a>
+      <p class="reel-caption">Almost practice time, shoutout Coach Blew</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DceE8QmxPDo/" aria-label="Duke W Lax fall gear dukewlax">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DceE8QmxPDo/poster.jpg" loading="lazy" decoding="async" alt="Duke W Lax fall gear dukewlax">
+        <span class="dur">1:12</span>
+      </a>
+      <p class="reel-caption">Duke W Lax fall gear dukewlax</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18622087570032893/" aria-label="I need Athlete Con 4.0 yesterday">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18622087570032893/poster.jpg" loading="lazy" decoding="async" alt="I need Athlete Con 4.0 yesterday">
+        <span class="dur">2:52</span>
+      </a>
+      <p class="reel-caption">I need Athlete Con 4.0 yesterday</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18486514501097365/" aria-label="What's in my purse at Disney World">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18486514501097365/poster.jpg" loading="lazy" decoding="async" alt="What's in my purse at Disney World">
+        <span class="dur">0:19</span>
+      </a>
+      <p class="reel-caption">What's in my purse at Disney World</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17981044581114552/" aria-label="Smth slight from athletecon">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17981044581114552/poster.jpg" loading="lazy" decoding="async" alt="Smth slight from athletecon">
+        <span class="dur">0:14</span>
+      </a>
+      <p class="reel-caption">Smth slight from athletecon</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18128446858736934/" aria-label="GRWM, quick fit check before I head out">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18128446858736934/poster.jpg" loading="lazy" decoding="async" alt="GRWM, quick fit check before I head out">
+        <span class="dur">0:09</span>
+      </a>
+      <p class="reel-caption">GRWM, quick fit check before I head out</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17902205292528326/" aria-label="Newest PO purchase, golf edition">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17902205292528326/poster.jpg" loading="lazy" decoding="async" alt="Newest PO purchase, golf edition">
+        <span class="dur">1:00</span>
+      </a>
+      <p class="reel-caption">Newest PO purchase, golf edition</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18067507583721547/" aria-label="2026 Fall Camp Gear Drop, ready for the season">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18067507583721547/poster.jpg" loading="lazy" decoding="async" alt="2026 Fall Camp Gear Drop, ready for the season">
+        <span class="dur">0:35</span>
+      </a>
+      <p class="reel-caption">2026 Fall Camp Gear Drop, ready for the season</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18422985145194763/" aria-label="Christmas in July!!! Thank you bc_wsoc">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18422985145194763/poster.jpg" loading="lazy" decoding="async" alt="Christmas in July!!! Thank you bc_wsoc">
+        <span class="dur">2:47</span>
+      </a>
+      <p class="reel-caption">Christmas in July!!! Thank you bc_wsoc</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18188352055387918/" aria-label="I'm a D1 runner but I don't run every day">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18188352055387918/poster.jpg" loading="lazy" decoding="async" alt="I'm a D1 runner but I don't run every day">
+        <span class="dur">0:08</span>
+      </a>
+      <p class="reel-caption">I'm a D1 runner but I don't run every day</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18413219272194419/" aria-label="Clean hair lasts a max of 12 hours">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18413219272194419/poster.jpg" loading="lazy" decoding="async" alt="Clean hair lasts a max of 12 hours">
+        <span class="dur">0:07</span>
+      </a>
+      <p class="reel-caption">Clean hair lasts a max of 12 hours</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18103924387915006/" aria-label="2026 HBCU Elite Field Daze Gear Drop">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18103924387915006/poster.jpg" loading="lazy" decoding="async" alt="2026 HBCU Elite Field Daze Gear Drop">
+        <span class="dur">0:19</span>
+      </a>
+      <p class="reel-caption">2026 HBCU Elite Field Daze Gear Drop</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18090133556527183/" aria-label="Sue me! nike">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18090133556527183/poster.jpg" loading="lazy" decoding="async" alt="Sue me! nike">
+        <span class="dur">0:16</span>
+      </a>
+      <p class="reel-caption">Sue me! nike</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DZvPwBrzCYq/" aria-label="Take it from Coltin, eliassportsgear is ELITE">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DZvPwBrzCYq/poster.jpg" loading="lazy" decoding="async" alt="Take it from Coltin, eliassportsgear is ELITE">
+        <span class="dur">0:35</span>
+      </a>
+      <p class="reel-caption">Take it from Coltin, eliassportsgear is ELITE</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18599537119061583/" aria-label="Drawing my practice fit!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18599537119061583/poster.jpg" loading="lazy" decoding="async" alt="Drawing my practice fit!">
+        <span class="dur">0:18</span>
+      </a>
+      <p class="reel-caption">Drawing my practice fit!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DWmtd0ljxNP/" aria-label="the best new hat to go with the most beautiful day Use CAMPUS15...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWmtd0ljxNP/poster.jpg" loading="lazy" decoding="async" alt="the best new hat to go with the most beautiful day Use CAMPUS15...">
+        <span class="dur">0:17</span>
+      </a>
+      <p class="reel-caption">the best new hat to go with the most beautiful day Use CAMPUS15...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DWSJMWrjoCT/" aria-label="Shopping Duke gear for my new job at NILTV">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWSJMWrjoCT/poster.jpg" loading="lazy" decoding="async" alt="Shopping Duke gear for my new job at NILTV">
+        <span class="dur">1:30</span>
+      </a>
+      <p class="reel-caption">Shopping Duke gear for my new job at NILTV</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DWRt4GjjtGY/" aria-label="your sign to add some extra fun to your day">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWRt4GjjtGY/poster.jpg" loading="lazy" decoding="async" alt="your sign to add some extra fun to your day">
+        <span class="dur">0:12</span>
+      </a>
+      <p class="reel-caption">your sign to add some extra fun to your day</p>
+    </div>
+  </div>
+</section>
+<!-- /AUTORAIL:theme-cat-style -->
+
+<!-- AUTORAIL:theme-cat-home -->
+
+<!-- /AUTORAIL:theme-cat-home -->
+
+<!-- AUTORAIL:theme-cat-games -->
+
+<!-- /AUTORAIL:theme-cat-games -->
+
+<!-- AUTORAIL:theme-cat-storytelling -->
+<section class="shelf">
+  <div class="shelf-head">
+    <h2 class="shelf-title">Storytelling</h2>
+  </div>
+  <div class="rail">
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17908049181280440/" aria-label="A clip from our first episode with gracehasselbeck and her wisd...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17908049181280440/poster.jpg" loading="lazy" decoding="async" alt="A clip from our first episode with gracehasselbeck and her wisd...">
+        <span class="dur">0:28</span>
+      </a>
+      <p class="reel-caption">A clip from our first episode with gracehasselbeck and her wisd...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18030826340830062/" aria-label="A broken hip before Wake Forest, the comeback story">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18030826340830062/poster.jpg" loading="lazy" decoding="async" alt="A broken hip before Wake Forest, the comeback story">
+        <span class="dur">0:27</span>
+      </a>
+      <p class="reel-caption">A broken hip before Wake Forest, the comeback story</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18204942922360876/" aria-label="Surgery STORYTIME">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18204942922360876/poster.jpg" loading="lazy" decoding="async" alt="Surgery STORYTIME">
+        <span class="dur">0:58</span>
+      </a>
+      <p class="reel-caption">Surgery STORYTIME</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18140516599558248/" aria-label="From player to coach">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18140516599558248/poster.jpg" loading="lazy" decoding="async" alt="From player to coach">
+        <span class="dur">1:38</span>
+      </a>
+      <p class="reel-caption">From player to coach</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DYkyFXvSDjT/" aria-label="Bringing the NIL conversation to the forefront">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DYkyFXvSDjT/poster.jpg" loading="lazy" decoding="async" alt="Bringing the NIL conversation to the forefront">
+        <span class="dur">0:45</span>
+      </a>
+      <p class="reel-caption">Bringing the NIL conversation to the forefront</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DX9pD_jRvG4/" aria-label="Hear some Swing Thoughts from Alexander Weinberg">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DX9pD_jRvG4/poster.jpg" loading="lazy" decoding="async" alt="Hear some Swing Thoughts from Alexander Weinberg">
+        <span class="dur">0:59</span>
+      </a>
+      <p class="reel-caption">Hear some Swing Thoughts from Alexander Weinberg</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18094113346917655/" aria-label="The hard decision not to play high school ball">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18094113346917655/poster.jpg" loading="lazy" decoding="async" alt="The hard decision not to play high school ball">
+        <span class="dur">0:56</span>
+      </a>
+      <p class="reel-caption">The hard decision not to play high school ball</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DXSMDFrEwYE/" aria-label="In life you gotta believe in yourself">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DXSMDFrEwYE/poster.jpg" loading="lazy" decoding="async" alt="In life you gotta believe in yourself">
+        <span class="dur">1:13</span>
+      </a>
+      <p class="reel-caption">In life you gotta believe in yourself</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DXPYxm2EbyW/" aria-label="Q&A and perspective on Swing Thoughts with John Hiller">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DXPYxm2EbyW/poster.jpg" loading="lazy" decoding="async" alt="Q&A and perspective on Swing Thoughts with John Hiller">
+        <span class="dur">0:51</span>
+      </a>
+      <p class="reel-caption">Q&A and perspective on Swing Thoughts with John Hiller</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DXKNvGdDh5n/" aria-label="Around the Bases with senior outfielder Tyler Albright">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DXKNvGdDh5n/poster.jpg" loading="lazy" decoding="async" alt="Around the Bases with senior outfielder Tyler Albright">
+        <span class="dur">1:41</span>
+      </a>
+      <p class="reel-caption">Around the Bases with senior outfielder Tyler Albright</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DXFbRbEAdKJ/" aria-label="Swing Thoughts with BK, a Q&amp;A while he works his game">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DXFbRbEAdKJ/poster.jpg" loading="lazy" decoding="async" alt="Swing Thoughts with BK, a Q&amp;A while he works his game">
+        <span class="dur">0:52</span>
+      </a>
+      <p class="reel-caption">Swing Thoughts with BK, a Q&amp;A while he works his game</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DXFC8wFDv-d/" aria-label="Senior szn for sydrsmith dukewlax">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DXFC8wFDv-d/poster.jpg" loading="lazy" decoding="async" alt="Senior szn for sydrsmith dukewlax">
+        <span class="dur">1:17</span>
+      </a>
+      <p class="reel-caption">Senior szn for sydrsmith dukewlax</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DW4wt_Ykx1v/" aria-label="Triple citizen, one goal, Bella Perry">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DW4wt_Ykx1v/poster.jpg" loading="lazy" decoding="async" alt="Triple citizen, one goal, Bella Perry">
+        <span class="dur">1:00</span>
+      </a>
+      <p class="reel-caption">Triple citizen, one goal, Bella Perry</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DWy8WKSEsJf/" aria-label="Julia Magliaro on what she loves about Duke track and field">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWy8WKSEsJf/poster.jpg" loading="lazy" decoding="async" alt="Julia Magliaro on what she loves about Duke track and field">
+        <span class="dur">0:15</span>
+      </a>
+      <p class="reel-caption">Julia Magliaro on what she loves about Duke track and field</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DWnGV6FkphB/" aria-label="Ballher of the week, Julia Magliaro on Duke's ACC title run">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWnGV6FkphB/poster.jpg" loading="lazy" decoding="async" alt="Ballher of the week, Julia Magliaro on Duke's ACC title run">
+        <span class="dur">0:38</span>
+      </a>
+      <p class="reel-caption">Ballher of the week, Julia Magliaro on Duke's ACC title run</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DVy_Q9UkSRb/" aria-label="Wise words from anthonydrago7">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVy_Q9UkSRb/poster.jpg" loading="lazy" decoding="async" alt="Wise words from anthonydrago7">
+        <span class="dur">1:11</span>
+      </a>
+      <p class="reel-caption">Wise words from anthonydrago7</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DVxAxL8DyCo/" aria-label="Daniel Choi is next up on Swing Thoughts">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVxAxL8DyCo/poster.jpg" loading="lazy" decoding="async" alt="Daniel Choi is next up on Swing Thoughts">
+        <span class="dur">0:45</span>
+      </a>
+      <p class="reel-caption">Daniel Choi is next up on Swing Thoughts</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DVbUNKQERl1/" aria-label="Welcome to Swing Thoughts, first up with Ethan Evans">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVbUNKQERl1/poster.jpg" loading="lazy" decoding="async" alt="Welcome to Swing Thoughts, first up with Ethan Evans">
+        <span class="dur">0:58</span>
+      </a>
+      <p class="reel-caption">Welcome to Swing Thoughts, first up with Ethan Evans</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DVRywx-DsST/" aria-label="What RJ said">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DVRywx-DsST/poster.jpg" loading="lazy" decoding="async" alt="What RJ said">
+        <span class="dur">0:35</span>
+      </a>
+      <p class="reel-caption">What RJ said</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DU_bYSkkv3p/" aria-label="Player spotlight of the week, Bobby Marsh">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DU_bYSkkv3p/poster.jpg" loading="lazy" decoding="async" alt="Player spotlight of the week, Bobby Marsh">
+        <span class="dur">2:27</span>
+      </a>
+      <p class="reel-caption">Player spotlight of the week, Bobby Marsh</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DU1etbuETV7/" aria-label="The Truth About College Baseball Recruiting with coachmoose31 F...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DU1etbuETV7/poster.jpg" loading="lazy" decoding="async" alt="The Truth About College Baseball Recruiting with coachmoose31 F...">
+        <span class="dur">0:51</span>
+      </a>
+      <p class="reel-caption">The Truth About College Baseball Recruiting with coachmoose31 F...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DUlqH3zEf3P/" aria-label="Duke baseball head coach was asked by on the development of ret...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DUlqH3zEf3P/poster.jpg" loading="lazy" decoding="async" alt="Duke baseball head coach was asked by on the development of ret...">
+        <span class="dur">2:57</span>
+      </a>
+      <p class="reel-caption">Duke baseball head coach was asked by on the development of ret...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DUbL1w_ADM6/" aria-label="Head Duke baseball coach discusses preseason improvements made...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DUbL1w_ADM6/poster.jpg" loading="lazy" decoding="async" alt="Head Duke baseball coach discusses preseason improvements made...">
+        <span class="dur">0:39</span>
+      </a>
+      <p class="reel-caption">Head Duke baseball coach discusses preseason improvements made...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DUYojW1gNe9/" aria-label="Duke head baseball coach talks about the development has made t...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DUYojW1gNe9/poster.jpg" loading="lazy" decoding="async" alt="Duke head baseball coach talks about the development has made t...">
+        <span class="dur">2:29</span>
+      </a>
+      <p class="reel-caption">Duke head baseball coach talks about the development has made t...</p>
+    </div>
+  </div>
+</section>
+<!-- /AUTORAIL:theme-cat-storytelling -->
+
+<!-- AUTORAIL:theme-cat-transformations -->
+
+<!-- /AUTORAIL:theme-cat-transformations -->
+
+<!-- AUTORAIL:theme-cat-relationships -->
+<section class="shelf">
+  <div class="shelf-head">
+    <h2 class="shelf-title">Relationships</h2>
+  </div>
+  <div class="rail">
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18057842738800225/" aria-label="Love this team SO MUCH">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18057842738800225/poster.jpg" loading="lazy" decoding="async" alt="Love this team SO MUCH">
+        <span class="dur">0:08</span>
+      </a>
+      <p class="reel-caption">Love this team SO MUCH</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18094995779656586/" aria-label="not every day is easy, but doing it with the best people makes...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18094995779656586/poster.jpg" loading="lazy" decoding="async" alt="not every day is easy, but doing it with the best people makes...">
+        <span class="dur">0:07</span>
+      </a>
+      <p class="reel-caption">not every day is easy, but doing it with the best people makes...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18138476764614929/" aria-label="Feeling right at home w/ dukewsoc">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18138476764614929/poster.jpg" loading="lazy" decoding="async" alt="Feeling right at home w/ dukewsoc">
+        <span class="dur">1:03</span>
+      </a>
+      <p class="reel-caption">Feeling right at home w/ dukewsoc</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18136189138528228/" aria-label="can’t spend a second away best friend creds amandapacii relatea...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18136189138528228/poster.jpg" loading="lazy" decoding="async" alt="can’t spend a second away best friend creds amandapacii relatea...">
+        <span class="dur">0:05</span>
+      </a>
+      <p class="reel-caption">can’t spend a second away best friend creds amandapacii relatea...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18586501021065796/" aria-label="Back in the gym with mini me kenzie_privett">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18586501021065796/poster.jpg" loading="lazy" decoding="async" alt="Back in the gym with mini me kenzie_privett">
+        <span class="dur">0:14</span>
+      </a>
+      <p class="reel-caption">Back in the gym with mini me kenzie_privett</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18148932502539216/" aria-label="And it's her last first game tomorrow">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18148932502539216/poster.jpg" loading="lazy" decoding="async" alt="And it's her last first game tomorrow">
+        <span class="dur">0:08</span>
+      </a>
+      <p class="reel-caption">And it's her last first game tomorrow</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DcRZtoGqp0c/" aria-label="Always with each other!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DcRZtoGqp0c/poster.jpg" loading="lazy" decoding="async" alt="Always with each other!">
+        <span class="dur">0:06</span>
+      </a>
+      <p class="reel-caption">Always with each other!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17961794499169577/" aria-label="missing zoeyzubich already!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17961794499169577/poster.jpg" loading="lazy" decoding="async" alt="missing zoeyzubich already!">
+        <span class="dur">0:05</span>
+      </a>
+      <p class="reel-caption">missing zoeyzubich already!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DcCQD7Fydvp/" aria-label="The best friends and teammates ever">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DcCQD7Fydvp/poster.jpg" loading="lazy" decoding="async" alt="The best friends and teammates ever">
+        <span class="dur">0:16</span>
+      </a>
+      <p class="reel-caption">The best friends and teammates ever</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18016770206715424/" aria-label="Home is wherever zoeyzubich is">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18016770206715424/poster.jpg" loading="lazy" decoding="async" alt="Home is wherever zoeyzubich is">
+        <span class="dur">0:14</span>
+      </a>
+      <p class="reel-caption">Home is wherever zoeyzubich is</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DbYqMaAKNRC/" aria-label="My people">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DbYqMaAKNRC/poster.jpg" loading="lazy" decoding="async" alt="My people">
+        <span class="dur">0:07</span>
+      </a>
+      <p class="reel-caption">My people</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DaEBl-izRwI/" aria-label="It’s all about FAMILY">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DaEBl-izRwI/poster.jpg" loading="lazy" decoding="async" alt="It’s all about FAMILY">
+        <span class="dur">0:13</span>
+      </a>
+      <p class="reel-caption">It’s all about FAMILY</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DYmqvT-vf5k/" aria-label="All about who you share these moments with">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DYmqvT-vf5k/poster.jpg" loading="lazy" decoding="async" alt="All about who you share these moments with">
+        <span class="dur">0:28</span>
+      </a>
+      <p class="reel-caption">All about who you share these moments with</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DRgIafUEWNf/" aria-label="Surprising my family with Duke-Arkansas tickets">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DRgIafUEWNf/poster-fill.jpg" loading="lazy" decoding="async" alt="Surprising my family with Duke-Arkansas tickets">
+        <span class="dur">1:19</span>
+      </a>
+      <p class="reel-caption">Surprising my family with Duke-Arkansas tickets</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/tbtv-DWtfWsoESXb/" aria-label="HAPPY SENIOR DAY Shoutout to our senior for your leadership and...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWtfWsoESXb/poster.jpg" loading="lazy" decoding="async" alt="HAPPY SENIOR DAY Shoutout to our senior for your leadership and...">
+        <span class="dur">0:40</span>
+      </a>
+      <p class="reel-caption">HAPPY SENIOR DAY Shoutout to our senior for your leadership and...</p>
+    </div>
+  </div>
+</section>
+<!-- /AUTORAIL:theme-cat-relationships -->
+
+<!-- AUTORAIL:theme-cat-bts -->
+<section class="shelf">
+  <div class="shelf-head">
+    <h2 class="shelf-title">BTS</h2>
+  </div>
+  <div class="rail">
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18228638203335274/" aria-label="media day fun chania_price du4ce_ coliiooo">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18228638203335274/poster.jpg" loading="lazy" decoding="async" alt="media day fun chania_price du4ce_ coliiooo">
+        <span class="dur">0:14</span>
+      </a>
+      <p class="reel-caption">media day fun chania_price du4ce_ coliiooo</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17960110578212462/" aria-label="Hectic days are always the best days!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17960110578212462/poster.jpg" loading="lazy" decoding="async" alt="Hectic days are always the best days!">
+        <span class="dur">0:57</span>
+      </a>
+      <p class="reel-caption">Hectic days are always the best days!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17882978949523398/" aria-label="DITL travel dayyyy">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17882978949523398/poster.jpg" loading="lazy" decoding="async" alt="DITL travel dayyyy">
+        <span class="dur">0:42</span>
+      </a>
+      <p class="reel-caption">DITL travel dayyyy</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18116870987052891/" aria-label="What else should I show from these trips?">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18116870987052891/poster.jpg" loading="lazy" decoding="async" alt="What else should I show from these trips?">
+        <span class="dur">1:21</span>
+      </a>
+      <p class="reel-caption">What else should I show from these trips?</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18111108437147829/" aria-label="So basically three people fence another three people from a sch...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18111108437147829/poster.jpg" loading="lazy" decoding="async" alt="So basically three people fence another three people from a sch...">
+        <span class="dur">0:08</span>
+      </a>
+      <p class="reel-caption">So basically three people fence another three people from a sch...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17981057618906106/" aria-label="DAY IN A LIFE PART 5!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17981057618906106/poster.jpg" loading="lazy" decoding="async" alt="DAY IN A LIFE PART 5!">
+        <span class="dur">0:48</span>
+      </a>
+      <p class="reel-caption">DAY IN A LIFE PART 5!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18117825196947205/" aria-label="Gameday from both perspectives">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18117825196947205/poster.jpg" loading="lazy" decoding="async" alt="Gameday from both perspectives">
+        <span class="dur">2:01</span>
+      </a>
+      <p class="reel-caption">Gameday from both perspectives</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18066003584780339/" aria-label="Had to pull out the big guns for media day">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18066003584780339/poster.jpg" loading="lazy" decoding="async" alt="Had to pull out the big guns for media day">
+        <span class="dur">0:05</span>
+      </a>
+      <p class="reel-caption">Had to pull out the big guns for media day</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18077278583651261/" aria-label="ring ceremony + family weekend + football vlog hcrosswbb">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18077278583651261/poster.jpg" loading="lazy" decoding="async" alt="ring ceremony + family weekend + football vlog hcrosswbb">
+        <span class="dur">0:18</span>
+      </a>
+      <p class="reel-caption">ring ceremony + family weekend + football vlog hcrosswbb</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18019063907935094/" aria-label="hi media day!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18019063907935094/poster.jpg" loading="lazy" decoding="async" alt="hi media day!">
+        <span class="dur">0:09</span>
+      </a>
+      <p class="reel-caption">hi media day!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18343534522271263/" aria-label="mini vlog of pre season w/ barebells.usa hcrosswbb">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18343534522271263/poster.jpg" loading="lazy" decoding="async" alt="mini vlog of pre season w/ barebells.usa hcrosswbb">
+        <span class="dur">0:20</span>
+      </a>
+      <p class="reel-caption">mini vlog of pre season w/ barebells.usa hcrosswbb</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17988946932025011/" aria-label="day in my life with timestampsss !!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17988946932025011/poster.jpg" loading="lazy" decoding="async" alt="day in my life with timestampsss !!">
+        <span class="dur">1:56</span>
+      </a>
+      <p class="reel-caption">day in my life with timestampsss !!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17901986319583021/" aria-label="DITL of BC and MSU Women’s Tennis Players (preseason edition)">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17901986319583021/poster.jpg" loading="lazy" decoding="async" alt="DITL of BC and MSU Women’s Tennis Players (preseason edition)">
+        <span class="dur">0:35</span>
+      </a>
+      <p class="reel-caption">DITL of BC and MSU Women’s Tennis Players (preseason edition)</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17937374832368044/" aria-label="Media day">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17937374832368044/poster.jpg" loading="lazy" decoding="async" alt="Media day">
+        <span class="dur">0:07</span>
+      </a>
+      <p class="reel-caption">Media day</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18125664589859732/" aria-label="Tour time!!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18125664589859732/poster.jpg" loading="lazy" decoding="async" alt="Tour time!!">
+        <span class="dur">0:44</span>
+      </a>
+      <p class="reel-caption">Tour time!!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18142395865605670/" aria-label="In season Day in my life!!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18142395865605670/poster.jpg" loading="lazy" decoding="async" alt="In season Day in my life!!">
+        <span class="dur">1:03</span>
+      </a>
+      <p class="reel-caption">In season Day in my life!!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18112125074043368/" aria-label="YAYYY GAMEDAY DIML!! athlete">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18112125074043368/poster.jpg" loading="lazy" decoding="async" alt="YAYYY GAMEDAY DIML!! athlete">
+        <span class="dur">1:05</span>
+      </a>
+      <p class="reel-caption">YAYYY GAMEDAY DIML!! athlete</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18110008978855434/" aria-label="Syracuties Media Dayyy">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18110008978855434/poster.jpg" loading="lazy" decoding="async" alt="Syracuties Media Dayyy">
+        <span class="dur">0:24</span>
+      </a>
+      <p class="reel-caption">Syracuties Media Dayyy</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17931150048390184/" aria-label="Wednesday DIML">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17931150048390184/poster.jpg" loading="lazy" decoding="async" alt="Wednesday DIML">
+        <span class="dur">0:46</span>
+      </a>
+      <p class="reel-caption">Wednesday DIML</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17933415348381859/" aria-label="Busy day to get the week started! Grateful for it all :)">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17933415348381859/poster.jpg" loading="lazy" decoding="async" alt="Busy day to get the week started! Grateful for it all :)">
+        <span class="dur">0:56</span>
+      </a>
+      <p class="reel-caption">Busy day to get the week started! Grateful for it all :)</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18102834068256815/" aria-label="The last of summer session">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18102834068256815/poster.jpg" loading="lazy" decoding="async" alt="The last of summer session">
+        <span class="dur">0:26</span>
+      </a>
+      <p class="reel-caption">The last of summer session</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18106253795336685/" aria-label="Live love laugh, back to school">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18106253795336685/poster.jpg" loading="lazy" decoding="async" alt="Live love laugh, back to school">
+        <span class="dur">0:09</span>
+      </a>
+      <p class="reel-caption">Live love laugh, back to school</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18204685357368050/" aria-label="Behind the scenes at a Lehigh D1 athlete photoshoot">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18204685357368050/poster.jpg" loading="lazy" decoding="async" alt="Behind the scenes at a Lehigh D1 athlete photoshoot">
+        <span class="dur">0:30</span>
+      </a>
+      <p class="reel-caption">Behind the scenes at a Lehigh D1 athlete photoshoot</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18126886900775731/" aria-label="First day of classes, putting the student in student athlete">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18126886900775731/poster.jpg" loading="lazy" decoding="async" alt="First day of classes, putting the student in student athlete">
+        <span class="dur">0:13</span>
+      </a>
+      <p class="reel-caption">First day of classes, putting the student in student athlete</p>
+    </div>
+  </div>
+</section>
+<!-- /AUTORAIL:theme-cat-bts -->
+
+<!-- AUTORAIL:theme-cat-community -->
+<section class="shelf">
+  <div class="shelf-head">
+    <h2 class="shelf-title">Community</h2>
+  </div>
+  <div class="rail">
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18138894751726654/" aria-label="I asked Mizzou fans what they think about Texas A&amp;M…">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18138894751726654/poster.jpg" loading="lazy" decoding="async" alt="I asked Mizzou fans what they think about Texas A&amp;M…">
+        <span class="dur">1:35</span>
+      </a>
+      <p class="reel-caption">I asked Mizzou fans what they think about Texas A&amp;M…</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18198093541388087/" aria-label="Some of these Mizzou fans were wildin">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18198093541388087/poster.jpg" loading="lazy" decoding="async" alt="Some of these Mizzou fans were wildin">
+        <span class="dur">0:51</span>
+      </a>
+      <p class="reel-caption">Some of these Mizzou fans were wildin</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18427876687150765/" aria-label="I asked Mizzou fans how they thought this one would go">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18427876687150765/poster.jpg" loading="lazy" decoding="async" alt="I asked Mizzou fans how they thought this one would go">
+        <span class="dur">1:07</span>
+      </a>
+      <p class="reel-caption">I asked Mizzou fans how they thought this one would go</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17889843894616726/" aria-label="Definitely wasn’t expecting THIS on a college football road trip">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17889843894616726/poster.jpg" loading="lazy" decoding="async" alt="Definitely wasn’t expecting THIS on a college football road trip">
+        <span class="dur">0:46</span>
+      </a>
+      <p class="reel-caption">Definitely wasn’t expecting THIS on a college football road trip</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18631773571028754/" aria-label="Game day TikTok always courtney_9_jones">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18631773571028754/poster.jpg" loading="lazy" decoding="async" alt="Game day TikTok always courtney_9_jones">
+        <span class="dur">0:11</span>
+      </a>
+      <p class="reel-caption">Game day TikTok always courtney_9_jones</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18113523779104491/" aria-label="happy gameday">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18113523779104491/poster.jpg" loading="lazy" decoding="async" alt="happy gameday">
+        <span class="dur">0:18</span>
+      </a>
+      <p class="reel-caption">happy gameday</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18127476574828888/" aria-label="W sack">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18127476574828888/poster.jpg" loading="lazy" decoding="async" alt="W sack">
+        <span class="dur">0:33</span>
+      </a>
+      <p class="reel-caption">W sack</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18114718006959577/" aria-label="3 days left of preseason">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18114718006959577/poster.jpg" loading="lazy" decoding="async" alt="3 days left of preseason">
+        <span class="dur">0:09</span>
+      </a>
+      <p class="reel-caption">3 days left of preseason</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18096029690560899/" aria-label="First time ever playing a game over 2 days">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18096029690560899/poster.jpg" loading="lazy" decoding="async" alt="First time ever playing a game over 2 days">
+        <span class="dur">0:57</span>
+      </a>
+      <p class="reel-caption">First time ever playing a game over 2 days</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17970638205136991/" aria-label="Duke T&amp;F does it best">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17970638205136991/poster.jpg" loading="lazy" decoding="async" alt="Duke T&amp;F does it best">
+        <span class="dur">0:15</span>
+      </a>
+      <p class="reel-caption">Duke T&amp;F does it best</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18129470038739983/" aria-label="Never forget the lives lost today Preciate eayn.thomas22 for jo...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18129470038739983/poster.jpg" loading="lazy" decoding="async" alt="Never forget the lives lost today Preciate eayn.thomas22 for jo...">
+        <span class="dur">0:28</span>
+      </a>
+      <p class="reel-caption">Never forget the lives lost today Preciate eayn.thomas22 for jo...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17874641319563396/" aria-label="season mode: ON">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17874641319563396/poster.jpg" loading="lazy" decoding="async" alt="season mode: ON">
+        <span class="dur">0:10</span>
+      </a>
+      <p class="reel-caption">season mode: ON</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18464995615142298/" aria-label="GAMEDAY WEEK! I’m so excited to be back at Raymond James this s...">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18464995615142298/poster.jpg" loading="lazy" decoding="async" alt="GAMEDAY WEEK! I’m so excited to be back at Raymond James this s...">
+        <span class="dur">0:12</span>
+      </a>
+      <p class="reel-caption">GAMEDAY WEEK! I’m so excited to be back at Raymond James this s...</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17933785914362471/" aria-label="The $1 million match">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17933785914362471/poster.jpg" loading="lazy" decoding="async" alt="The $1 million match">
+        <span class="dur">0:12</span>
+      </a>
+      <p class="reel-caption">The $1 million match</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18095500307548606/" aria-label="CANT WAIT for the 2026-27 season!!!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18095500307548606/poster.jpg" loading="lazy" decoding="async" alt="CANT WAIT for the 2026-27 season!!!">
+        <span class="dur">0:06</span>
+      </a>
+      <p class="reel-caption">CANT WAIT for the 2026-27 season!!!</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18104372204596434/" aria-label="Stackin points at an HBCU near you, coming soon">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18104372204596434/poster.jpg" loading="lazy" decoding="async" alt="Stackin points at an HBCU near you, coming soon">
+        <span class="dur">0:07</span>
+      </a>
+      <p class="reel-caption">Stackin points at an HBCU near you, coming soon</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18101037461262306/" aria-label="Game day TikToks are back">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18101037461262306/poster.jpg" loading="lazy" decoding="async" alt="Game day TikToks are back">
+        <span class="dur">0:10</span>
+      </a>
+      <p class="reel-caption">Game day TikToks are back</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-17950544214229583/" aria-label="A good hole with every shot tracked">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17950544214229583/poster.jpg" loading="lazy" decoding="async" alt="A good hole with every shot tracked">
+        <span class="dur">1:08</span>
+      </a>
+      <p class="reel-caption">A good hole with every shot tracked</p>
+    </div>
+    <div class="reel-cell">
+      <a class="card card-reel" href="/watch/ig-18138746563511713/" aria-label="Season opener baby!">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18138746563511713/poster.jpg" loading="lazy" decoding="async" alt="Season opener baby!">
+        <span class="dur">0:17</span>
+      </a>
+      <p class="reel-caption">Season opener baby!</p>
+    </div>
+    <div class="reel-cell">
       <a class="card card-reel" href="/watch/ig-18113331245068769/" aria-label="So excited for game day">
         <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18113331245068769/poster.jpg" loading="lazy" decoding="async" alt="So excited for game day">
         <span class="dur">0:05</span>
@@ -2835,116 +3291,36 @@ br.mbr{display:none}
       <p class="reel-caption">So excited for game day</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-17956018901981624/" aria-label="I love volleyball">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-17956018901981624/poster.jpg" loading="lazy" decoding="async" alt="I love volleyball">
-        <span class="dur">0:06</span>
-      </a>
-      <p class="reel-caption">I love volleyball</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18381573850178344/" aria-label="Inside the Vanderbilt volleyball locker room">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18381573850178344/poster.jpg" loading="lazy" decoding="async" alt="Inside the Vanderbilt volleyball locker room">
-        <span class="dur">2:41</span>
-      </a>
-      <p class="reel-caption">Inside the Vanderbilt volleyball locker room</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/ig-18032701730696119/" aria-label="Satisfying pepper drills with Vanderbilt volleyball">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18032701730696119/poster.jpg" loading="lazy" decoding="async" alt="Satisfying pepper drills with Vanderbilt volleyball">
-        <span class="dur">2:46</span>
-      </a>
-      <p class="reel-caption">Satisfying pepper drills with Vanderbilt volleyball</p>
-    </div>
-  </div>
-</section>
-<!-- /AUTORAIL:theme-sport-volleyball -->
-
-<!-- AUTORAIL:theme-sport-softball -->
-<section class="shelf">
-  <div class="shelf-head">
-    <h2 class="shelf-title">Softball</h2>
-  </div>
-  <div class="rail">
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DYVOnP7Py68/" aria-label="Back like we never left on our home field">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DYVOnP7Py68/poster.jpg" loading="lazy" decoding="async" alt="Back like we never left on our home field">
-        <span class="dur">0:23</span>
-      </a>
-      <p class="reel-caption">Back like we never left on our home field</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DWADKJUD7hy/" aria-label="Happy St. Paddy's Day from Duke Softball">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DWADKJUD7hy/poster.jpg" loading="lazy" decoding="async" alt="Happy St. Paddy's Day from Duke Softball">
-        <span class="dur">0:46</span>
-      </a>
-      <p class="reel-caption">Happy St. Paddy's Day from Duke Softball</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DXZvao0AMEF/" aria-label="Today's bullpen episode, season is so soon">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DXZvao0AMEF/poster.jpg" loading="lazy" decoding="async" alt="Today's bullpen episode, season is so soon">
-        <span class="dur">0:20</span>
-      </a>
-      <p class="reel-caption">Today's bullpen episode, season is so soon</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DUenHL9AEUj/" aria-label="First weekend out">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DUenHL9AEUj/poster.jpg" loading="lazy" decoding="async" alt="First weekend out">
-        <span class="dur">0:15</span>
-      </a>
-      <p class="reel-caption">First weekend out</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DV1jysAD_jo/" aria-label="One more always turns into ten in the bullpen">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DV1jysAD_jo/poster.jpg" loading="lazy" decoding="async" alt="One more always turns into ten in the bullpen">
+      <a class="card card-reel" href="/watch/ig-18122118952870372/" aria-label="Making noise this season">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18122118952870372/poster.jpg" loading="lazy" decoding="async" alt="Making noise this season">
         <span class="dur">0:17</span>
       </a>
-      <p class="reel-caption">One more always turns into ten in the bullpen</p>
+      <p class="reel-caption">Making noise this season</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DTlRtPWj1Aa/" aria-label="Long days but worth it">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DTlRtPWj1Aa/poster.jpg" loading="lazy" decoding="async" alt="Long days but worth it">
-        <span class="dur">0:31</span>
+      <a class="card card-reel" href="/watch/ig-18086956544211008/" aria-label="Year 2 loading, kickoff around the corner">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18086956544211008/poster.jpg" loading="lazy" decoding="async" alt="Year 2 loading, kickoff around the corner">
+        <span class="dur">2:33</span>
       </a>
-      <p class="reel-caption">Long days but worth it</p>
+      <p class="reel-caption">Year 2 loading, kickoff around the corner</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DUMVXDOgC7b/" aria-label="Goodbye January, hello softball season">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DUMVXDOgC7b/poster.jpg" loading="lazy" decoding="async" alt="Goodbye January, hello softball season">
-        <span class="dur">0:14</span>
+      <a class="card card-reel" href="/watch/ig-18275620366295532/" aria-label="back up and at em in less than a month">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18275620366295532/poster.jpg" loading="lazy" decoding="async" alt="back up and at em in less than a month">
+        <span class="dur">0:28</span>
       </a>
-      <p class="reel-caption">Goodbye January, hello softball season</p>
+      <p class="reel-caption">back up and at em in less than a month</p>
     </div>
     <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DT-2JH-AKpz/" aria-label="Prep work protects the money maker">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DT-2JH-AKpz/poster.jpg" loading="lazy" decoding="async" alt="Prep work protects the money maker">
-        <span class="dur">0:20</span>
+      <a class="card card-reel" href="/watch/ig-18013895390866844/" aria-label="One of two pars today, but who's counting">
+        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18013895390866844/poster.jpg" loading="lazy" decoding="async" alt="One of two pars today, but who's counting">
+        <span class="dur">0:21</span>
       </a>
-      <p class="reel-caption">Prep work protects the money maker</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DTYmHI4APZN/" aria-label="He still yelled at me, but bullpens can be fun">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DTYmHI4APZN/poster.jpg" loading="lazy" decoding="async" alt="He still yelled at me, but bullpens can be fun">
-        <span class="dur">1:21</span>
-      </a>
-      <p class="reel-caption">He still yelled at me, but bullpens can be fun</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DS0hnfkD8FG/" aria-label="An everyday pitcher vlog">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DS0hnfkD8FG/poster.jpg" loading="lazy" decoding="async" alt="An everyday pitcher vlog">
-        <span class="dur">0:23</span>
-      </a>
-      <p class="reel-caption">An everyday pitcher vlog</p>
-    </div>
-    <div class="reel-cell">
-      <a class="card card-reel" href="/watch/tbtv-DU07KilAJ6r/" aria-label="That feeling after a good bullpen">
-        <img src="https://d1nm1d2txb83wa.cloudfront.net/video/tbtv-DU07KilAJ6r/poster.jpg" loading="lazy" decoding="async" alt="That feeling after a good bullpen">
-        <span class="dur">0:09</span>
-      </a>
-      <p class="reel-caption">That feeling after a good bullpen</p>
+      <p class="reel-caption">One of two pars today, but who's counting</p>
     </div>
   </div>
 </section>
-<!-- /AUTORAIL:theme-sport-softball -->
+<!-- /AUTORAIL:theme-cat-community -->
 
 </main>
 

@@ -312,7 +312,7 @@ def build_page(a, tpl, strip=''):
 
 DIR_CSS = """
 /* ---- athlete directory (build-athletes.py) ---- */
-.ath-filters{max-width:1280px;margin:0 auto 22px;padding:0 var(--gutter);display:grid;gap:12px}
+.ath-filters{margin:0 0 22px;padding:0 var(--gutter);display:grid;gap:12px}
 .ath-filters .grp{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;min-width:0}
 /* filter chips: one sliding row with edge arrows (shown only when there is more that way) */
 .chips-wrap{position:relative;flex:1;min-width:0}
@@ -332,8 +332,8 @@ DIR_CSS = """
 .chip{border:1px solid var(--border);background:transparent;color:var(--dim);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;transition:color .15s,border-color .15s}
 .chip:hover{color:var(--text)}
 .chip.on{color:var(--gold);border-color:var(--gold)}
-.ath-count{max-width:1280px;margin:0 auto 12px;padding:0 var(--gutter);font-size:12.5px;color:var(--dim)}
-.ath-grid{max-width:1280px;margin:0 auto;padding:0 var(--gutter);display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px}
+.ath-count{margin:0 0 12px;padding:0 var(--gutter);font-size:12.5px;color:var(--dim)}
+.ath-grid{padding:0 var(--gutter);display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px}
 .ath-card{position:relative;display:block;aspect-ratio:4/5;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--surface);transition:transform .2s ease,border-color .2s ease}
 .ath-card:hover{transform:translateY(-4px);border-color:rgba(217,178,91,.5)}
 .ath-card img{width:100%;height:100%;object-fit:cover;display:block}
@@ -344,15 +344,17 @@ DIR_CSS = """
 .ath-card .ss{font-size:12.5px;line-height:1.35;color:var(--dim);margin-top:3px}
 .ath-card .nm + .ss{margin-top:6px}
 .ath-card[hidden]{display:none}
-.ath-empty{max-width:1280px;margin:0 auto;padding:30px var(--gutter);color:var(--dim);font-size:14px}
+.ath-empty{padding:30px var(--gutter);color:var(--dim);font-size:14px}
 @media (max-width:640px){.ath-grid{grid-template-columns:repeat(2,1fr);gap:12px}.ath-card .nm{font-size:18px}}
 """
 
 WALL_CSS = """
 /* ---- athlete action collage (build-athletes.py) ---- */
-.ath-hero{max-width:1280px;margin:0 auto;padding:clamp(80px,8vw,96px) var(--gutter) clamp(36px,5vw,52px)}
-.ath-hero .collage{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(2,clamp(150px,17vw,230px));gap:10px;margin-bottom:clamp(32px,4vw,48px)}
-.ath-hero .tl{position:relative;display:block;border-radius:12px;overflow:hidden;background:var(--surface)}
+.ath-hero{padding:56px 0 0}
+.ath-hero + .shelves{margin-top:0}
+#athlete-videos .reel-by{margin:2px 0 0;font-size:11.5px;font-weight:600;letter-spacing:.04em;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:clamp(178px,16vw,236px)}
+.ath-hero .collage{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(2,clamp(170px,20vw,320px));gap:4px;margin-bottom:clamp(36px,4vw,56px)}
+.ath-hero .tl{position:relative;display:block;overflow:hidden;background:var(--surface)}
 .ath-hero .tl img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(1) contrast(1.1) brightness(.85);transition:filter .35s ease,transform .5s ease}
 .ath-hero .tl::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(217,178,91,.55),rgba(120,84,24,.55));mix-blend-mode:color;transition:opacity .35s ease;pointer-events:none}
 .ath-hero .tl:hover img{filter:none;transform:scale(1.03)}
@@ -362,7 +364,7 @@ WALL_CSS = """
 .ath-hero .t3{grid-column:5/6;grid-row:1/2}.ath-hero .t4{grid-column:6/7;grid-row:1/2}
 .ath-hero .t5{grid-column:5/6;grid-row:2/3}.ath-hero .t6{grid-column:6/7;grid-row:2/3}
 .ath-hero .t1 .shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,6,8,.85) 0%,rgba(6,6,8,0) 55%);pointer-events:none;z-index:1}
-.ath-hero .ttl{position:absolute;left:clamp(18px,2.4vw,32px);bottom:clamp(16px,2.2vw,28px);z-index:2;margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:800;text-transform:uppercase;line-height:.88;font-size:clamp(44px,6.4vw,96px);color:var(--text);pointer-events:none}
+.ath-hero .ttl{position:absolute;left:var(--gutter);bottom:clamp(20px,3vw,40px);z-index:2;margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:800;text-transform:uppercase;line-height:.88;font-size:clamp(52px,7.5vw,120px);color:var(--text);pointer-events:none}
 .ath-hero .ttl::after{content:"";display:block;width:56px;height:3px;background:var(--gold);margin-top:14px}
 @media (max-width:760px){.ath-hero .collage{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:240px 150px 150px}.ath-hero .t1{grid-column:1/3;grid-row:1/2}.ath-hero .t2,.ath-hero .t3{display:none}.ath-hero .t4{grid-column:1/2;grid-row:2/3}.ath-hero .t5{grid-column:2/3;grid-row:2/3}.ath-hero .t6{grid-column:1/3;grid-row:3/4}}
 @media (prefers-reduced-motion:reduce){.ath-hero .tl img,.ath-hero .tl::after{transition:none}}
@@ -412,6 +414,46 @@ CHIP_JS = r"""<script>
 })();
 </script>"""
 
+SHELF_MAX = 24   # videos in the "From Our Athletes" shelf
+
+def athlete_shelf(athletes):
+    """Round-robin over athletes with their own videos (each list newest first),
+    so the shelf alternates people instead of opening on one athlete's run."""
+    queues = [(a, list(a.get('reels') or [])) for a in athletes if a.get('reels')]
+    queues.sort(key=lambda x: -len(x[1]))   # lead with the athletes who have the most content
+    picks, seen = [], set()
+    while queues and len(picks) < SHELF_MAX:
+        nxt = []
+        for a, q in queues:
+            while q and q[0]['id'] in seen:
+                q.pop(0)
+            if q:
+                r = q.pop(0); seen.add(r['id']); picks.append((a, r))
+            if q:
+                nxt.append((a, q))
+        queues = nxt
+    if len(picks) < MIN_FEED:
+        return ''
+    cells = ''
+    for a, r in picks:
+        dur = '<span class="dur">%s</span>' % fmt_dur(r['duration']) if r.get('duration') else ''
+        cells += ('    <div class="reel-cell">\n'
+                  '      <a class="card card-reel" href="/watch/%s/" aria-label="%s">\n'
+                  '        <img src="%s" loading="lazy" decoding="async" alt="%s">\n'
+                  '        %s\n'
+                  '      </a>\n'
+                  '      <p class="reel-caption">%s</p>\n'
+                  '      <p class="reel-by">%s</p>\n'
+                  '    </div>\n' % (r['id'], esc(r['title']), POSTER % r['id'], esc(r['title']), dur, esc(r['title']), esc(a['name'])))
+    return ('<!-- FROM OUR ATHLETES : the athletes\' own NIL TV videos (build-athletes.py) -->\n'
+            '<section class="shelf" id="athlete-videos">\n'
+            '  <div class="shelf-head">\n'
+            '    <h2 class="shelf-title gold">From Our Athletes</h2>\n'
+            '  </div>\n'
+            '  <div class="rail">\n%s'
+            '  </div>\n'
+            '</section>\n\n' % cells)
+
 def build_index(athletes, pills=None):
     s = io.open(INDEX, encoding='utf-8').read()
     # hero copy
@@ -455,6 +497,7 @@ def build_index(athletes, pills=None):
                                   esc(a['name']), esc(val(a, 'school_card') or a['school']), esc(a['sport']),   # school_card: shorter label for long names
                                   (pills or {}).get(a['slug'], '')))
     main = ('<main class="shelves">\n\n'
+            '%s'
             '<!-- ATHLETE DIRECTORY : generated by scripts/builders/build-athletes.py from athletes/_data/athletes.json -->\n'
             '<section class="shelf" id="roster" style="padding-top:8px">\n'
             '%s'
@@ -481,7 +524,7 @@ def build_index(athletes, pills=None):
             '})();\n'
             '</script>\n'
             '%s\n'
-            '</main>' % (filters, cards, empty, CHIP_JS))
+            '</main>' % (athlete_shelf(athletes), filters, cards, empty, CHIP_JS))
     s2 = re.sub(r'<main class="shelves">.*?</main>', lambda m: main, s, count=1, flags=re.S)
     assert s2 != s or '<!-- ATHLETE DIRECTORY' in s, 'index: main block not replaced'
     io.open(INDEX, 'w', encoding='utf-8', newline='\n').write(s2)

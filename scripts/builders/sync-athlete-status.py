@@ -18,7 +18,7 @@ never leave the dashboard.
     ... --api https://api-dev.niltv.com/api     # another environment (default: prod)
     ... --dry-run                               # print, write nothing
 """
-import io, json, os, re, sys, datetime, urllib.request
+import io, json, os, re, sys, datetime, urllib.error, urllib.request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from private_data import private_path, HOWTO
@@ -58,7 +58,14 @@ def main():
         print('sync-athlete-status: private data not found (%s)' % HOWTO)
         return 1
     records = json.load(io.open(data, encoding='utf-8'))
-    apps = fetch(api, key)
+    try:
+        apps = fetch(api, key)
+    except urllib.error.HTTPError as e:
+        if e.code in (401, 403):
+            print('sync-athlete-status: the dashboard rejected the key (HTTP %d). Set NILTV_DASHBOARD_API_KEY to the '
+                  'X-API-Key value the dashboard API accepts.' % e.code)
+            return 1
+        raise
 
     by = {'instagram': {}, 'tiktok': {}, 'name': {}}
     for ap in apps:

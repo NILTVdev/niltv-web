@@ -512,17 +512,33 @@ window.NILTV = (function () {
   // latest, so slow index loads can't stack old result sets into the list.
   var searchSeq = 0;
 
-  // Index records pair each channel/item with its matchable fields, lowercased
-  // once at build time instead of on every keystroke. The \u0001 separator
-  // keeps a query from matching across two fields.
-  function searchKey(fields) {
-    return fields.map(function (f) { return String(f || "").toLowerCase(); }).join("\u0001");
+  // Lowercase, strip accents, drop apostrophes and "&", and turn other
+  // punctuation into spaces, so "José" finds "jose", "Texas A&M" is
+  // "texas am", "#ncstate" finds "ncstate". Applied to indexed fields once
+  // and to each query.
+  function searchNorm(s) {
+    return String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .toLowerCase().replace(/['’&]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
   }
+  // Normalized fields plus the same fields with spaces removed, so "ncstate"
+  // finds "NC State" and "gameday" finds "game day".
+  function searchFields(values) {
+    var fields = values.map(searchNorm);
+    return { fields: fields, compact: fields.map(function (f) { return f.replace(/ /g, ""); }) };
+  }
+
+  // Field weights, in the order each record's `fields` lists them. Titles and
+  // athlete names say most about a video; the channel name least, since it
+  // matches every clip on the channel.
+  var CHANNEL_FIELD_WEIGHTS = [3, 2];        // name, school
+  var ITEM_FIELD_WEIGHTS = [3, 3, 2, 1];     // title, creator, school, channel
 
   function buildSearchIndex() {
     if (searchIndex) return searchIndex;
     searchIndex = api("/v1/channels").then(function (res) {
       var channels = visibleChannels(res.channels);
+      var schoolOf = {}; // channelId -> school; list items don't carry one
+      channels.forEach(function (c) { schoolOf[c.id] = c.school || ""; });
       return Promise.all(channels.map(function (ch) {
         return channelItems(ch.id).catch(function () { return []; });
       })).then(function (lists) {
@@ -530,10 +546,15 @@ window.NILTV = (function () {
         lists.forEach(function (l) { items = items.concat(l); });
         return {
           channels: channels.map(function (c) {
-            return { channel: c, key: searchKey([c.name]) };
+            var r = searchFields([c.name, c.school]);
+            r.channel = c;
+            return r;
           }),
           items: items.map(function (it) {
-            return { item: it, key: searchKey([it.title, it.channelName, it.creatorName]) };
+            var school = schoolOf[it.channelId] || "";
+            var r = searchFields([it.title, it.creatorName, school, it.channelName]);
+            r.item = it; r.school = school; r.published = it.publishedAt || "";
+            return r;
           }),
         };
       });
@@ -543,11 +564,50 @@ window.NILTV = (function () {
     return searchIndex;
   }
 
+  // How well `term` matches one field: 3 = the whole field, 2 = the start of
+  // a word in it, 1 = inside a word or across a space, 0 = not at all.
+  function matchStrength(text, compact, term) {
+    if (text === term) return 3;
+    if ((" " + text).indexOf(" " + term) >= 0) return 2;
+    // 1-2 letter terms only count at a word start, or "am" would match "game"
+    if (term.length < 3) return 0;
+    return text.indexOf(term) >= 0 || compact.indexOf(term) >= 0 ? 1 : 0;
+  }
+
+  // Every query word has to match some field (any order, any field). Each word
+  // scores its best weight x strength; a multi-word query also scores the
+  // whole phrase, so "nil tv" ranks the NIL TV channel over clips with both
+  // words scattered around.
+  function scoreRecord(r, weights, words, phrase) {
+    var total = 0;
+    var terms = words.length > 1 ? words.concat([phrase]) : words;
+    for (var w = 0; w < terms.length; w++) {
+      var best = 0;
+      for (var f = 0; f < r.fields.length; f++) {
+        var s = weights[f] * matchStrength(r.fields[f], r.compact[f], terms[w]);
+        if (s > best) best = s;
+      }
+      if (!best && w < words.length) return 0;
+      total += best;
+    }
+    return total;
+  }
+
   function querySearchIndex(idx, q) {
-    var match = function (r) { return r.key.indexOf(q) >= 0; };
+    var words = q.split(" ").filter(function (w, i, all) { return w && all.indexOf(w) === i; });
+    var rank = function (records, weights) {
+      return records
+        .map(function (r) { return { r: r, score: scoreRecord(r, weights, words, q) }; })
+        .filter(function (x) { return x.score > 0; })
+        .sort(function (a, b) {
+          // ties: newest video first (ISO dates compare as strings)
+          return b.score - a.score || (b.r.published || "").localeCompare(a.r.published || "");
+        })
+        .map(function (x) { return x.r; });
+    };
     return {
-      channels: idx.channels.filter(match).map(function (r) { return r.channel; }),
-      items: idx.items.filter(match).slice(0, 24).map(function (r) { return r.item; }),
+      channels: rank(idx.channels, CHANNEL_FIELD_WEIGHTS).map(function (r) { return r.channel; }),
+      items: rank(idx.items, ITEM_FIELD_WEIGHTS).slice(0, 24),
     };
   }
 
@@ -585,7 +645,7 @@ window.NILTV = (function () {
     var out = document.getElementById("search-results");
     if (!out) return;
     var seq = ++searchSeq;
-    q = String(q || "").trim().toLowerCase();
+    q = searchNorm(q);
     out.textContent = "";
     if (q.length < 2) {
       out.appendChild(el("div", "search-hint", "Type to search the network."));
@@ -601,22 +661,26 @@ window.NILTV = (function () {
   }
 
   function renderSearchResults(out, hits) {
-    var chanHits = hits.channels, itemHits = hits.items;
+    var chanHits = hits.channels;
+    var itemHits = hits.items.map(function (r) { return r.item; });
     chanHits.forEach(function (c) {
       var row = el("a", "search-row");
       row.href = "/channels/" + channelSlug(c.id) + "/";
-      row.appendChild(el("span", "search-kicker", "Channel"));
+      row.appendChild(el("span", "search-kicker", "Channel" + (c.school ? " · " + c.school : "")));
       row.appendChild(el("span", "search-title", c.name));
       out.appendChild(row);
     });
-    itemHits.forEach(function (it, i) {
+    hits.items.forEach(function (r, i) {
+      var it = r.item;
       var row = el("button", "search-row");
       var th = el("span", "search-thumb");
       th.appendChild(thumbNode(it));
       row.appendChild(th);
       var txt = el("span", "search-text");
       txt.appendChild(el("span", "search-title", it.title));
-      txt.appendChild(el("span", "search-kicker", it.channelName + (it.duration != null ? " · " + fmtDuration(it.duration) : "")));
+      // school shown so a school search explains its own matches
+      var kicker = [it.channelName, r.school, it.duration != null ? fmtDuration(it.duration) : ""];
+      txt.appendChild(el("span", "search-kicker", kicker.filter(Boolean).join(" · ")));
       row.appendChild(txt);
       row.addEventListener("click", function () {
         closeSearch();

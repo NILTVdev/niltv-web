@@ -20,7 +20,8 @@
 # PROD PIPELINE: the tree stays dev-flavored; prod deploys stage a copy,
 # regenerate watch/channel pages + sitemap/robots/llms against the PROD API,
 # sweep every baked dev reference to the prod CDN + niltv.com, swap in the
-# prod config.js, prune the dev-only pages (vote, athletes, partners), and
+# prod config.js, prune the dev-only pages (vote, partners), build the
+# published athlete pages when the publish set is available, and
 # guard that zero dev references ship.
 param(
   [ValidateSet("dev","prod")][Alias("Branch")][string]$Env = "dev",
@@ -77,7 +78,8 @@ $prodClient = "866nashv1brjs96apc17r1gfa"
 $zip = Join-Path $tmpDir "niltv-web-deploy-$Env-$PID.zip"
 if (Test-Path $zip) { Remove-Item $zip -Force }
 
-# Shared page set. Prod additionally excludes vote/athletes/partners (dev-only).
+# Shared page set. Prod additionally excludes vote/partners (dev-only); athletes
+# ship to prod only as the published set (see the athlete step below).
 # concepts/ is an ignored scratch dir: dev ships it only when present.
 $pages = @("index.html","not-found.html","sitemap.xml","robots.txt","llms.txt","build.json","assets",
            "channels","featured","about","watch","legal","nilstar","competitions",
@@ -114,6 +116,30 @@ if ($Env -eq "prod") {
   # the generator needs the scripts (chrome template included) beside the pages
   Copy-Tree (Join-Path $src "scripts") (Join-Path $stage "scripts")
 
+  # ---- athlete pages: the published set only ----
+  # Athlete records and photos never enter this repo. The Deploy Prod workflow
+  # syncs the publish set (published athletes only) from a private S3 folder
+  # into NILTV_PRIVATE_DATA; the builder then applies its publish gate. With no
+  # publish set, or nothing published, athletes stay off prod: no pages, no
+  # directory, and the sweep cuts the nav link. Runs before build-pages.mjs so
+  # the sitemap lists the pages.
+  $athletes = "off"
+  $priv = $env:NILTV_PRIVATE_DATA
+  if ($priv -and (Test-Path (Join-Path $priv "athletes/_data/athletes.json"))) {
+    New-Item -ItemType Directory -Path (Join-Path $stage "athletes") -Force | Out-Null
+    Copy-Item (Join-Path $src "athletes/index.html") (Join-Path $stage "athletes/index.html")
+    $env:NILTV_ATHLETES_REVIEW = "0"
+    python (Join-Path $stage "scripts/builders/build-athletes.py") --require
+    $ab = $LASTEXITCODE
+    Remove-Item Env:NILTV_ATHLETES_REVIEW -ErrorAction SilentlyContinue
+    if ($ab -ne 0) { Write-Error "prod athlete build failed"; exit 1 }
+    $built = @(Get-ChildItem (Join-Path $stage "athletes") -Directory).Count
+    if ($built -gt 0) { $athletes = "on" } else { [IO.Directory]::Delete((Join-Path $stage "athletes"), $true) }
+    Write-Host "athlete pages: $built published"
+  } else {
+    Write-Host "athlete pages: no publish set (NILTV_PRIVATE_DATA unset) - athletes stay off prod"
+  }
+
   # ---- regenerate against the PROD API, prod identity ----
   Write-Host "Generating pages from the PROD API..."
   $env:NILTV_ENV = "prod"; $env:NILTV_API = $prodCdn; $env:NILTV_ORIGIN = $prodOrigin
@@ -125,7 +151,7 @@ if ($Env -eq "prod") {
 
   # ---- sweep every baked dev reference to the prod identity ----
   $fills = if ($ProdFills) { "on" } else { "off" }
-  python (Join-Path $stage "scripts/deploy-sweep.py") $stage $prodOrigin $prodCdn --fills $fills
+  python (Join-Path $stage "scripts/deploy-sweep.py") $stage $prodOrigin $prodCdn --fills $fills --athletes $athletes
   if ($LASTEXITCODE -ne 0) { Write-Error "prod sweep failed its guard"; exit 1 }
 
   # ---- prod runtime config ----
@@ -156,8 +182,10 @@ window.NILTV_CONFIG = {
     Write-Host "prod check passed (commit $sha): staged, generated, swept, 63 marquee cards, zero dev references. Nothing uploaded."
     exit 0
   }
-  New-Zip $zip $stage ($pages + @("config.js"))
-  Write-Host "Zipped $((Get-Item $zip).Length) bytes for 'prod' (commit $sha)"
+  $prodItems = $pages + @("config.js")
+  if ($athletes -eq "on") { $prodItems += "athletes" }
+  New-Zip $zip $stage $prodItems
+  Write-Host "Zipped $((Get-Item $zip).Length) bytes for 'prod' (commit $sha, athletes $athletes)"
 } else {
   # ---- dev: the tree IS the artifact ----
   # One dev deploy per tree at a time: parallel runs rebuild the same

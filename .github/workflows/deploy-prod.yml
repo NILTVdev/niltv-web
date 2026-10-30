@@ -105,6 +105,25 @@ jobs:
           python "$GITHUB_WORKSPACE/scripts/poster-audit.py" --stage prod --fix
           # dev shares the same clips; keep its posters honest too
           python "$GITHUB_WORKSPACE/scripts/poster-audit.py" --stage dev --fix
+      # Athlete pages: records and photos never enter this public repo. The
+      # published set lives in a private S3 folder (vars.ATHLETE_DATA_S3, read
+      # with the role above); deploy.ps1 builds the pages from it. No variable,
+      # no access or a failed sync = athletes stay off prod for this deploy
+      # (no pages, no nav link) and the rest of the site still ships.
+      # Updating the S3 folder alone does not trigger a deploy: dispatch this
+      # workflow with force=true to publish a change to the athlete set.
+      - name: Fetch the athlete publish set
+        if: vars.ATHLETE_DATA_S3 != ''
+        continue-on-error: true
+        working-directory: ${{ runner.temp }}
+        run: |
+          pip install --quiet pillow
+          dest="$RUNNER_TEMP/private-data/niltv-web"
+          if aws s3 sync "${{ vars.ATHLETE_DATA_S3 }}" "$dest" --only-show-errors; then
+            echo "NILTV_PRIVATE_DATA=$dest" >> "$GITHUB_ENV"
+          else
+            echo "::warning::athlete publish set could not be fetched; athletes stay off prod for this deploy"
+          fi
       - name: Deploy release to prod (${{ needs.changes.outputs.reason }})
         shell: pwsh
         run: ./deploy.ps1 -Env prod -Yes -ProdFills

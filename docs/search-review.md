@@ -60,8 +60,12 @@ Gaps that matter for the planned work:
   distinct `creatorId`s. 7 of those are channel accounts, none are flagged
   ambassadors, and none match the athlete ids on the home rail.
 - **The full roster isn't in the API.** `/athletes/` is generated at deploy
-  time from private data (`build-athletes.py`). The browser can only reach
-  the 8 athletes on the home rail.
+  time from private data (`build-athletes.py`). From the API, the browser
+  can only reach the 8 athletes on the home rail, and those have no athlete
+  pages (their detail requests 404). The build does publish the roster as
+  `athletes/index.json` (slug, name, school, sport, class year, portrait),
+  which search now uses for athlete and school results whenever the athlete
+  pages ship.
 - **No server-side search.** `/v1/search` returns 404, and
   `/v1/content?q=` returns 400.
 
@@ -177,8 +181,9 @@ On Node 20, run it as `node --experimental-websocket scripts/dev/bench-search.mj
   rendering were measured and left out (see above). Starting the index
   build earlier only makes sense once something on the page opens search
   (bug 3). Until then it would cost every visitor 13 requests.
-- Channel and athlete results (home rail) and a channel filter can use data
-  the browser already has.
+- Channel, athlete and school results and a channel filter can use data
+  the browser already has (athletes and schools come from the published
+  roster, `athletes/index.json`).
 - Sport and school filters across *videos*, tags, and full-catalog coverage
   cannot be done well in the browser with today's API. They need either
   school/sport/tags on list items plus a way to fetch the whole catalog

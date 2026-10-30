@@ -517,34 +517,87 @@ window.NILTV = (function () {
   // "texas am", "#ncstate" finds "ncstate". Applied to indexed fields once
   // and to each query.
   function searchNorm(s) {
-    return String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "")
-      .toLowerCase().replace(/['’&]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+    return String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase().replace(/['\u2019&]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
   }
-  // Normalized fields plus the same fields with spaces removed, so "ncstate"
-  // finds "NC State" and "gameday" finds "game day".
+  // Normalized fields, plus each field's words run together from every word
+  // start, so "ncstate" finds "NC State" and "gameday" finds "game day". Only
+  // from a word start: "sam" mustn't match "texas am" as "texasam".
   function searchFields(values) {
     var fields = values.map(searchNorm);
-    return { fields: fields, compact: fields.map(function (f) { return f.replace(/ /g, ""); }) };
+    return {
+      fields: fields,
+      joined: fields.map(function (f) {
+        var words = f.split(" "), runs = [];
+        for (var i = 0; i < words.length - 1; i++) runs.push(words.slice(i).join(""));
+        return runs;
+      }),
+    };
   }
 
   // Field weights, in the order each record's `fields` lists them. Titles and
   // athlete names say most about a video; the channel name least, since it
   // matches every clip on the channel.
+  var ATHLETE_FIELD_WEIGHTS = [3, 2, 2];     // name, school, sport
+  var SCHOOL_FIELD_WEIGHTS = [3];            // name
   var CHANNEL_FIELD_WEIGHTS = [3, 2];        // name, school
   var ITEM_FIELD_WEIGHTS = [3, 3, 2, 1];     // title, creator, school, channel
 
+  // Athlete results link into the athlete pages, which only ship when
+  // deploy.ps1 builds them; otherwise deploy-sweep.py cuts the Athletes nav
+  // entry (and fails any build still linking there). Taking the base path
+  // from that entry keeps search in step: no entry, no athlete results.
+  function athletesBase() {
+    for (var i = 0; i < NAV_LINKS.length; i++) {
+      if (NAV_LINKS[i][0] === "Athletes") return NAV_LINKS[i][1];
+    }
+    return "";
+  }
+
+  // The published roster build-athletes.py writes next to the athlete pages:
+  // [{slug, name, school, sport, classYear, portrait, channel}]. Missing or
+  // unreachable just means no athlete or school results.
+  function athleteRoster() {
+    var base = athletesBase();
+    if (!base) return Promise.resolve([]);
+    return fetch(base + "index.json")
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (list) { return Array.isArray(list) ? list : []; })
+      .catch(function () { return []; });
+  }
+
   function buildSearchIndex() {
     if (searchIndex) return searchIndex;
+    var roster = athleteRoster(); // in parallel with the channel requests
     searchIndex = api("/v1/channels").then(function (res) {
       var channels = visibleChannels(res.channels);
       var schoolOf = {}; // channelId -> school; list items don't carry one
       channels.forEach(function (c) { schoolOf[c.id] = c.school || ""; });
-      return Promise.all(channels.map(function (ch) {
-        return channelItems(ch.id).catch(function () { return []; });
-      })).then(function (lists) {
-        var items = [];
-        lists.forEach(function (l) { items = items.concat(l); });
+      return Promise.all([
+        Promise.all(channels.map(function (ch) {
+          return channelItems(ch.id).catch(function () { return []; });
+        })),
+        roster,
+      ]).then(function (got) {
+        var items = [], athletes = got[1];
+        got[0].forEach(function (l) { items = items.concat(l); });
+        // Schools come from the roster, so each one has athletes to show.
+        var schools = {};
+        athletes.forEach(function (a) {
+          if (!a.school) return;
+          schools[a.school] = (schools[a.school] || 0) + 1;
+        });
         return {
+          athletes: athletes.map(function (a) {
+            var r = searchFields([a.name, a.school, a.sport]);
+            r.athlete = a;
+            return r;
+          }),
+          schools: Object.keys(schools).map(function (name) {
+            var r = searchFields([name]);
+            r.schoolGroup = { name: name, athletes: schools[name] };
+            return r;
+          }),
           channels: channels.map(function (c) {
             var r = searchFields([c.name, c.school]);
             r.channel = c;
@@ -565,13 +618,16 @@ window.NILTV = (function () {
   }
 
   // How well `term` matches one field: 3 = the whole field, 2 = the start of
-  // a word in it, 1 = inside a word or across a space, 0 = not at all.
-  function matchStrength(text, compact, term) {
+  // a word in it (spaces optional), 1 = inside a word, 0 = not at all.
+  function matchStrength(text, joined, term) {
     if (text === term) return 3;
     if ((" " + text).indexOf(" " + term) >= 0) return 2;
+    for (var i = 0; i < joined.length; i++) {
+      if (joined[i].indexOf(term) === 0) return 2;
+    }
     // 1-2 letter terms only count at a word start, or "am" would match "game"
     if (term.length < 3) return 0;
-    return text.indexOf(term) >= 0 || compact.indexOf(term) >= 0 ? 1 : 0;
+    return text.indexOf(term) >= 0 ? 1 : 0;
   }
 
   // Every query word has to match some field (any order, any field). Each word
@@ -584,7 +640,7 @@ window.NILTV = (function () {
     for (var w = 0; w < terms.length; w++) {
       var best = 0;
       for (var f = 0; f < r.fields.length; f++) {
-        var s = weights[f] * matchStrength(r.fields[f], r.compact[f], terms[w]);
+        var s = weights[f] * matchStrength(r.fields[f], r.joined[f], terms[w]);
         if (s > best) best = s;
       }
       if (!best && w < words.length) return 0;
@@ -606,6 +662,8 @@ window.NILTV = (function () {
         .map(function (x) { return x.r; });
     };
     return {
+      athletes: rank(idx.athletes, ATHLETE_FIELD_WEIGHTS).slice(0, 8).map(function (r) { return r.athlete; }),
+      schools: rank(idx.schools, SCHOOL_FIELD_WEIGHTS).slice(0, 4).map(function (r) { return r.schoolGroup; }),
       channels: rank(idx.channels, CHANNEL_FIELD_WEIGHTS).map(function (r) { return r.channel; }),
       items: rank(idx.items, ITEM_FIELD_WEIGHTS).slice(0, 24),
     };
@@ -663,6 +721,34 @@ window.NILTV = (function () {
   function renderSearchResults(out, hits) {
     var chanHits = hits.channels;
     var itemHits = hits.items.map(function (r) { return r.item; });
+    var base = athletesBase();
+    hits.athletes.forEach(function (a) {
+      var row = el("a", "search-row");
+      row.href = base + encodeURIComponent(a.slug) + "/";
+      var th = el("span", "search-thumb");
+      if (a.portrait) {
+        var img = document.createElement("img");
+        img.loading = "lazy";
+        img.src = a.portrait;
+        img.alt = "";
+        img.onerror = function () { img.remove(); };
+        th.appendChild(img);
+      }
+      row.appendChild(th);
+      var txt = el("span", "search-text");
+      txt.appendChild(el("span", "search-title", a.name));
+      txt.appendChild(el("span", "search-kicker", ["Athlete", a.school, a.sport].filter(Boolean).join(" · ")));
+      row.appendChild(txt);
+      out.appendChild(row);
+    });
+    hits.schools.forEach(function (s) {
+      var row = el("a", "search-row");
+      // the athletes page filters its roster by ?school=
+      row.href = base + "?school=" + encodeURIComponent(s.name);
+      row.appendChild(el("span", "search-kicker", "School · " + s.athletes + (s.athletes === 1 ? " athlete" : " athletes")));
+      row.appendChild(el("span", "search-title", s.name));
+      out.appendChild(row);
+    });
     chanHits.forEach(function (c) {
       var row = el("a", "search-row");
       row.href = "/channels/" + channelSlug(c.id) + "/";
@@ -688,7 +774,7 @@ window.NILTV = (function () {
       });
       out.appendChild(row);
     });
-    if (!chanHits.length && !itemHits.length) {
+    if (!hits.athletes.length && !hits.schools.length && !chanHits.length && !itemHits.length) {
       out.appendChild(el("div", "search-hint", "No matches. Try an athlete, school, or channel name."));
     }
   }

@@ -42,7 +42,7 @@ The index only holds the first page of each channel:
 
 | Endpoint | Search-relevant fields |
 |---|---|
-| `/v1/channels` | `id`, `name`, `about`, `clipCount` |
+| `/v1/channels` | `id`, `name`, `about`, `clipCount`, `school` (added after this review; set on 10 of 12 channels) |
 | `/v1/content?channelId=` (list) | `title`, `channelName`, `creatorId`, `creatorName`, `creatorIsAmbassador`, `duration`, `publishedAt` |
 | `/v1/content/{id}` (detail) | adds `description`, `creator.school`, `creator.sport` |
 | `/v1/home` athletes rail | `id`, `name`, `school`, `sport` (8 featured ambassadors) |
@@ -50,8 +50,12 @@ The index only holds the first page of each channel:
 Gaps that matter for the planned work:
 
 - **No school or sport on list items.** Those fields only appear on detail,
-  which costs one request per video.
-- **No tags anywhere.** No endpoint returns a tags field.
+  which costs one request per video. A video's school can now come from
+  its channel's `school` instead, which search uses. Sport still has no
+  cheap source.
+- **No tags anywhere.** No endpoint returns a tags field. The closest thing
+  is hashtags in titles (4 across the indexed clips), and title matching
+  already finds those.
 - **Athletes aren't linked to content.** The 213 indexed items come from 18
   distinct `creatorId`s. 7 of those are channel accounts, none are flagged
   ambassadors, and none match the athlete ids on the home rail.

@@ -349,9 +349,9 @@ async function main() {
     "", "competitions/", "nilstar/season-1/", "channels/", "featured/", "about/",
     "contact/", "legal/privacy/", "legal/terms/", "legal/contest-notice/",
   ];
-  // vote + athletes are dev-only; prod excludes the pages entirely, so they
-  // never enter its sitemap
-  if (ENV !== "prod") urls.push("vote/", "athletes/");
+  // vote is dev-only; prod excludes the page entirely, so it never enters its
+  // sitemap. Athletes are listed below, only when athlete pages were built.
+  if (ENV !== "prod") urls.push("vote/");
   let watchCount = 0;
 
   const HIDDEN = new Set(["ch-esports"]); // hidden from the web
@@ -411,15 +411,17 @@ else location.replace("/");`,
 
   // static athlete pages (built by scripts/builders/build-athletes.py into
   // athletes/{slug}/; this script never writes there, only indexes them).
-  // Dev-only.
+  // deploy.ps1 builds them before this runs: on prod only the published set,
+  // and none when the athlete data is unavailable (then nothing is listed).
   try {
-    if (ENV === "prod") throw new Error("athletes are dev-only for now");
+    const athletePages = [];
     for (const entry of await readdir(path.join(ROOT, "athletes"))) {
       try {
         await stat(path.join(ROOT, "athletes", entry, "index.html"));
-        urls.push(`athletes/${entry}/`);
+        athletePages.push(`athletes/${entry}/`);
       } catch { /* not a page dir (e.g. the index.html file itself) */ }
     }
+    if (athletePages.length) urls.push("athletes/", ...athletePages);
   } catch (e) { console.log(`  athlete page scan skipped: ${e.message}`); }
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

@@ -20,7 +20,8 @@
 # PROD PIPELINE: the tree stays dev-flavored; prod deploys stage a copy,
 # regenerate watch/channel pages + sitemap/robots/llms against the PROD API,
 # sweep every baked dev reference to the prod CDN + niltv.com, swap in the
-# prod config.js, prune the dev-only pages (vote, athletes, partners), and
+# prod config.js, prune the dev-only pages (vote, partners), build the
+# published athlete pages when the publish set is available, and
 # guard that zero dev references ship.
 param(
   [ValidateSet("dev","prod")][Alias("Branch")][string]$Env = "dev",
@@ -77,7 +78,8 @@ $prodClient = "866nashv1brjs96apc17r1gfa"
 $zip = Join-Path $tmpDir "niltv-web-deploy-$Env-$PID.zip"
 if (Test-Path $zip) { Remove-Item $zip -Force }
 
-# Shared page set. Prod additionally excludes vote/athletes/partners (dev-only).
+# Shared page set. Prod additionally excludes vote/partners (dev-only); athletes
+# ship to prod only as the published set (see the athlete step below).
 # concepts/ is an ignored scratch dir: dev ships it only when present.
 $pages = @("index.html","not-found.html","sitemap.xml","robots.txt","llms.txt","build.json","assets",
            "channels","featured","about","watch","legal","nilstar","competitions",
@@ -114,6 +116,30 @@ if ($Env -eq "prod") {
   # the generator needs the scripts (chrome template included) beside the pages
   Copy-Tree (Join-Path $src "scripts") (Join-Path $stage "scripts")
 
+  # ---- athlete pages: the published set only ----
+  # Athlete records and photos never enter this repo. The Deploy Prod workflow
+  # syncs the publish set (published athletes only) from a private S3 folder
+  # into NILTV_PRIVATE_DATA; the builder then applies its publish gate. With no
+  # publish set, or nothing published, athletes stay off prod: no pages, no
+  # directory, and the sweep cuts the nav link. Runs before build-pages.mjs so
+  # the sitemap lists the pages.
+  $athletes = "off"
+  $priv = $env:NILTV_PRIVATE_DATA
+  if ($priv -and (Test-Path (Join-Path $priv "athletes/_data/athletes.json"))) {
+    New-Item -ItemType Directory -Path (Join-Path $stage "athletes") -Force | Out-Null
+    Copy-Item (Join-Path $src "athletes/index.html") (Join-Path $stage "athletes/index.html")
+    $env:NILTV_ATHLETES_REVIEW = "0"
+    python (Join-Path $stage "scripts/builders/build-athletes.py") --require
+    $ab = $LASTEXITCODE
+    Remove-Item Env:NILTV_ATHLETES_REVIEW -ErrorAction SilentlyContinue
+    if ($ab -ne 0) { Write-Error "prod athlete build failed"; exit 1 }
+    $built = @(Get-ChildItem (Join-Path $stage "athletes") -Directory).Count
+    if ($built -gt 0) { $athletes = "on" } else { [IO.Directory]::Delete((Join-Path $stage "athletes"), $true) }
+    Write-Host "athlete pages: $built published"
+  } else {
+    Write-Host "athlete pages: no publish set (NILTV_PRIVATE_DATA unset) - athletes stay off prod"
+  }
+
   # ---- regenerate against the PROD API, prod identity ----
   Write-Host "Generating pages from the PROD API..."
   $env:NILTV_ENV = "prod"; $env:NILTV_API = $prodCdn; $env:NILTV_ORIGIN = $prodOrigin
@@ -125,7 +151,7 @@ if ($Env -eq "prod") {
 
   # ---- sweep every baked dev reference to the prod identity ----
   $fills = if ($ProdFills) { "on" } else { "off" }
-  python (Join-Path $stage "scripts/deploy-sweep.py") $stage $prodOrigin $prodCdn --fills $fills
+  python (Join-Path $stage "scripts/deploy-sweep.py") $stage $prodOrigin $prodCdn --fills $fills --athletes $athletes
   if ($LASTEXITCODE -ne 0) { Write-Error "prod sweep failed its guard"; exit 1 }
 
   # ---- prod runtime config ----
@@ -156,10 +182,22 @@ window.NILTV_CONFIG = {
     Write-Host "prod check passed (commit $sha): staged, generated, swept, 63 marquee cards, zero dev references. Nothing uploaded."
     exit 0
   }
-  New-Zip $zip $stage ($pages + @("config.js"))
-  Write-Host "Zipped $((Get-Item $zip).Length) bytes for 'prod' (commit $sha)"
+  $prodItems = $pages + @("config.js")
+  if ($athletes -eq "on") { $prodItems += "athletes" }
+  New-Zip $zip $stage $prodItems
+  Write-Host "Zipped $((Get-Item $zip).Length) bytes for 'prod' (commit $sha, athletes $athletes)"
 } else {
   # ---- dev: the tree IS the artifact ----
+  # One dev deploy per tree at a time: parallel runs rebuild the same
+  # generated folders and one of them fails or ships a half-built tree. A
+  # lock older than 15 minutes is treated as left over from a failed run.
+  $lock = Join-Path $src ".deploy-lock"
+  if (-not $Check) {
+    if ((Test-Path $lock) -and ((Get-Date) - (Get-Item $lock).LastWriteTime).TotalMinutes -lt 15) {
+      Write-Error "dev deploy refused: another deploy from this tree started at $((Get-Item $lock).LastWriteTime) ($(Get-Content $lock)). Wait for it, or delete .deploy-lock if it is stale."; exit 1
+    }
+    "pid=$PID started=$(Get-Date -Format s)" | Out-File -FilePath $lock -Encoding ascii
+  }
   Write-Host "Generating pages from the API..."
   $sha = git -C $src rev-parse --short HEAD
   $env:NILTV_BUILD_COMMIT = $sha; $env:NILTV_BUILD_BRANCH = (git -C $src rev-parse --abbrev-ref HEAD)
@@ -173,7 +211,10 @@ window.NILTV_CONFIG = {
   # athlete pages are generated from the PRIVATE data folder (never in git):
   # regenerate them so the dev artifact carries the current records + photos.
   # --require makes a missing private folder a hard failure.
-  Write-Host "Building athlete pages from private data..."
+  # dev shows every athlete record for review (prod never runs this builder);
+  # set NILTV_ATHLETES_REVIEW=0 to preview the gated, publish-only set instead
+  if (-not $env:NILTV_ATHLETES_REVIEW) { $env:NILTV_ATHLETES_REVIEW = "1" }
+  Write-Host "Building athlete pages from private data (review mode: $env:NILTV_ATHLETES_REVIEW)..."
   python (Join-Path $src "scripts/builders/build-athletes.py") --require
   if ($LASTEXITCODE -ne 0) { Write-Error "dev deploy refused: athlete pages could not be built. The private data folder is missing - set NILTV_PRIVATE_DATA or create ../private-data/niltv-web beside the repo (see DEVELOPING.md)."; exit 1 }
   # athlete-signup and payments ship to prod too (they are in $pages); the dev
@@ -225,6 +266,7 @@ do {
 } while ($status -eq "PENDING" -or $status -eq "RUNNING")
 
 Add-Content -Path (Join-Path $src "deploy-log.txt") -Value "$(Get-Date -Format s) env=$Env job=$($dep.jobId) sha=$sha status=$status"
+if ($Env -eq "dev") { Remove-Item (Join-Path $src ".deploy-lock") -ErrorAction SilentlyContinue }
 
 if ($status -ne "SUCCEED") { Write-Error "Deployment finished with status $status"; exit 1 }
 $site = "https://$branch.$appId.amplifyapp.com"

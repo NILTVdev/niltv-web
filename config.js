@@ -10,9 +10,11 @@ window.NILTV_CONFIG = {
   // (niltv-dashboard, applications router; CORS allows this origin). Empty =
   // the /athlete-signup/ form runs in demo mode and shows the payload instead.
   applicationsApi: "https://api-dev.niltv.com/api/applications/",
-  // Community Star intake (POST, public, one entry per email). Empty = the
-  // /communitystar/ form runs in demo mode and shows the payload instead.
-  communityStarApi: "",
+  // Community Star intake: the dashboard API's public POST
+  // /api/community-star/applications (one entry per email, 409 on a repeat,
+  // 410 outside Nov 2 - Nov 23). Empty = the /communitystar/ form runs in
+  // demo mode and shows the payload instead.
+  communityStarApi: "https://api-dev.niltv.com/api/community-star/applications",
   // Community Star "Get notified" signups before Nov 2 (POST, public; same
   // export as the applications). Empty = the signup runs in demo mode.
   communityStarNotifyApi: "",

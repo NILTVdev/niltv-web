@@ -29,10 +29,10 @@ DRAFT_RE = re.compile(r"[ \t]*<!--(?:(?!-->).)*draft(?:(?!-->).)*-->\s*", re.S |
 ATHLETES_NAV_RE = re.compile(r'[ \t]*<a href="/athletes/"(?: class="active")?>Athletes</a>\n?')
 ATHLETES_JS_RE = re.compile(r'[ \t]*\["Athletes", "/athletes/"\],\n')
 # Generic fence: <!-- unreleased:NAME --> ... <!-- /unreleased:NAME -->.
-# Community Star (launch Nov 2): /communitystar/ is dev-only in deploy.ps1,
-# so the guard also fails any prod page that links to it.
+# Community Star: /communitystar/ itself ships to prod; its homepage slide and
+# /competitions/ tile stay fenced (unreleased:communitystar) until signed off.
 UNRELEASED_RE = re.compile(r"[ \t]*<!-- unreleased:([\w-]+) -->.*?<!-- /unreleased:\1 -->\s*", re.S)
-UNRELEASED_GUARD = ("unreleased:", "/communitystar/")
+UNRELEASED_GUARD = ("unreleased:",)
 
 def flag(name, default):
     """Value after `name` on the command line, or default."""

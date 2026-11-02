@@ -970,9 +970,9 @@ phase_cells = ["""    <div class="phase-card">
 about_hero = """<section class="hero hero-sm" id="hero">
   <div class="hero-slide vslide v-wide on">
     <div class="hglow" style="background-image:url('%s/assets/img/sizzle-poster-wide.jpg')"></div>
-    <video class="hero-echo" muted loop playsinline preload="none" data-src="%s/video/sizzle/niltv-wide-720a.mp4"></video>
+    <video class="hero-echo" muted loop playsinline preload="none" data-src="%s/video/sizzle/niltv-wide-720b.mp4"></video>
     <video class="hero-video vw-desk" muted loop playsinline preload="none"
-      poster="%s/assets/img/sizzle-poster-wide.jpg" data-src="%s/video/sizzle/niltv-wide-720a.mp4"></video>
+      poster="%s/assets/img/sizzle-poster-wide.jpg" data-src="%s/video/sizzle/niltv-wide-720b.mp4"></video>
     <div class="hero-copy">
       <h1 class="hero-title ht-sm">The Media Network<br>for the NIL Era</h1>
       <p class="hero-dek">Real Name. Real Game. Real TV.</p>

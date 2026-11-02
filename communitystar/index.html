@@ -1542,7 +1542,7 @@ br.mbr{display:none}
     <form class="apply-form" id="applyForm" novalidate>
     <div aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden"><label>Leave empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
       <div class="q"><div class="qn">1.</div><div class="qb"><label for="q-fullName">Full name <span class="req">*</span></label><input type="text" id="q-fullName" name="fullName" required autocomplete="name" maxlength="120"></div></div>
-      <div class="q"><div class="qn">2.</div><div class="qb"><label for="q-email">Email <span class="req">*</span></label><div class="mo">One application per email. Your confirmation goes here.</div><input type="email" id="q-email" name="email" required autocomplete="email" maxlength="200"></div></div>
+      <div class="q"><div class="qn">2.</div><div class="qb"><label for="q-email">Email <span class="req">*</span></label><div class="mo">One application per person. Your confirmation goes here.</div><input type="email" id="q-email" name="email" required autocomplete="email" maxlength="200"></div></div>
       <div class="q"><div class="qn">3.</div><div class="qb"><label for="q-phone">Phone <span class="req">*</span></label><input type="tel" id="q-phone" name="phone" required autocomplete="tel" inputmode="tel" maxlength="30"></div></div>
       <div class="q"><div class="qn">4.</div><div class="qb"><label for="q-school">School <span class="req">*</span></label><div class="mo">Start typing and pick your school from the list.</div><div class="school-box"><input type="text" id="q-school" name="school" required autocomplete="off" spellcheck="false" placeholder="e.g. Duke University" maxlength="160"><ul class="school-list" id="schoolList" hidden></ul></div><input type="hidden" id="q-schoolState" name="schoolState"><input type="hidden" id="q-schoolDomain" name="schoolDomain"></div></div>
       <div class="q"><div class="qn">5.</div><div class="qb"><label for="q-sport">Sport <span class="req">*</span></label><input type="text" id="q-sport" name="sport" required maxlength="80" placeholder="e.g. Women's Soccer"></div></div>
@@ -1565,7 +1565,6 @@ br.mbr{display:none}
       <div class="mo">Optional. Your application counts the same either way.</div>
       <label class="chk"><input type="checkbox" name="consentEmail"> <span>Email me about NIL TV competitions, content, and updates.</span></label>
       <label class="chk"><input type="checkbox" name="consentSms"> <span>Text me about NIL TV competitions and updates. Msg and data rates may apply. Reply STOP to opt out.</span></label>
-      <label class="chk"><input type="checkbox" name="consentPartners"> <span>Send me offers from NIL TV brand partners, and use my information for relevant partner marketing.</span></label>
     </div></div>
 
     <div class="submit-row"><button class="btn btn-gold" type="submit" id="applySubmit">Submit application</button><div id="apply-msg" role="status"></div></div>
@@ -2609,7 +2608,7 @@ document.querySelectorAll('.shelf').forEach(function(sh){
 
     var fd = new FormData(form), body = {};
     fd.forEach(function(v, k){ v = typeof v === 'string' ? v.trim() : v; if (v !== '') body[k] = v; });
-    ['collabInvited','eligibleAndRules','confirmAge','consentPrivacy','consentEmail','consentSms','consentPartners'].forEach(function(k){ body[k] = !!form.elements[k].checked; });
+    ['collabInvited','eligibleAndRules','confirmAge','consentPrivacy','consentEmail','consentSms'].forEach(function(k){ body[k] = !!form.elements[k].checked; });
     body.email = body.email.toLowerCase();
     body.instagram = '@' + ig.value.toLowerCase();
     body.postUrl = post;
@@ -2641,7 +2640,7 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     if (!cfg.communityStarApi){ finish('demo'); return; }
     fetch(cfg.communityStarApi, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)})
     .then(function(r){
-      if (r.status === 409) { btn.disabled = false; form.elements.email.focus(); say('This email already has an application. One application per email.'); return; }
+      if (r.status === 409) { btn.disabled = false; form.elements.email.focus(); say('There is already an application with this email or Instagram handle. One application per person.'); return; }
       if (r.status === 410) { location.reload(); return; }
       if (r.status === 429) { btn.disabled = false; say('Too many tries from this connection. Wait a bit and try again.'); return; }
       if (!r.ok) throw new Error('http ' + r.status);

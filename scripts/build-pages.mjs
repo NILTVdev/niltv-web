@@ -346,7 +346,7 @@ async function main() {
     }
   } catch (e) { console.warn(`  home recovery skipped: ${e.message}`); }
   const urls = [
-    "", "competitions/", "nilstar/season-1/", "channels/", "featured/", "about/",
+    "", "competitions/", "communitystar/", "nilstar/season-1/", "channels/", "featured/", "about/",
     "contact/", "legal/privacy/", "legal/terms/", "legal/contest-notice/",
   ];
   // vote + athletes are dev-only; prod excludes the pages entirely, so they

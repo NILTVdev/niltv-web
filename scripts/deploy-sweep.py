@@ -24,10 +24,10 @@ DRAFT_RE = re.compile(r"[ \t]*<!--(?:(?!-->).)*draft(?:(?!-->).)*-->\s*", re.S |
 # Cuts for features that are on main but not signed off for prod go here: a
 # regex applied to the staging copy plus a line in the hard guard below.
 # Generic fence: <!-- unreleased:NAME --> ... <!-- /unreleased:NAME -->.
-# Community Star (launch Nov 2): /communitystar/ is dev-only in deploy.ps1,
-# so the guard also fails any prod page that links to it.
+# Community Star: /communitystar/ itself ships to prod; its homepage slide and
+# /competitions/ tile stay fenced (unreleased:communitystar) until signed off.
 UNRELEASED_RE = re.compile(r"[ \t]*<!-- unreleased:([\w-]+) -->.*?<!-- /unreleased:\1 -->\s*", re.S)
-UNRELEASED_GUARD = ("unreleased:", "/communitystar/")
+UNRELEASED_GUARD = ("unreleased:",)
 # Athletes nav link: the /athletes/ pages are dev-only (deploy.ps1 prunes
 # them), so the nav link to them is cut from prod. Delete with the prune.
 ATHLETES_NAV_RE = re.compile(r'[ \t]*<a href="/athletes/"(?: class="active")?>Athletes</a>\n?')

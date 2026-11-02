@@ -1194,6 +1194,84 @@ br.mbr{display:none}
 
 <main class="shelves">
 
+<!-- unreleased:communitystar -->
+<style>
+/* Events rail (the parked builder shelf, back for a second event). There is
+   no Community Star logo file, so its tile sets the wordmark in type. */
+.ev-tile.ev-cs{--cs-gold:#E8BD6E;border-color:rgba(232,189,110,.4);
+  background:radial-gradient(70% 90% at 85% -4%,rgba(232,189,110,.22),rgba(232,189,110,0) 62%),linear-gradient(180deg,#121216,#08080a)}
+.ev-cs .ev-star{position:absolute;right:-7%;bottom:-34%;width:56%;height:auto;fill:rgba(232,189,110,.08);z-index:0}
+.ev-cs .ev-logo-box,.ev-cs .ev-foot{position:relative;z-index:1}
+.ev-cs .ev-mark{font-family:'Barlow Condensed',sans-serif;font-weight:800;text-transform:uppercase;text-align:center;
+  font-size:clamp(40px,4.2vw,60px);line-height:.86;letter-spacing:.01em}
+.ev-cs .ev-mark b{display:block;font-weight:800;color:var(--cs-gold)}
+.ev-cs.live .ev-state,.ev-cs .ev-meta b{color:var(--cs-gold)}
+@media (max-width:480px){
+  .ev-cs .ev-logo-box{padding-top:30px}
+  .ev-cs .ev-mark{font-size:30px}
+  .ev-cs .ev-mark b{display:inline}
+}
+</style>
+<section class="shelf">
+  <div class="shelf-head">
+    <h2 class="shelf-title gold">Events</h2>
+  </div>
+  <div class="rail">
+    <a class="card ev-tile ev-cs" href="/communitystar/" aria-label="Community Star" data-cs-tile>
+      <span class="ev-state" data-cs-state>Coming Soon</span>
+      <svg class="ev-star" viewBox="0 0 100 96" aria-hidden="true"><path d="M50 2l14.7 30 33 4.8-23.9 23.3 5.6 32.9L50 77.5 20.6 93l5.6-32.9L2.3 36.8l33-4.8z"/></svg>
+      <span class="ev-logo-box"><span class="ev-mark">Community <b>Star</b></span></span>
+      <span class="ev-foot">
+        <span class="ev-line">Two $5,000 grants for college athletes</span>
+        <span class="ev-meta"><span data-cs-when>Applications open Nov 2</span><b data-cs-cta>Get Notified</b></span>
+      </span>
+    </a>
+    <a class="card ev-tile" href="/nilstar/season-1/" aria-label="NIL Star Season 1, Completed">
+      <span class="ev-state">Completed</span>
+      <span class="ev-logo-box"><img class="ev-logo ev-logo-wide" src="/assets/img/nilstar-logo-wide.webp" alt="NIL Star Season 1" loading="lazy" decoding="async"></span>
+      <span class="ev-foot">
+        <span class="ev-line">Champion crowned Jul 22. 20 finalists, 1M+ votes.</span>
+        <span class="ev-meta">Season 1 &middot; Jul 7 to Jul 22, 2026<b>Watch the Recap</b></span>
+      </span>
+    </a>
+  </div>
+</section>
+<script>
+/* Community Star tile: state, dates and call to action follow the campaign
+   on the same UTC clock as /communitystar/ (?stage= previews off niltv.com). */
+(function(){
+  var tile = document.querySelector('[data-cs-tile]');
+  if (!tile) return;
+  var T = {opens:Date.parse('2026-11-02T14:00:00Z'), closes:Date.parse('2026-11-24T08:00:00Z'),
+    finalists:Date.parse('2026-11-25T23:00:00Z'), voteOpens:Date.parse('2026-12-11T14:00:00Z'),
+    voteCloses:Date.parse('2026-12-14T08:00:00Z'), winners:Date.parse('2026-12-18T14:00:00Z')};
+  var S = {
+    coming:   ['Coming Soon', 'Applications open Nov 2', 'Get Notified', '#apply'],
+    open:     ['Applications Open', 'Apply by Nov 23', 'Apply Now', '#apply', 1],
+    closed:   ['Applications Closed', 'Finalists announced Nov 25', 'Learn More', ''],
+    finalists:['Finalists', 'Voting opens Dec 11', 'Meet the Finalists', '#finalists'],
+    voting:   ['Voting Live', 'Voting closes Dec 13', 'Vote Now', '#finalists', 1],
+    top5:     ['Top 5', 'Winners announced Dec 18', 'See the Top 5', '#finalists'],
+    winners:  ['Winners', 'Two winners, $5,000 each', 'Meet the Winners', '#winners']
+  };
+  var t = Date.now(), forced = null;
+  if (!/^(www\.)?niltv\.com$/.test(location.hostname)){
+    var q = (location.search.match(/[?&]stage=([a-z0-9]+)/) || [])[1];
+    if (q && S[q]) forced = q;
+  }
+  var st = forced || (t < T.opens ? 'coming' : t < T.closes ? 'open' : t < T.finalists ? 'closed' :
+    t < T.voteOpens ? 'finalists' : t < T.voteCloses ? 'voting' : t < T.winners ? 'top5' : 'winners');
+  var c = S[st];
+  tile.querySelector('[data-cs-state]').textContent = c[0];
+  tile.querySelector('[data-cs-when]').textContent = c[1];
+  tile.querySelector('[data-cs-cta]').textContent = c[2];
+  tile.href = '/communitystar/' + (forced ? '?stage=' + forced : '') + c[3];
+  tile.setAttribute('aria-label', 'Community Star, ' + c[0]);
+  tile.classList.toggle('live', !!c[4]);
+})();
+</script>
+<!-- /unreleased:communitystar -->
+
 <section class="shelf">
   <div class="shelf-head">
     <h2 class="shelf-title gold">NIL Singing Star Season 1</h2>

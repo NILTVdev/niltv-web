@@ -23,9 +23,8 @@ EXTS = (".html", ".xml", ".txt", ".js", ".webmanifest")
 DRAFT_RE = re.compile(r"[ \t]*<!--(?:(?!-->).)*draft(?:(?!-->).)*-->\s*", re.S | re.I)
 # Cuts for features that are on main but not signed off for prod go here: a
 # regex applied to the staging copy plus a line in the hard guard below.
-# Generic fence: <!-- unreleased:NAME --> ... <!-- /unreleased:NAME -->.
-# Community Star: /communitystar/ itself ships to prod; its homepage slide and
-# /competitions/ tile stay fenced (unreleased:communitystar) until signed off.
+# Generic fence: <!-- unreleased:NAME --> ... <!-- /unreleased:NAME -->. Wrap
+# a dev-only section in one and the prod artifact cuts it.
 UNRELEASED_RE = re.compile(r"[ \t]*<!-- unreleased:([\w-]+) -->.*?<!-- /unreleased:\1 -->\s*", re.S)
 UNRELEASED_GUARD = ("unreleased:",)
 # Athletes nav link: the /athletes/ pages are dev-only (deploy.ps1 prunes

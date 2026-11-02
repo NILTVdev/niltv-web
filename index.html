@@ -1190,66 +1190,44 @@ br.mbr{display:none}
 
   <!-- unreleased:communitystar -->
   <style>
-  /* Community Star slide: the campaign look (warm gold glow, faded star,
-     gold framed host portraits) in type, no video. The script after the
-     hero moves it to the front and keeps the dot row in step. */
-  .cs-slide{--cs-gold:#E8BD6E;background:#0b0b0f}
-  .cs-bg{position:absolute;inset:0;z-index:0;overflow:hidden;
-    background:radial-gradient(60% 80% at 80% -6%,rgba(232,189,110,.24),rgba(232,189,110,0) 62%),
-      radial-gradient(50% 60% at 4% 108%,rgba(232,189,110,.07),rgba(232,189,110,0) 70%),#0b0b0f}
-  .cs-bg svg{position:absolute;right:-6vw;bottom:-24vh;height:100vh;width:auto;fill:rgba(232,189,110,.07)}
+  /* Community Star slide: the NIL Star slide's layout (the launch reel as a
+     card over a blurred echo of itself), campaign gold for the title and
+     button. The script after the hero moves it to the front, keeps the dot
+     row in step and follows the campaign stages. */
+  .cs-slide{--cs-gold:#E8BD6E}
   .cs-slide .hero-title .g{color:var(--cs-gold)}
   .cs-slide .btn-gold{background:var(--cs-gold)}
   .cs-slide .btn-gold:hover{background:#f0cd88}
+  .cs-slide .hero-ctas{flex-wrap:wrap;align-items:center}
   .cs-when{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:15px;letter-spacing:.18em;
     text-transform:uppercase;color:var(--dim);white-space:nowrap}
   .cs-when b{color:var(--cs-gold);font-weight:700}
-  .cs-hosts{position:absolute;z-index:2;right:calc(var(--gutter) + 72px);top:50%;transform:translateY(-44%);margin:0;
-    display:grid;grid-template-columns:repeat(2,clamp(170px,15vw,260px));gap:14px clamp(14px,1.4vw,22px)}
-  .cs-lbl{grid-column:1/-1;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:15px;
-    letter-spacing:.24em;text-transform:uppercase;color:var(--cs-gold)}
-  .cs-host{margin:0}
-  .cs-host img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;border:1px solid #836C42;background:#141418}
-  .cs-host figcaption{margin-top:10px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:15px;
-    letter-spacing:.14em;text-transform:uppercase;line-height:1.3;color:var(--text)}
-  .cs-host figcaption span{display:block;color:var(--dim)}
-  /* tablets: the copy column is wide here, so the hosts sit above it */
-  @media (min-width:701px) and (max-width:900px){
-    .cs-bg svg{height:80vw}
-    .cs-hosts{top:96px;right:var(--gutter);transform:none;grid-template-columns:repeat(2,clamp(140px,20vw,180px))}
-  }
-  @media (min-width:701px) and (max-width:900px) and (max-height:819px){.cs-hosts{display:none}}
   @media (max-width:700px){
-    .cs-slide{background:var(--bg)}
-    .cs-bg{bottom:auto;height:calc(76px + 56.25vw);background-color:transparent;
-      -webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent)}
-    .cs-bg svg{right:-14vw;bottom:-10vw;height:70vw}
-    .cs-hosts{position:relative;right:auto;top:auto;transform:none;width:100%;aspect-ratio:16/9;margin:0 0 8px;
-      grid-template-columns:repeat(2,36vw);justify-content:center;align-content:center;gap:6px 2vw}
-    .cs-lbl{font-size:12px;letter-spacing:.2em;text-align:center}
-    .cs-host img{width:26vw;margin:0 auto}
-    .cs-host figcaption{margin-top:6px;font-size:11.5px;letter-spacing:.08em;text-align:center;white-space:nowrap}
     .cs-slide .hero-kicker{font-size:14px;letter-spacing:.14em}
     .cs-slide .hero-title br{display:none}
-    .cs-when{font-size:13px;letter-spacing:.14em}
+    .cs-when{flex-basis:100%;font-size:13px;letter-spacing:.14em}
   }
   </style>
-  <div class="hero-slide vslide cs-slide">
-    <div class="cs-bg" aria-hidden="true"><svg viewBox="0 0 100 96"><path d="M50 2l14.7 30 33 4.8-23.9 23.3 5.6 32.9L50 77.5 20.6 93l5.6-32.9L2.3 36.8l33-4.8z"/></svg></div>
-    <div class="cs-hosts">
-      <div class="cs-lbl">Your hosts and judges</div>
-      <figure class="cs-host"><img src="/assets/img/advisory/sion-james.webp" alt="Sion James" decoding="async" style="object-position:50% 16%">
-        <figcaption>Sion James<span>Charlotte Hornets</span></figcaption></figure>
-      <figure class="cs-host"><img src="/assets/img/team/anthony-egbo.jpg" alt="Anthony Egbo" decoding="async" style="object-position:50% 20%">
-        <figcaption>Anthony Egbo<span>NIL TV Co-Founder</span></figcaption></figure>
-    </div>
+  <div class="hero-slide vslide bleed cs-slide">
+    <div class="hglow" style="background-image:url('https://d1nm1d2txb83wa.cloudfront.net/video/cs-launch-reel/poster.jpg')"></div>
+    <video class="hero-echo" muted loop playsinline preload="none" data-src="https://d1nm1d2txb83wa.cloudfront.net/video/cs-launch-reel/master.mp4"></video>
+    <div class="hero-scrim"></div>
+    <div class="hreel"><video class="hero-video" muted loop playsinline preload="none"
+      poster="https://d1nm1d2txb83wa.cloudfront.net/video/cs-launch-reel/poster.jpg" data-src="https://d1nm1d2txb83wa.cloudfront.net/video/cs-launch-reel/master.mp4"></video></div>
     <div class="hero-copy">
       <div class="hero-kicker" data-cs-k>$10,000 in grants for college athletes</div>
       <h1 class="hero-title">Community<br> <span class="g">Star</span></h1>
       <p class="hero-dek">Two college athletes will each receive $5,000 to support the community work they're already doing.</p>
       <div class="hero-ctas">
-        <a class="btn btn-gold" href="/communitystar/#apply" data-cs-btn>Get notified</a>
-        <span class="cs-when" data-cs-when>Applications open Nov 2</span>
+        <a class="btn btn-gold" href="/communitystar/#apply" data-cs-btn>Apply now</a>
+        <a class="btn btn-ghost theater-open" href="#"
+           data-mp4="https://d1nm1d2txb83wa.cloudfront.net/video/cs-launch-reel/master.mp4"
+           data-poster="https://d1nm1d2txb83wa.cloudfront.net/video/cs-launch-reel/poster.jpg"
+           data-kicker="NIL TV Community Star" data-title="Hosted by Sion James and Anthony Egbo">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          Watch
+        </a>
+        <span class="cs-when" data-cs-when></span>
       </div>
     </div>
   </div>

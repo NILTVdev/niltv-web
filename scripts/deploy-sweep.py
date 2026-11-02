@@ -28,9 +28,8 @@ DRAFT_RE = re.compile(r"[ \t]*<!--(?:(?!-->).)*draft(?:(?!-->).)*-->\s*", re.S |
 # the guard fails any page that still links there.
 ATHLETES_NAV_RE = re.compile(r'[ \t]*<a href="/athletes/"(?: class="active")?>Athletes</a>\n?')
 ATHLETES_JS_RE = re.compile(r'[ \t]*\["Athletes", "/athletes/"\],\n')
-# Generic fence: <!-- unreleased:NAME --> ... <!-- /unreleased:NAME -->.
-# Community Star: /communitystar/ itself ships to prod; its homepage slide and
-# /competitions/ tile stay fenced (unreleased:communitystar) until signed off.
+# Generic fence: <!-- unreleased:NAME --> ... <!-- /unreleased:NAME -->. Wrap
+# a dev-only section in one and the prod artifact cuts it.
 UNRELEASED_RE = re.compile(r"[ \t]*<!-- unreleased:([\w-]+) -->.*?<!-- /unreleased:\1 -->\s*", re.S)
 UNRELEASED_GUARD = ("unreleased:",)
 

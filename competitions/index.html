@@ -1360,14 +1360,16 @@ br.mbr{display:none}
   var T = {opens:Date.parse('2026-11-02T14:00:00Z'), closes:Date.parse('2026-11-24T08:00:00Z'),
     finalists:Date.parse('2026-11-25T23:00:00Z'), voteOpens:Date.parse('2026-12-11T14:00:00Z'),
     voteCloses:Date.parse('2026-12-14T08:00:00Z'), winners:Date.parse('2026-12-18T14:00:00Z')};
+  // [state pill, date line, call to action, live]. The card always opens the
+  // top of /communitystar/; the page's own button leads on from there.
   var S = {
-    coming:   ['Coming Soon', 'Applications open Nov 2', 'Get Notified', '#apply'],
-    open:     ['Applications Open', 'Apply by Nov 23', 'Apply Now', '#apply', 1],
-    closed:   ['Applications Closed', 'Finalists announced Nov 25', 'Learn More', ''],
-    finalists:['Finalists', 'Voting opens Dec 11', 'Meet the Finalists', '#finalists'],
-    voting:   ['Voting Live', 'Voting closes Dec 13', 'Vote Now', '#finalists', 1],
-    top5:     ['Top 5', 'Winners announced Dec 18', 'See the Top 5', '#finalists'],
-    winners:  ['Winners', 'Two winners, $5,000 each', 'Meet the Winners', '#winners']
+    coming:   ['Coming Soon', 'Applications open Nov 2', 'Get Notified'],
+    open:     ['Applications Open', 'Apply by Nov 23', 'Apply Now', 1],
+    closed:   ['Applications Closed', 'Finalists announced Nov 25', 'Learn More'],
+    finalists:['Finalists', 'Voting opens Dec 11', 'Meet the Finalists'],
+    voting:   ['Voting Live', 'Voting closes Dec 13', 'Vote Now', 1],
+    top5:     ['Top 5', 'Winners announced Dec 18', 'See the Top 5'],
+    winners:  ['Winners', 'Two winners, $5,000 each', 'Meet the Winners']
   };
   var t = Date.now(), forced = null;
   if (!/^(www\.)?niltv\.com$/.test(location.hostname)){
@@ -1380,9 +1382,9 @@ br.mbr{display:none}
   tile.querySelector('[data-cs-state]').textContent = c[0];
   tile.querySelector('[data-cs-when]').textContent = c[1];
   tile.querySelector('[data-cs-cta]').textContent = c[2];
-  tile.href = '/communitystar/' + (forced ? '?stage=' + forced : '') + c[3];
+  tile.href = '/communitystar/' + (forced ? '?stage=' + forced : '');
   tile.setAttribute('aria-label', 'NIL Community Star, ' + c[0]);
-  tile.classList.toggle('live', !!c[4]);
+  tile.classList.toggle('live', !!c[3]);
 })();
 </script>
 

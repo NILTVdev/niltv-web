@@ -39,9 +39,6 @@
     hold:           {view: 'hold',      at: '2026-11-26T16:00:00Z'},
     finalists:      {view: 'finalists', at: '2026-12-01T16:00:00Z'},
     voting:         {view: 'voting',    at: '2026-12-12T16:00:00Z'},
-    votingempty:    {view: 'voting',    at: '2026-12-11T15:00:00Z'},
-    votinghidden:   {view: 'voting',    at: '2026-12-12T16:00:00Z'},
-    paused:         {view: 'voting',    at: '2026-12-12T16:00:00Z'},
     top5hold:       {view: 'top5hold',  at: '2026-12-14T10:00:00Z'},
     top5:           {view: 'top5',      at: '2026-12-15T16:00:00Z'},
     winners:        {view: 'winners',   at: '2026-12-19T16:00:00Z'},
@@ -52,6 +49,15 @@
     confirminvalid: {view: 'voting',    at: '2026-12-12T16:00:00Z'},
     confirmpaused:  {view: 'voting',    at: '2026-12-12T16:00:00Z'}
   };
+
+  /* stand-in reels for previews: 9:16 videos already in the site's library */
+  var MEDIA = 'https://d1nm1d2txb83wa.cloudfront.net/video/';
+  var SAMPLE_REELS = ('18090687326638212 18032459951649287 17885005557669640 18005583791944416 18105514307111514 18148933864451059 18088349483186091 ' +
+    '17968578101935272* 17879255838614337* 18085956953359667 18407599015157352 18021282023853993 18604893316048710 18217919269327952* 18059364485762372* ' +
+    '17960315856137760 17997167144792706 17992218497811714 18116745598768277 17960395157963864').split(' ').map(function(x){
+      var base = MEDIA + 'ig-' + x.replace('*', '');
+      return {mp4: base + '/master.mp4', poster: base + '/poster' + (x.slice(-1) === '*' ? '-fill' : '') + '.jpg'};
+    });
 
   /* An allowlist, so any host not named here (niltv.com, the prod Amplify
      domain) counts as production. The prod artifact guard forbids the dev app
@@ -102,6 +108,33 @@
     return '';
   }
 
+  /* winners stage on the homepage and competitions slide: the two winners take
+     the reel's place. An empty list puts the launch reel back. */
+  function winnerSlide(slide, won){
+    var reel = slide.querySelector('.hreel'), dek = slide.querySelector('.hero-dek');
+    if (!reel) return;
+    if (dek && dek.csDek == null) dek.csDek = dek.textContent;
+    var old = reel.querySelector('.cs-pair');
+    if (old) old.remove();
+    slide.classList.toggle('cs-won', won.length > 0);
+    if (dek) dek.textContent = won.length ? won.map(function(f){ return f.name; }).join(' and ') + ' each receive a $5,000 grant for the community work they already do.' : dek.csDek;
+    if (!won.length) return;
+    var pair = document.createElement('div');
+    pair.className = 'cs-pair';
+    won.forEach(function(f){
+      var fig = document.createElement('figure'), img = document.createElement('img'), cap = document.createElement('figcaption');
+      img.src = f.photo || f.poster || '';
+      img.alt = '';
+      cap.textContent = f.name;
+      fig.appendChild(img);
+      fig.appendChild(cap);
+      pair.appendChild(fig);
+    });
+    reel.appendChild(pair);
+  }
+  function feedWinners(feed){ return ((feed && feed.finalists) || []).filter(function(f){ return f.winner; }); }
+  function sampleWinners(){ return SAMPLE_REELS.slice(0, 2).map(function(r, n){ return {name: 'Finalist ' + (n + 1), poster: r.poster}; }); }
+
   function api(path){
     var a = (window.NILTV_CONFIG || {}).communityStarApi || '';
     return a ? a.replace(/\/applications\/?$/, path) : '';
@@ -139,6 +172,6 @@
     setInterval(function(){ if (!document.hidden) pull(); }, every);
   }
 
-  window.NILTV_CS = {T: T, PREVIEWS: PREVIEWS, devHost: devHost, preview: preview, times: times, view: view, base: base,
-    announce: announce, api: api, load: load, watch: watch};
+  window.NILTV_CS = {T: T, PREVIEWS: PREVIEWS, SAMPLE_REELS: SAMPLE_REELS, devHost: devHost, preview: preview, times: times, view: view, base: base,
+    announce: announce, api: api, load: load, watch: watch, winnerSlide: winnerSlide, feedWinners: feedWinners, sampleWinners: sampleWinners};
 })();

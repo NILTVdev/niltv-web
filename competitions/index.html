@@ -1243,10 +1243,12 @@ br.mbr{display:none}
   </div>
 </section>
 
+<script src="/assets/js/cs-stage.js"></script>
 <script>
-/* Community Star slide: leads the carousel and follows the campaign on the
-   same UTC clock as /communitystar/. ?stage= previews a stage anywhere but
-   niltv.com, and the button carries it through to the page. */
+/* Community Star slide: leads the carousel and follows the campaign through
+   the shared feed (assets/js/cs-stage.js), so it says what the page says and
+   announces nothing staff have not published. ?stage= previews a state off
+   production, and the button carries it through to the page. */
 (function(){
   var hero = document.getElementById('hero');
   var cs = hero && hero.querySelector('.cs-slide');
@@ -1265,29 +1267,21 @@ br.mbr{display:none}
       row.appendChild(b);
     });
   }
-  var D = 864e5;
-  var T = {opens:Date.parse('2026-11-02T14:00:00Z'), closes:Date.parse('2026-11-24T08:00:00Z'),
-    finalists:Date.parse('2026-11-25T23:00:00Z'), voteOpens:Date.parse('2026-12-11T14:00:00Z'),
-    voteCloses:Date.parse('2026-12-14T08:00:00Z'), winners:Date.parse('2026-12-18T14:00:00Z')};
+  var CS = window.NILTV_CS;
+  if (!CS) return;
   var GRANTS = '$10,000 in grants for college athletes';
   var S = {
-    coming:   {start:T.opens - 13*D, k:GRANTS, btn:'Get notified', hash:'#apply', to:T.opens, lbl:'Opens in'},
-    open:     {start:T.opens, k:GRANTS, btn:'Apply now', hash:'#apply', to:T.closes, lbl:'Closes in'},
-    closed:   {start:T.closes, k:GRANTS, btn:'Learn more', hash:'', note:'Finalists announced Nov 25'},
-    finalists:{start:T.finalists, k:'Top 25 finalists announced', btn:'Meet the finalists', hash:'#finalists', note:'Voting opens Dec 11'},
-    voting:   {start:T.voteOpens, k:'Fan voting is open', btn:'Vote now', hash:'#finalists', to:T.voteCloses, lbl:'Voting ends in'},
-    top5:     {start:T.voteCloses, k:'Top 5 announced', btn:'See the top 5', hash:'#finalists', note:'Winners announced Dec 18'},
-    winners:  {start:T.winners, k:'Winners announced', btn:'Meet the winners', hash:'#winners'}
+    coming:   {k:GRANTS, btn:'Get notified', hash:'#apply', to:'opens', lbl:'Opens in'},
+    open:     {k:GRANTS, btn:'Apply now', hash:'#apply', to:'closes', lbl:'Closes in'},
+    closed:   {k:GRANTS, btn:'Learn more', hash:''},
+    hold:     {k:GRANTS, btn:'Learn more', hash:''},
+    finalists:{k:'Top 25 finalists announced', btn:'Meet the finalists', hash:'#finalists', note:'Voting opens Dec 11'},
+    voting:   {k:'Fan voting is open', btn:'Vote now', hash:'#finalists', to:'voteCloses', lbl:'Voting ends in'},
+    top5hold: {k:'Voting is closed', btn:'Learn more', hash:''},
+    top5:     {k:'Top 5 announced', btn:'See the top 5', hash:'#finalists'},
+    winners:  {k:'Winners announced', btn:'Meet the winners', hash:'#winners'}
   };
-  var forced = null, shift = 0;
-  if (!/^(www\.)?niltv\.com$/.test(location.hostname)){
-    var q = (location.search.match(/[?&]stage=([a-z0-9]+)/) || [])[1];
-    if (q && S[q]){ forced = q; shift = S[q].start + 1.5*D - Date.now(); }
-  }
-  function stageAt(t){
-    return t < T.opens ? 'coming' : t < T.closes ? 'open' : t < T.finalists ? 'closed' :
-      t < T.voteOpens ? 'finalists' : t < T.voteCloses ? 'voting' : t < T.winners ? 'top5' : 'winners';
-  }
+  var pv = CS.preview(), feed = null, shift = pv ? pv.at - Date.now() : 0;
   function pad(n){ return (n < 10 ? '0' : '') + n; }
   function left(ms){
     var m = Math.max(0, Math.floor(ms / 6e4)), d = Math.floor(m / 1440), h = Math.floor(m % 1440 / 60);
@@ -1296,19 +1290,20 @@ br.mbr{display:none}
   var kEl = cs.querySelector('[data-cs-k]'), btn = cs.querySelector('[data-cs-btn]'), when = cs.querySelector('[data-cs-when]');
   var cur = null;
   function render(){
-    var t = Date.now() + shift, st = forced || stageAt(t), c = S[st];
+    var t = Date.now() + shift, st = pv ? pv.view : CS.view(feed, t), c = S[st], note = c.note || CS.announce(st, t, feed);
     if (st !== cur){
       cur = st;
       kEl.textContent = c.k;
       btn.textContent = c.btn;
-      btn.href = '/communitystar/' + (forced ? '?stage=' + forced : '') + c.hash;
+      btn.href = '/communitystar/' + (pv ? '?stage=' + pv.key : '') + c.hash;
     }
-    if (c.to) when.innerHTML = c.lbl + ' <b>' + left(c.to - t) + '</b>';
-    else when.textContent = c.note || '';
-    when.hidden = !(c.to || c.note);
+    if (c.to) when.innerHTML = c.lbl + ' <b>' + left(CS.times(feed)[c.to] - t) + '</b>';
+    else when.textContent = note;
+    when.hidden = !(c.to || note);
   }
   render();
   setInterval(render, 30000);
+  if (!pv) CS.watch(function(f){ if (f){ feed = f; shift = f.offset; } render(); }, 3e5);
 })();
 </script>
 
@@ -1352,39 +1347,37 @@ br.mbr{display:none}
   </div>
 </section>
 <script>
-/* Community Star tile: state, dates and call to action follow the campaign
-   on the same UTC clock as /communitystar/ (?stage= previews off niltv.com). */
+/* Community Star tile: state, dates and call to action follow the shared
+   feed (assets/js/cs-stage.js). ?stage= previews a state off production. */
 (function(){
-  var tile = document.querySelector('[data-cs-tile]');
-  if (!tile) return;
-  var T = {opens:Date.parse('2026-11-02T14:00:00Z'), closes:Date.parse('2026-11-24T08:00:00Z'),
-    finalists:Date.parse('2026-11-25T23:00:00Z'), voteOpens:Date.parse('2026-12-11T14:00:00Z'),
-    voteCloses:Date.parse('2026-12-14T08:00:00Z'), winners:Date.parse('2026-12-18T14:00:00Z')};
-  // [state pill, date line, call to action, live]. The card always opens the
-  // top of /communitystar/; the page's own button leads on from there.
+  var tile = document.querySelector('[data-cs-tile]'), CS = window.NILTV_CS;
+  if (!tile || !CS) return;
+  // [state pill, date line, call to action, live]. An empty date line takes
+  // the next announcement. The card always opens the top of /communitystar/;
+  // the page's own button leads on from there.
   var S = {
     coming:   ['Coming Soon', 'Applications open Nov 2', 'Get Notified'],
     open:     ['Applications Open', 'Apply by Nov 23', 'Apply Now', 1],
-    closed:   ['Applications Closed', 'Finalists announced Nov 25', 'Learn More'],
+    closed:   ['Applications Closed', '', 'Learn More'],
+    hold:     ['Applications Closed', '', 'Learn More'],
     finalists:['Finalists', 'Voting opens Dec 11', 'Meet the Finalists'],
     voting:   ['Voting Live', 'Voting closes Dec 13', 'Vote Now', 1],
-    top5:     ['Top 5', 'Winners announced Dec 18', 'See the Top 5'],
+    top5hold: ['Voting Closed', '', 'Learn More'],
+    top5:     ['Top 5', '', 'See the Top 5'],
     winners:  ['Winners', 'Two winners, $5,000 each', 'Meet the Winners']
   };
-  var t = Date.now(), forced = null;
-  if (!/^(www\.)?niltv\.com$/.test(location.hostname)){
-    var q = (location.search.match(/[?&]stage=([a-z0-9]+)/) || [])[1];
-    if (q && S[q]) forced = q;
+  var pv = CS.preview(), feed = null;
+  function render(){
+    var t = pv ? pv.at : Date.now() + (feed ? feed.offset : 0), st = pv ? pv.view : CS.view(feed, t), c = S[st];
+    tile.querySelector('[data-cs-state]').textContent = c[0];
+    tile.querySelector('[data-cs-when]').textContent = c[1] || CS.announce(st, t, feed);
+    tile.querySelector('[data-cs-cta]').textContent = c[2];
+    tile.href = '/communitystar/' + (pv ? '?stage=' + pv.key : '');
+    tile.setAttribute('aria-label', 'NIL Community Star, ' + c[0]);
+    tile.classList.toggle('live', !!c[3]);
   }
-  var st = forced || (t < T.opens ? 'coming' : t < T.closes ? 'open' : t < T.finalists ? 'closed' :
-    t < T.voteOpens ? 'finalists' : t < T.voteCloses ? 'voting' : t < T.winners ? 'top5' : 'winners');
-  var c = S[st];
-  tile.querySelector('[data-cs-state]').textContent = c[0];
-  tile.querySelector('[data-cs-when]').textContent = c[1];
-  tile.querySelector('[data-cs-cta]').textContent = c[2];
-  tile.href = '/communitystar/' + (forced ? '?stage=' + forced : '');
-  tile.setAttribute('aria-label', 'NIL Community Star, ' + c[0]);
-  tile.classList.toggle('live', !!c[3]);
+  render();
+  if (!pv) CS.watch(function(f){ if (f) feed = f; render(); }, 3e5);
 })();
 </script>
 

@@ -346,7 +346,7 @@ async function main() {
     }
   } catch (e) { console.warn(`  home recovery skipped: ${e.message}`); }
   const urls = [
-    "", "competitions/", "communitystar/", "nilstar/season-1/", "channels/", "featured/", "about/",
+    "", "competitions/", "communitystar/", "communitystar/rules/", "nilstar/season-1/", "channels/", "featured/", "about/",
     "contact/", "legal/privacy/", "legal/terms/", "legal/contest-notice/",
   ];
   // vote is dev-only; prod excludes the page entirely, so it never enters its

@@ -135,6 +135,21 @@ appear on dev without ever touching niltv.com until it is promoted.
   `main` as a fresh commit (`git cherry-pick`), never by merging the original
   branch again.
 
+### Community Star voting
+
+Three settings have to change together before voting opens on prod. The page
+shows voting as paused if the API has a secret and the page has no site key,
+and the API answers 503 if it has no secret at all.
+
+1. Add `challenges.cloudflare.com` to `script-src` and `frame-src` in the
+   CSP header on the site. `connect-src` does not change.
+2. Put the Turnstile site key in `communityStarTurnstileSiteKey` in the prod
+   config template in `deploy.ps1`, and ship it in a release.
+3. Set the Turnstile secret on the prod API last, once that release is live.
+
+Then confirm the dashboard readiness list is green and that the page shows the
+Vote button, not "Voting is paused", on the first poll after the vote opens.
+
 ## Drafts and retired pages
 
 `concepts/` and `_legacy/` are ignored scratch directories. `build-sections.py`

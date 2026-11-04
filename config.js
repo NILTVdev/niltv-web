@@ -20,7 +20,9 @@ window.NILTV_CONFIG = {
   communityStarNotifyApi: "",
   // Cloudflare Turnstile site key for Community Star votes (public by design).
   // Empty = no widget, and the API then decides: dev skips the check, prod
-  // refuses votes until its secret is set.
+  // refuses votes until its secret is set. Once the API has a secret and this
+  // is still empty, the page holds voting as paused. Ship both together, see
+  // "Community Star voting" in DEVELOPING.md.
   communityStarTurnstileSiteKey: "",
   cognito: {
     // niltv-dev pool + the niltv-dev-web client (SRP, no secret - browser

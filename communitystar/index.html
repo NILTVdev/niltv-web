@@ -2,6 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>
+/* The vote token must be gone before any tag reads the URL: GA reports the
+   full address, fragment included. This stays the first script in the page,
+   and its listeners run ahead of the ones gtag.js adds. */
+(function(){
+  function take(){
+    var m = location.hash.match(/^#confirm=(.*)$/);
+    if (!m) return;
+    if (/^[\w-]+$/.test(m[1])) window.__csConfirm = m[1];
+    history.replaceState(null, '', location.pathname + location.search);
+  }
+  take();
+  addEventListener('popstate', take);
+  addEventListener('hashchange', take);
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NIL TV Community Star</title>
 <meta name="description" content="If you're a college athlete already doing something for a community you care about, you could receive a $5,000 grant to support a nonprofit or the community work you're already doing.">
@@ -2326,8 +2342,8 @@ document.querySelectorAll('.shelf').forEach(function(sh){
   var CS = window.NILTV_CS;
   var LABELS = {coming: 'Coming soon', open: 'Open', closed: 'Closed', hold: 'Hold', finalists: 'Finalists', voting: 'Voting',
     votingempty: 'Empty board', votinghidden: 'No board', paused: 'Paused', top5hold: 'Voting closed', top5: 'Top 5', winners: 'Winners',
-    confirm: 'Confirm', confirmdone: 'Confirmed', confirmexpired: 'Expired link', confirmclosed: 'Late link', confirminvalid: 'Bad link'};
-  var CONFIRM_SAMPLES = {confirm: 'pending', confirmdone: 'confirmed', confirmexpired: 'expired', confirmclosed: 'closed', confirminvalid: 'invalid'};
+    confirm: 'Confirm', confirmdone: 'Confirmed', confirmexpired: 'Expired link', confirmclosed: 'Late link', confirminvalid: 'Bad link', confirmpaused: 'Paused link'};
+  var CONFIRM_SAMPLES = {confirm: 'pending', confirmdone: 'confirmed', confirmexpired: 'expired', confirmclosed: 'closed', confirminvalid: 'invalid', confirmpaused: 'paused'};
   var cfg = window.NILTV_CONFIG || {};
   /* live = the last good feed; feed = what is on screen (live, or a sample in
      a preview). view is the stage plus its hold, stage is the plain stage. */
@@ -2338,14 +2354,18 @@ document.querySelectorAll('.shelf').forEach(function(sh){
   function pad(n){ return (n < 10 ? '0' : '') + n; }
   function list(){ return (feed && feed.finalists) || []; }
   function byId(id){ return list().filter(function(f){ return String(f.id) === String(id); })[0] || null; }
-  function paused(){ return !!(feed && feed.voting.paused); }
+  /* the API wants a Turnstile token this build has no key to get, so every
+     vote would fail: hold the form instead of letting voters find that out */
+  function noKey(){ return !!(feed && feed.voting.turnstile) && !tsKey(); }
+  function paused(){ return !!(feed && (feed.voting.paused || noKey())); }
   function canVote(){ return view === 'voting' && !!feed.voting.open && !paused(); }
 
   /* ---- preview data, never reached on production ---- */
   function sampleFeed(key){
     var v = CS.PREVIEWS[key].view, st = CS.base(v), rows = [], cards = [];
+    var hold = key === 'paused' || key === 'confirmpaused';
     var out = {sample: true, stage: st, offset: 0, finalists: cards, top5_published: v === 'top5' || v === 'winners', winners_published: v === 'winners',
-      voting: {open: st === 'voting' && key !== 'paused', paused: key === 'paused', turnstile: false}, board: {state: 'hidden', rows: rows}};
+      voting: {open: st === 'voting' && !hold, paused: hold, turnstile: false}, board: {state: 'hidden', rows: rows}};
     if (['finalists', 'voting', 'top5', 'winners'].indexOf(st) < 0) return out;
     for (var i = 0; i < 25; i++) cards.push({id: i + 1, slug: 'sample-' + (i + 1), name: 'Athlete Name', school: 'School', sport: 'Sport', community: 'City, State',
       cause: i % 7 === 6 ? '' : 'One line on what they are doing.', photo: '', youtube: i % 2 ? '' : 'aqz-KE-bpKQ', top5: out.top5_published && i < 5, winner: out.winners_published && i < 2});
@@ -2627,6 +2647,7 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     else if (state === 'expired') panel('This link expired', 'Vote again to get a new link.', '<button class="btn btn-gold csx-btn" type="button" data-confirm="close">See the finalists</button>');
     else if (state === 'closed') panel('Voting is closed', 'This vote was not confirmed before voting closed.');
     else if (state === 'invalid') panel('This link is not valid', 'Use the newest email from us, or vote again.');
+    else if (state === 'paused') panel('Voting is paused', 'Your vote is not confirmed yet. Try again soon.', '<button class="btn btn-gold csx-btn" type="button" data-confirm="retry">Try again</button>');
     else panel('Could not reach us', 'Check your connection and try again.', '<button class="btn btn-gold csx-btn" type="button" data-confirm="retry">Try again</button>');
   }
   function checkToken(){
@@ -2651,6 +2672,7 @@ document.querySelectorAll('.shelf').forEach(function(sh){
       }
       else if (r.status === 404) confirmState('invalid');
       else if (r.status === 410) confirmState(/expired/i.test(String(r.data.detail) + r.data.status) ? 'expired' : 'closed');
+      else if (r.status === 503) { confirmState('paused'); pull(); }
       else confirmState('error');
     }).catch(function(){ confirmState('error'); });
   }
@@ -2668,16 +2690,17 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     else cstep();
   });
 
-  /* ---- links into the page. The token leaves the address bar at once, so it
-     stays out of history and anything the visitor copies or shares. ---- */
+  /* ---- links into the page. The first script in <head> has already taken
+     the token out of the address bar, so it stays out of analytics, history
+     and anything the visitor copies or shares. ---- */
   var wantCard = '';
   function readHash(){
-    var m = location.hash.match(/^#(confirm|f)=([\w-]+)$/);
-    if (!m) return;
-    if (m[1] === 'f') { wantCard = m[2]; landCard(); return; }
-    history.replaceState(null, '', location.pathname + location.search);
+    var token = window.__csConfirm, m = location.hash.match(/^#f=([\w-]+)$/);
+    if (m) { wantCard = m[1]; landCard(); }
+    if (!token) return;
+    window.__csConfirm = '';
     if (preview) { cname = 'Athlete Name'; confirmState('pending'); return; }
-    ctoken = m[2];
+    ctoken = token;
     checkToken();
   }
   /* the slug's number is the finalist id, so a link survives a card rename */

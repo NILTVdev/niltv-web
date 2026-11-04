@@ -49,7 +49,8 @@
     confirmdone:    {view: 'voting',    at: '2026-12-12T16:00:00Z'},
     confirmexpired: {view: 'voting',    at: '2026-12-12T16:00:00Z'},
     confirmclosed:  {view: 'top5hold',  at: '2026-12-14T10:00:00Z'},
-    confirminvalid: {view: 'voting',    at: '2026-12-12T16:00:00Z'}
+    confirminvalid: {view: 'voting',    at: '2026-12-12T16:00:00Z'},
+    confirmpaused:  {view: 'voting',    at: '2026-12-12T16:00:00Z'}
   };
 
   /* An allowlist, so any host not named here (niltv.com, the prod Amplify

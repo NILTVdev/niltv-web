@@ -1293,6 +1293,7 @@ br.mbr{display:none}
 .apply-done h3{font-size:34px}
 .apply-done p{font-size:14.5px}
 .apply-done p b{color:var(--text)}
+.csx-notyou{background:none;border:0;padding:0;font:inherit;color:var(--gold-bright);text-decoration:underline;cursor:pointer}
 
 /* how the 2 winners are chosen */
 .csx-flow{list-style:none;position:relative;padding-left:30px;display:grid;gap:18px}
@@ -1571,6 +1572,11 @@ br.mbr{display:none}
     </form>
   </div>
   <div class="csx-panel apply-done" id="applyDone" hidden></div>
+  <div class="csx-panel apply-done" id="applySeen" hidden>
+    <h3>You've applied</h3>
+    <p>We have your application from <b id="applySeenEmail"></b>. Make sure <b>@NILTV</b> and <b>@NILSTAR</b> accepted your collab invite. Finalists are announced Nov 25.</p>
+    <p><button type="button" class="csx-notyou" id="applySeenNot">Not you? Apply with a different email</button></p>
+  </div>
 
   <div class="csx-panel" id="csClosed" hidden>
     <h2 class="csx-h csx-h-sm">Applications are <span>closed</span></h2>
@@ -2375,6 +2381,19 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     });
   });
 
+  /* ---- "You've applied". Applying needs no account, so this only changes
+     what the page shows: the server's one-per-person check is the real rule.
+     The device remembers a saved application as a masked email, a signed-in
+     visitor's account answer takes priority, and "Not you?" always brings
+     the form back for a teammate on a shared device. ---- */
+  var seenSlot = 'cs-applied-2026', seenHint = '', seenOff = false;
+  try { seenHint = (JSON.parse(localStorage.getItem(seenSlot)) || {}).hint || ''; } catch (e) {}
+  function rememberApplied(email){
+    var at = email.indexOf('@');
+    seenHint = email.charAt(0) + '\u2022\u2022\u2022' + email.slice(at);
+    try { localStorage.setItem(seenSlot, JSON.stringify({hint: seenHint})); } catch (e) {}
+  }
+
   /* ---- render one stage ---- */
   var formReady = false;
   function render(s){
@@ -2392,7 +2411,10 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     $('csNotify').hidden = s !== 'coming';
     $('csClosed').hidden = s !== 'closed';
     var applied = !$('applyDone').hidden;
-    $('csOpen').hidden = s !== 'open' || applied;
+    var seen = s === 'open' && !applied && !!seenHint && !seenOff;
+    $('applySeen').hidden = !seen;
+    if (seen) $('applySeenEmail').textContent = seenHint;
+    $('csOpen').hidden = s !== 'open' || applied || seen;
     if (s !== 'open') $('applyDone').hidden = true;
     if (s === 'open' && !formReady) { formReady = true; csInitForm(); }
     if (['finalists', 'voting', 'top5', 'winners'].indexOf(s) >= 0) renderFinalists();
@@ -2447,6 +2469,25 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     });
   }
   go(!PROD && STAGES.indexOf(q) >= 0 ? q : '');
+
+  $('applySeenNot').addEventListener('click', function(){
+    seenOff = true;
+    render(stage);
+    $('applyForm').elements.email.focus();
+  });
+  /* signed in now, or later on this page: the account's answer wins. If the
+     check fails the device memory stands. */
+  if (cfg.communityStarApi && window.NILTV && NILTV.whenAuthed) NILTV.whenAuthed(function(){
+    NILTV.auth.getIdToken().then(function(token){
+      if (!token) return null;
+      return fetch(cfg.communityStarApi.replace(/\/applications$/, '/me'), {headers: {Authorization: 'Bearer ' + token}})
+        .then(function(r){ return r.ok ? r.json() : null; });
+    }).then(function(d){
+      if (!d) return;
+      seenHint = d.applied ? d.email_hint : '';
+      render(stage);
+    }).catch(function(){});
+  });
 
   /* ---- hero button: smooth scroll; Get notified focuses the email field ---- */
   $('csBtn').addEventListener('click', function(e){
@@ -2648,7 +2689,10 @@ document.querySelectorAll('.shelf').forEach(function(sh){
       if (r.status === 410) { location.reload(); return; }
       if (r.status === 429) { btn.disabled = false; say('Too many tries from this connection. Wait a bit and try again.'); return; }
       if (!r.ok) throw new Error('http ' + r.status);
-      finish('live');
+      return r.json().catch(function(){ return {}; }).then(function(d){
+        if (d && d.id) rememberApplied(body.email);
+        finish('live');
+      });
     }).catch(function(){ btn.disabled = false; say('Could not send. Check your connection and try again.'); });
   });
 

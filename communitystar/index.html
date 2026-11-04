@@ -2504,7 +2504,7 @@ document.querySelectorAll('.shelf').forEach(function(sh){
 
   /* Turnstile runs only with a site key, in the voting stage, on real votes */
   var tsWaiting = [], tsTag = null, tsFailed = false;
-  function tsKey(){ return preview ? '' : cfg.communityStarTurnstileSiteKey || ''; }
+  function tsKey(){ return preview ? '' : (feed && feed.voting.turnstile_site_key) || cfg.communityStarTurnstileSiteKey || ''; }
   function tsLoad(){
     if (tsTag || !tsKey()) return;
     tsTag = document.createElement('script');
@@ -2646,6 +2646,7 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     else if (state === 'already') panel('Thanks for voting! Share your favorite finalist\'s video.', cname ? 'Your vote for ' + cname + ' was already confirmed.' : 'Your vote was already confirmed.', shareRow(byId(cid)));
     else if (state === 'expired') panel('This link expired', 'Vote again to get a new link.', '<button class="btn btn-gold csx-btn" type="button" data-confirm="close">See the finalists</button>');
     else if (state === 'closed') panel('Voting is closed', 'This vote was not confirmed before voting closed.');
+    else if (state === 'out') panel('This finalist is no longer in the vote', 'Your vote was not counted. You can vote for another finalist.', '<button class="btn btn-gold csx-btn" type="button" data-confirm="close">See the finalists</button>');
     else if (state === 'invalid') panel('This link is not valid', 'Use the newest email from us, or vote again.');
     else if (state === 'paused') panel('Voting is paused', 'Your vote is not confirmed yet. Try again soon.', '<button class="btn btn-gold csx-btn" type="button" data-confirm="retry">Try again</button>');
     else panel('Could not reach us', 'Check your connection and try again.', '<button class="btn btn-gold csx-btn" type="button" data-confirm="retry">Try again</button>');
@@ -2659,7 +2660,8 @@ document.querySelectorAll('.shelf').forEach(function(sh){
       var f = r.data.finalist || {};
       cname = f.name || ''; cid = f.id;
       var st = r.data.status === 'confirmed' ? 'already' : r.data.status;
-      confirmState(['pending', 'already', 'expired', 'closed'].indexOf(st) >= 0 ? st : 'invalid');
+      if (st === 'finalist_out') st = 'out';
+      confirmState(['pending', 'already', 'expired', 'closed', 'out'].indexOf(st) >= 0 ? st : 'invalid');
     }).catch(function(){ confirmState('error'); });
   }
   function sendConfirm(){
@@ -2671,7 +2673,7 @@ document.querySelectorAll('.shelf').forEach(function(sh){
         if (window.gtag) gtag('event', 'community_star_vote', {step: 'confirmed'});
       }
       else if (r.status === 404) confirmState('invalid');
-      else if (r.status === 410) confirmState(/expired/i.test(String(r.data.detail) + r.data.status) ? 'expired' : 'closed');
+      else if (r.status === 410) { var why = String(r.data.detail) + r.data.status; confirmState(/finalist_out/.test(why) ? 'out' : /expired/i.test(why) ? 'expired' : 'closed'); }
       else if (r.status === 503) { confirmState('paused'); pull(); }
       else confirmState('error');
     }).catch(function(){ confirmState('error'); });

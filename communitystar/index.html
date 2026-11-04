@@ -1558,17 +1558,12 @@ br.mbr{display:none}
       <div class="q"><div class="qn">11.</div><div class="qb"><label for="q-organization">Group or organization you do this work with, if any</label><input type="text" id="q-organization" name="organization" maxlength="160"></div></div>
     <div class="q q-consent"><div class="qn">12.</div><div class="qb">
       <div class="ql">Confirm <span class="req">*</span></div>
-      <label class="chk"><input type="checkbox" name="collabInvited" required> <span>I invited @NILTV and @NILSTAR as collaborators on my post <span class="req">*</span></span></label>
-      <label class="chk"><input type="checkbox" name="eligibleAndRules" required> <span>I'm a current college athlete and agree to the <a href="/communitystar/rules/" target="_blank" rel="noopener">official rules</a> <span class="req">*</span></span></label>
-      <label class="chk"><input type="checkbox" name="confirmAge" required> <span>I am 18 or older <span class="req">*</span></span></label>
-      <label class="chk"><input type="checkbox" name="consentPrivacy" required> <span>I have read the <a href="/legal/privacy/" target="_blank" rel="noopener">Privacy Policy</a>. NIL TV will email me about my application. <span class="req">*</span></span></label>
+      <label class="chk"><input type="checkbox" name="confirmAll" required> <span>I invited @NILTV and @NILSTAR as collaborators on my post. I'm a current college athlete, I'm 18 or older, I agree to the <a href="/communitystar/rules/" target="_blank" rel="noopener">official rules</a>, and I've read the <a href="/legal/privacy/" target="_blank" rel="noopener">Privacy Policy</a>. <span class="req">*</span></span></label>
     </div></div>
 
     <div class="q q-consent q-opt"><div class="qn">13.</div><div class="qb">
       <div class="ql">Stay in touch</div>
-      <div class="mo">Optional. Your application counts the same either way.</div>
       <label class="chk"><input type="checkbox" name="consentEmail"> <span>Email me about NIL TV competitions, content, and updates.</span></label>
-      <label class="chk"><input type="checkbox" name="consentSms"> <span>Text me about NIL TV competitions and updates. Msg and data rates may apply. Reply STOP to opt out.</span></label>
     </div></div>
 
     <div class="submit-row"><button class="btn btn-gold" type="submit" id="applySubmit">Submit application</button><div id="apply-msg" role="status"></div></div>
@@ -2601,7 +2596,7 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     var bad = form.querySelector(':invalid');
     if (bad){
       bad.focus();
-      say(bad.type === 'checkbox' ? 'Please tick the required boxes.' : (bad.type === 'email' ? 'Please enter a valid email.' : (bad.type === 'url' ? 'Paste the full post link, starting with https://' : 'Please fill in the required fields.')));
+      say(bad.type === 'checkbox' ? 'Please tick the box to confirm.' : (bad.type === 'email' ? 'Please enter a valid email.' : (bad.type === 'url' ? 'Paste the full post link, starting with https://' : 'Please fill in the required fields.')));
       return;
     }
     var d = digits(form.elements.phone.value);
@@ -2612,7 +2607,10 @@ document.querySelectorAll('.shelf').forEach(function(sh){
 
     var fd = new FormData(form), body = {};
     fd.forEach(function(v, k){ v = typeof v === 'string' ? v.trim() : v; if (v !== '') body[k] = v; });
-    ['collabInvited','eligibleAndRules','confirmAge','consentPrivacy','consentEmail','consentSms'].forEach(function(k){ body[k] = !!form.elements[k].checked; });
+    /* one box on the form covers the four confirmations the API records */
+    ['collabInvited','eligibleAndRules','confirmAge','consentPrivacy'].forEach(function(k){ body[k] = !!form.elements.confirmAll.checked; });
+    delete body.confirmAll;
+    body.consentEmail = !!form.elements.consentEmail.checked;
     body.email = body.email.toLowerCase();
     body.instagram = '@' + ig.value.toLowerCase();
     body.postUrl = post;
@@ -2620,7 +2618,7 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     body.program = 'community-star';
     body.season = '2026';
     body.source = 'communitystar';
-    body.consentVersion = '2026-10-11';
+    body.consentVersion = '2026-11-04';
     body.submittedAt = new Date().toISOString();
     body.userAgent = navigator.userAgent;
     var utm = {};

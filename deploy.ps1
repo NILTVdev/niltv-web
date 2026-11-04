@@ -136,6 +136,7 @@ window.NILTV_CONFIG = {
   payoutsApi: "https://wf2ggl2nk4hmcppi5rz7rwekzu0ojpzb.lambda-url.us-east-1.on.aws/",
   applicationsApi: "https://api.niltv.com/api/applications/",
   communityStarApi: "https://api.niltv.com/api/community-star/applications",
+  communityStarTurnstileSiteKey: "",
   cognito: {
     userPoolId: "$prodPool",
     clientId: "$prodClient",

@@ -18,6 +18,10 @@ window.NILTV_CONFIG = {
   // Community Star "Get notified" signups before Nov 2 (POST, public; same
   // export as the applications). Empty = the signup runs in demo mode.
   communityStarNotifyApi: "",
+  // Cloudflare Turnstile site key for Community Star votes (public by design).
+  // Empty = no widget, and the API then decides: dev skips the check, prod
+  // refuses votes until its secret is set.
+  communityStarTurnstileSiteKey: "",
   cognito: {
     // niltv-dev pool + the niltv-dev-web client (SRP, no secret - browser
     // safe). deploy.ps1 -Env prod writes the prod pool and client instead.

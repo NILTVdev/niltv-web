@@ -1172,6 +1172,12 @@ br.mbr{display:none}
      button. The script after the hero moves it to the front, keeps the dot
      row in step and follows the campaign stages. */
   .cs-slide{--cs-gold:#E8BD6E}
+  .cs-won .hreel .hero-video,.cs-won .hero-echo{visibility:hidden}
+  .cs-won .hreel{background:none!important;box-shadow:none!important;overflow:visible!important}
+  .cs-pair{position:absolute;inset:0 -14%;display:flex;gap:14px;align-items:center;justify-content:center}
+  .cs-pair figure{flex:1 1 0;min-width:0;max-width:300px;margin:0}
+  .cs-pair img{display:block;width:100%;aspect-ratio:9/16;object-fit:cover;border:1px solid var(--cs-gold)}
+  .cs-pair figcaption{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(16px,1.6vw,22px);text-transform:uppercase;text-align:center;margin-top:8px}
   .cs-slide .hero-title .g{color:var(--cs-gold)}
   .hl-stack{height:clamp(150px,15vw,216px)}
   @media (max-width:700px){.hl-stack{height:112px}}
@@ -1278,7 +1284,7 @@ br.mbr{display:none}
     finalists:{k:'Top 25 finalists announced', btn:'Meet the finalists', hash:'#finalists', note:'Voting opens Dec 11'},
     voting:   {k:'Fan voting is open', btn:'Vote now', hash:'#finalists', to:'voteCloses', lbl:'Voting ends in'},
     top5hold: {k:'Voting is closed', btn:'Learn more', hash:''},
-    top5:     {k:'Top 5 announced', btn:'See the top 5', hash:'#finalists'},
+    top5:     {k:'Top 5 announced', btn:'See the top 5', hash:''},
     winners:  {k:'Winners announced', btn:'Meet the winners', hash:'#winners'}
   };
   var pv = CS.preview(), feed = null, shift = pv ? pv.at - Date.now() : 0;
@@ -1297,6 +1303,7 @@ br.mbr{display:none}
       btn.textContent = c.btn;
       btn.href = '/communitystar/' + (pv ? '?stage=' + pv.key : '') + c.hash;
     }
+    CS.winnerSlide(cs, st !== 'winners' ? [] : pv ? CS.sampleWinners() : CS.feedWinners(feed));
     if (c.to) when.innerHTML = c.lbl + ' <b>' + left(CS.times(feed)[c.to] - t) + '</b>';
     else when.textContent = note;
     when.hidden = !(c.to || note);

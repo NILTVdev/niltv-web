@@ -1293,6 +1293,7 @@ br.mbr{display:none}
 .apply-done h3{font-size:34px}
 .apply-done p{font-size:14.5px}
 .apply-done p b{color:var(--text)}
+.csx-notyou{background:none;border:0;padding:0;font:inherit;color:var(--gold-bright);text-decoration:underline;cursor:pointer}
 
 /* how the 2 winners are chosen */
 .csx-flow{list-style:none;position:relative;padding-left:30px;display:grid;gap:18px}
@@ -1558,23 +1559,24 @@ br.mbr{display:none}
       <div class="q"><div class="qn">11.</div><div class="qb"><label for="q-organization">Group or organization you do this work with, if any</label><input type="text" id="q-organization" name="organization" maxlength="160"></div></div>
     <div class="q q-consent"><div class="qn">12.</div><div class="qb">
       <div class="ql">Confirm <span class="req">*</span></div>
+      <label class="chk"><input type="checkbox" name="confirmEligible" required> <span>I'm a current college athlete, I'm 18 or older, I agree to the <a href="/communitystar/rules/" target="_blank" rel="noopener">official rules</a>, and I've read the <a href="/legal/privacy/" target="_blank" rel="noopener">Privacy Policy</a>. <span class="req">*</span></span></label>
       <label class="chk"><input type="checkbox" name="collabInvited" required> <span>I invited @NILTV and @NILSTAR as collaborators on my post <span class="req">*</span></span></label>
-      <label class="chk"><input type="checkbox" name="eligibleAndRules" required> <span>I'm a current college athlete and agree to the <a href="/communitystar/rules/" target="_blank" rel="noopener">official rules</a> <span class="req">*</span></span></label>
-      <label class="chk"><input type="checkbox" name="confirmAge" required> <span>I am 18 or older <span class="req">*</span></span></label>
-      <label class="chk"><input type="checkbox" name="consentPrivacy" required> <span>I have read the <a href="/legal/privacy/" target="_blank" rel="noopener">Privacy Policy</a>. NIL TV will email me about my application. <span class="req">*</span></span></label>
     </div></div>
 
     <div class="q q-consent q-opt"><div class="qn">13.</div><div class="qb">
       <div class="ql">Stay in touch</div>
-      <div class="mo">Optional. Your application counts the same either way.</div>
       <label class="chk"><input type="checkbox" name="consentEmail"> <span>Email me about NIL TV competitions, content, and updates.</span></label>
-      <label class="chk"><input type="checkbox" name="consentSms"> <span>Text me about NIL TV competitions and updates. Msg and data rates may apply. Reply STOP to opt out.</span></label>
     </div></div>
 
     <div class="submit-row"><button class="btn btn-gold" type="submit" id="applySubmit">Submit application</button><div id="apply-msg" role="status"></div></div>
     </form>
   </div>
   <div class="csx-panel apply-done" id="applyDone" hidden></div>
+  <div class="csx-panel apply-done" id="applySeen" hidden>
+    <h3>You've applied</h3>
+    <p>We have your application from <b id="applySeenEmail"></b>. Make sure <b>@NILTV</b> and <b>@NILSTAR</b> accepted your collab invite. Finalists are announced Nov 25.</p>
+    <p><button type="button" class="csx-notyou" id="applySeenNot">Not you? Apply with a different email</button></p>
+  </div>
 
   <div class="csx-panel" id="csClosed" hidden>
     <h2 class="csx-h csx-h-sm">Applications are <span>closed</span></h2>
@@ -2379,6 +2381,19 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     });
   });
 
+  /* ---- "You've applied". Applying needs no account, so this only changes
+     what the page shows: the server's one-per-person check is the real rule.
+     The device remembers a saved application as a masked email, a signed-in
+     visitor's account answer takes priority, and "Not you?" always brings
+     the form back for a teammate on a shared device. ---- */
+  var seenSlot = 'cs-applied-2026', seenHint = '', seenOff = false;
+  try { seenHint = (JSON.parse(localStorage.getItem(seenSlot)) || {}).hint || ''; } catch (e) {}
+  function rememberApplied(email){
+    var at = email.indexOf('@');
+    seenHint = email.charAt(0) + '\u2022\u2022\u2022' + email.slice(at);
+    try { localStorage.setItem(seenSlot, JSON.stringify({hint: seenHint})); } catch (e) {}
+  }
+
   /* ---- render one stage ---- */
   var formReady = false;
   function render(s){
@@ -2396,7 +2411,10 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     $('csNotify').hidden = s !== 'coming';
     $('csClosed').hidden = s !== 'closed';
     var applied = !$('applyDone').hidden;
-    $('csOpen').hidden = s !== 'open' || applied;
+    var seen = s === 'open' && !applied && !!seenHint && !seenOff;
+    $('applySeen').hidden = !seen;
+    if (seen) $('applySeenEmail').textContent = seenHint;
+    $('csOpen').hidden = s !== 'open' || applied || seen;
     if (s !== 'open') $('applyDone').hidden = true;
     if (s === 'open' && !formReady) { formReady = true; csInitForm(); }
     if (['finalists', 'voting', 'top5', 'winners'].indexOf(s) >= 0) renderFinalists();
@@ -2451,6 +2469,25 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     });
   }
   go(!PROD && STAGES.indexOf(q) >= 0 ? q : '');
+
+  $('applySeenNot').addEventListener('click', function(){
+    seenOff = true;
+    render(stage);
+    $('applyForm').elements.email.focus();
+  });
+  /* signed in now, or later on this page: the account's answer wins. If the
+     check fails the device memory stands. */
+  if (cfg.communityStarApi && window.NILTV && NILTV.whenAuthed) NILTV.whenAuthed(function(){
+    NILTV.auth.getIdToken().then(function(token){
+      if (!token) return null;
+      return fetch(cfg.communityStarApi.replace(/\/applications$/, '/me'), {headers: {Authorization: 'Bearer ' + token}})
+        .then(function(r){ return r.ok ? r.json() : null; });
+    }).then(function(d){
+      if (!d) return;
+      seenHint = d.applied ? d.email_hint : '';
+      render(stage);
+    }).catch(function(){});
+  });
 
   /* ---- hero button: smooth scroll; Get notified focuses the email field ---- */
   $('csBtn').addEventListener('click', function(e){
@@ -2601,7 +2638,7 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     var bad = form.querySelector(':invalid');
     if (bad){
       bad.focus();
-      say(bad.type === 'checkbox' ? 'Please tick the required boxes.' : (bad.type === 'email' ? 'Please enter a valid email.' : (bad.type === 'url' ? 'Paste the full post link, starting with https://' : 'Please fill in the required fields.')));
+      say(bad.type === 'checkbox' ? 'Please tick both boxes to confirm.' : (bad.type === 'email' ? 'Please enter a valid email.' : (bad.type === 'url' ? 'Paste the full post link, starting with https://' : 'Please fill in the required fields.')));
       return;
     }
     var d = digits(form.elements.phone.value);
@@ -2612,7 +2649,11 @@ document.querySelectorAll('.shelf').forEach(function(sh){
 
     var fd = new FormData(form), body = {};
     fd.forEach(function(v, k){ v = typeof v === 'string' ? v.trim() : v; if (v !== '') body[k] = v; });
-    ['collabInvited','eligibleAndRules','confirmAge','consentPrivacy','consentEmail','consentSms'].forEach(function(k){ body[k] = !!form.elements[k].checked; });
+    /* the first box covers three of the confirmations the API records */
+    ['eligibleAndRules','confirmAge','consentPrivacy'].forEach(function(k){ body[k] = !!form.elements.confirmEligible.checked; });
+    delete body.confirmEligible;
+    body.collabInvited = !!form.elements.collabInvited.checked;
+    body.consentEmail = !!form.elements.consentEmail.checked;
     body.email = body.email.toLowerCase();
     body.instagram = '@' + ig.value.toLowerCase();
     body.postUrl = post;
@@ -2620,7 +2661,7 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     body.program = 'community-star';
     body.season = '2026';
     body.source = 'communitystar';
-    body.consentVersion = '2026-10-11';
+    body.consentVersion = '2026-11-04';
     body.submittedAt = new Date().toISOString();
     body.userAgent = navigator.userAgent;
     var utm = {};
@@ -2648,7 +2689,10 @@ document.querySelectorAll('.shelf').forEach(function(sh){
       if (r.status === 410) { location.reload(); return; }
       if (r.status === 429) { btn.disabled = false; say('Too many tries from this connection. Wait a bit and try again.'); return; }
       if (!r.ok) throw new Error('http ' + r.status);
-      finish('live');
+      return r.json().catch(function(){ return {}; }).then(function(d){
+        if (d && d.id) rememberApplied(body.email);
+        finish('live');
+      });
     }).catch(function(){ btn.disabled = false; say('Could not send. Check your connection and try again.'); });
   });
 

@@ -184,9 +184,11 @@ On Node 20, run it as `node --experimental-websocket scripts/dev/bench-search.mj
 - Channel, athlete and school results and a channel filter can use data
   the browser already has (athletes and schools come from the published
   roster, `athletes/index.json`).
-- Sport and school filters across *videos*, tags, and full-catalog coverage
-  cannot be done well in the browser with today's API. They need either
-  school/sport/tags on list items plus a way to fetch the whole catalog
+- School and channel filters now cover videos, because each video takes its
+  school from its channel. A sport filter across *videos*, tags, and
+  full-catalog coverage still can't be done well in the browser with
+  today's API, so the sport filter only narrows athletes and says so. They
+  need either sport/tags on list items plus a way to fetch the whole catalog
   cheaply, or a server-side search endpoint. That is the input to the
   "browser index vs API" decision, which gets its own write-up.
 - Bug 3 (no entry point) is a product call: add a nav icon, or leave search

@@ -566,6 +566,19 @@ window.NILTV = (function () {
       .catch(function () { return []; });
   }
 
+  // Dropdown options from raw labels: one per normalized value (so "Duke" from
+  // a channel and from the roster are one school), first spelling wins, A-Z.
+  function filterOptions(labels) {
+    var seen = {}, out = [];
+    labels.forEach(function (label) {
+      var key = searchNorm(label);
+      if (!key || seen[key]) return;
+      seen[key] = true;
+      out.push({ value: key, label: label });
+    });
+    return out.sort(function (a, b) { return a.label.localeCompare(b.label); });
+  }
+
   function buildSearchIndex() {
     if (searchIndex) return searchIndex;
     var roster = athleteRoster(); // in parallel with the channel requests
@@ -587,28 +600,42 @@ window.NILTV = (function () {
           if (!a.school) return;
           schools[a.school] = (schools[a.school] || 0) + 1;
         });
+        // Filter keys go on each record only where that kind has the
+        // attribute (schoolKey, sportKey, channelId); a filter hides any
+        // record without its key, e.g. videos under a sport filter.
         return {
           athletes: athletes.map(function (a) {
             var r = searchFields([a.name, a.school, a.sport]);
             r.athlete = a;
+            r.schoolKey = searchNorm(a.school); r.sportKey = searchNorm(a.sport);
+            if (a.channel) r.channelId = a.channel;
             return r;
           }),
           schools: Object.keys(schools).map(function (name) {
             var r = searchFields([name]);
             r.schoolGroup = { name: name, athletes: schools[name] };
+            r.schoolKey = searchNorm(name);
             return r;
           }),
           channels: channels.map(function (c) {
             var r = searchFields([c.name, c.school]);
             r.channel = c;
+            r.schoolKey = searchNorm(c.school); r.channelId = c.id;
             return r;
           }),
           items: items.map(function (it) {
             var school = schoolOf[it.channelId] || "";
             var r = searchFields([it.title, it.creatorName, school, it.channelName]);
             r.item = it; r.school = school; r.published = it.publishedAt || "";
+            r.schoolKey = searchNorm(school); r.channelId = it.channelId;
             return r;
           }),
+          options: {
+            schools: filterOptions(channels.map(function (c) { return c.school; })
+              .concat(athletes.map(function (a) { return a.school; }))),
+            sports: filterOptions(athletes.map(function (a) { return a.sport; })),
+            channels: channels.map(function (c) { return { value: c.id, label: c.name }; }),
+          },
         };
       });
     });
@@ -649,11 +676,19 @@ window.NILTV = (function () {
     return total;
   }
 
-  function querySearchIndex(idx, q) {
+  function passesFilters(r, f) {
+    return (!f.school || r.schoolKey === f.school) &&
+           (!f.sport || r.sportKey === f.sport) &&
+           (!f.channel || r.channelId === f.channel);
+  }
+
+  // An empty q with a filter set browses: everything that passes, newest first.
+  function querySearchIndex(idx, q, filters) {
     var words = q.split(" ").filter(function (w, i, all) { return w && all.indexOf(w) === i; });
     var rank = function (records, weights) {
       return records
-        .map(function (r) { return { r: r, score: scoreRecord(r, weights, words, q) }; })
+        .filter(function (r) { return passesFilters(r, filters); })
+        .map(function (r) { return { r: r, score: words.length ? scoreRecord(r, weights, words, q) : 1 }; })
         .filter(function (x) { return x.score > 0; })
         .sort(function (a, b) {
           // ties: newest video first (ISO dates compare as strings)
@@ -678,6 +713,21 @@ window.NILTV = (function () {
       input.placeholder = "Search athletes, reels, channels…";
       input.id = "search-input";
       box.appendChild(input);
+      var filters = el("div", "search-filters");
+      filters.id = "search-filters";
+      FILTER_KINDS.forEach(function (k) {
+        var sel = document.createElement("select");
+        sel.id = "search-filter-" + k.key;
+        sel.setAttribute("aria-label", "Filter by " + k.key);
+        sel.appendChild(new Option(k.all, ""));
+        sel.hidden = true; // until the index brings options
+        sel.addEventListener("change", function () {
+          searchFilters[k.key] = sel.value;
+          runSearch(input.value);
+        });
+        filters.appendChild(sel);
+      });
+      box.appendChild(filters);
       var results = el("div", "search-results");
       results.id = "search-results";
       box.appendChild(results);
@@ -692,8 +742,27 @@ window.NILTV = (function () {
     searchEl.classList.add("open");
     document.body.style.overflow = "hidden";
     document.getElementById("search-input").focus();
-    buildSearchIndex().catch(function () {}); // warm the index; runSearch reports failures
+    buildSearchIndex().then(fillSearchFilters, function () {}); // runSearch reports failures
     runSearch(document.getElementById("search-input").value);
+  }
+
+  // Dropdowns, in display order. Sport only has roster values, so it stays
+  // hidden on builds without the athlete pages.
+  var FILTER_KINDS = [
+    { key: "sport", all: "All sports", options: "sports" },
+    { key: "school", all: "All schools", options: "schools" },
+    { key: "channel", all: "All channels", options: "channels" },
+  ];
+  var searchFilters = { sport: "", school: "", channel: "" };
+
+  function fillSearchFilters(idx) {
+    FILTER_KINDS.forEach(function (k) {
+      var sel = document.getElementById("search-filter-" + k.key);
+      if (!sel || sel.options.length > 1) return; // filled on an earlier open
+      idx.options[k.options].forEach(function (o) { sel.appendChild(new Option(o.label, o.value)); });
+      sel.value = searchFilters[k.key];
+      sel.hidden = idx.options[k.options].length < 2;
+    });
   }
   function closeSearch() {
     if (searchEl) { searchEl.classList.remove("open"); document.body.style.overflow = ""; }
@@ -705,20 +774,28 @@ window.NILTV = (function () {
     var seq = ++searchSeq;
     q = searchNorm(q);
     out.textContent = "";
+    var f = searchFilters, filtered = !!(f.sport || f.school || f.channel);
     if (q.length < 2) {
-      out.appendChild(el("div", "search-hint", "Type to search the network."));
-      return;
+      if (!filtered) {
+        out.appendChild(el("div", "search-hint", "Type to search the network."));
+        return;
+      }
+      q = ""; // a filter alone browses
     }
     buildSearchIndex().then(function (idx) {
       if (seq !== searchSeq) return;
-      renderSearchResults(out, querySearchIndex(idx, q));
+      if (f.sport) {
+        // the API gives videos no sport, so say why they've dropped out
+        out.appendChild(el("div", "search-hint", "Sport filters athletes only. Videos don't list a sport yet."));
+      }
+      renderSearchResults(out, querySearchIndex(idx, q, f), filtered);
     }, function () {
       if (seq !== searchSeq) return;
       out.appendChild(el("div", "search-hint", "Search couldn't load. Check your connection and keep typing to retry."));
     });
   }
 
-  function renderSearchResults(out, hits) {
+  function renderSearchResults(out, hits, filtered) {
     var chanHits = hits.channels;
     var itemHits = hits.items.map(function (r) { return r.item; });
     var base = athletesBase();
@@ -775,7 +852,9 @@ window.NILTV = (function () {
       out.appendChild(row);
     });
     if (!hits.athletes.length && !hits.schools.length && !chanHits.length && !itemHits.length) {
-      out.appendChild(el("div", "search-hint", "No matches. Try an athlete, school, or channel name."));
+      out.appendChild(el("div", "search-hint", filtered
+        ? "No matches with these filters. Try clearing one."
+        : "No matches. Try an athlete, school, or channel name."));
     }
   }
 

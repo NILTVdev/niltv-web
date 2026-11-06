@@ -60,6 +60,13 @@ HUB_CSS = r"""
 .hub-how b{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:19px;text-transform:uppercase;line-height:1;margin-bottom:5px}
 .hub-how p{font-size:12.5px;color:var(--dim)}
 @media (max-width:700px){.hub-how{grid-template-columns:1fr;gap:10px}}
+.hub-tags{padding:0 var(--gutter);margin:0 0 22px;display:flex;flex-wrap:wrap;gap:8px}
+.hub-tags[hidden]{display:none}
+.hub-tag{background:transparent;border:1px solid var(--border);color:var(--dim);border-radius:999px;padding:6px 14px;font-family:inherit;font-size:12px;text-transform:capitalize;cursor:pointer}
+.hub-tag:hover{color:var(--text)}
+.hub-tag[aria-pressed="true"]{border-color:var(--gold);color:var(--gold-bright)}
+.ask-fmt{color:var(--dim);font-weight:600;letter-spacing:.12em}
+.ask-ok{color:var(--gold-bright)!important}
 #hubMine{scroll-margin-top:76px}
 @media (max-width:700px){.hub-grid{grid-template-columns:1fr}}
 """
@@ -86,6 +93,7 @@ HUB_MAIN = r"""<main class="shelves" id="main">
     <p class="hub-note" id="hubNote" hidden><b>Sample data.</b> The hub is not connected on this environment yet, so these asks are examples and your claims and submissions are saved in this browser only.</p>
     <div class="hub-state" id="hubState" role="status"></div>
   </div>
+  <div class="hub-tags" id="hubTags" role="group" aria-label="Filter asks by tag" hidden></div>
   <section class="shelf" id="hubMine" hidden>
     <div class="shelf-head">
       <h2 class="shelf-title gold">My Claims</h2>
@@ -114,12 +122,16 @@ HUB_JS = r"""
    With NILTV_CONFIG.hubApi set (live), every call carries the account's ID
    token:
      GET  {hubApi}asks               -> {asks: [...]}; each ask carries `mine`:
-                                        null, or {status: claimed|submitted,
-                                        claimed_at, submitted_at, url, note}
+                                        null, or {status: claimed|submitted|
+                                        approved, claimed_at, submitted_at,
+                                        url, note}; plus format and tags
      POST {hubApi}asks/{id}/claim    -> 2xx, or 409 when the last spot has gone
+                                        or the ask has closed
      POST {hubApi}asks/{id}/unclaim  -> 2xx
      POST {hubApi}asks/{id}/submit   -> 2xx; JSON body {url, note}; a second
                                         submit replaces the first
+   A refused call answers {detail: "..."}; the page shows that text. Once
+   staff approve a submission it is locked (no unclaim, no new link).
    With none (demo) it runs on /hub/sample-asks.json, keeps claims and
    submissions in this browser's localStorage, and says so on the page.
    Ask text is rendered with textContent only; a submitted link becomes an
@@ -139,7 +151,10 @@ HUB_JS = r"""
   var grid = document.getElementById('hubGrid');
   var count = document.getElementById('hubCount');
   var empty = document.getElementById('hubEmpty');
+  var tagRow = document.getElementById('hubTags');
   var NOTE_MAX = 200;
+  var tagOn = '';      // the chosen tag filter; '' = all
+  var lastAsks = [];
 
   function mk(tag, cls, text){
     var n = document.createElement(tag);
@@ -191,10 +206,17 @@ HUB_JS = r"""
   function writeClaims(claims){
     try { localStorage.setItem(CLAIMS_KEY, JSON.stringify(claims)); } catch (e) {}
   }
-  function httpError(status){
+  function httpError(status, detail){
     var e = new Error('http ' + status);
     e.status = status;
+    e.detail = detail;
     return e;
+  }
+  // a refused call: keep the server's reason ({detail: "..."}) when it sent one
+  function refused(r){
+    return r.json().catch(function(){ return null; }).then(function(d){
+      throw httpError(r.status, d && typeof d.detail === 'string' ? d.detail : '');
+    });
   }
   function authed(path, method, body){
     var tokenP = (N.auth && N.auth.getIdToken) ? N.auth.getIdToken() : Promise.resolve(null);
@@ -207,7 +229,7 @@ HUB_JS = r"""
   }
   function listAsks(){
     return (demo ? fetch('/hub/sample-asks.json') : authed('asks')).then(function(r){
-      if (!r.ok) throw httpError(r.status);
+      if (!r.ok) return refused(r);
       return r.json();
     }).then(function(d){
       var asks = (d && d.asks) || [];
@@ -229,7 +251,7 @@ HUB_JS = r"""
       return Promise.resolve();
     }
     return authed('asks/' + encodeURIComponent(ask.id) + (on ? '/claim' : '/unclaim'), 'POST')
-      .then(function(r){ if (!r.ok) throw httpError(r.status); });
+      .then(function(r){ if (!r.ok) return refused(r); });
   }
   function submitLink(ask, url, noteText){
     if (demo){
@@ -244,14 +266,15 @@ HUB_JS = r"""
       return Promise.resolve();
     }
     return authed('asks/' + encodeURIComponent(ask.id) + '/submit', 'POST', {url: url, note: noteText})
-      .then(function(r){ if (!r.ok) throw httpError(r.status); });
+      .then(function(r){ if (!r.ok) return refused(r); });
   }
 
   /* ---- cards ---- */
   function failText(e){
     var status = e && e.status;
-    if (status === 409) return 'That last spot was just claimed.';
     if (status === 401) return 'Your sign-in expired. Sign in again.';
+    if (e && e.detail && status < 500) return e.detail;
+    if (status === 409) return 'That last spot was just claimed.';
     return 'That did not go through. Try again.';
   }
   function actionButton(label, cls, onClick){
@@ -313,10 +336,14 @@ HUB_JS = r"""
   }
   function card(ask){
     var mine = ask.mine;
-    var submitted = !!(mine && mine.status === 'submitted');
+    var approved = !!(mine && mine.status === 'approved');
+    // an approved claim still shows its link, just without "Change link"
+    var submitted = !!(mine && (mine.status === 'submitted' || approved));
     var el = mk('article', 'ask' + (mine ? ' mine' : ''));
     var top = mk('div', 'ask-top');
-    top.appendChild(mk('span', 'ask-cat', ask.category || 'Content'));
+    var cat = mk('span', 'ask-cat', ask.category || 'Content');
+    if (ask.format) cat.appendChild(mk('span', 'ask-fmt', ' · ' + ask.format));
+    top.appendChild(cat);
     var due = fmtDay(ask.due);
     top.appendChild(mk('span', 'ask-due', due ? 'Due ' + due : 'No deadline'));
     el.appendChild(top);
@@ -328,7 +355,9 @@ HUB_JS = r"""
       el.appendChild(ul);
     }
     var foot = mk('div', 'ask-foot');
-    if (submitted){
+    if (approved){
+      foot.appendChild(mk('b', 'ask-ok', 'Approved by the NIL TV team'));
+    } else if (submitted){
       var sentWhen = fmtWhen(mine.submitted_at);
       foot.appendChild(mk('b', null, 'Submitted' + (sentWhen ? ' ' + sentWhen : '')));
     } else if (mine){
@@ -360,7 +389,9 @@ HUB_JS = r"""
       msg.textContent = '';
       el.insertBefore(linkForm(ask, act, msg), act);
     }
-    if (submitted){
+    if (approved){
+      // locked: nothing to change once the team has approved it
+    } else if (submitted){
       act.appendChild(actionButton('Change link', 'btn-ghost', openForm));
     } else if (mine){
       act.appendChild(actionButton('Submit', 'btn-gold', openForm));
@@ -412,17 +443,44 @@ HUB_JS = r"""
       state.appendChild(b);
     }
   }
-  function render(asks){
+  function hasTag(a, t){ return (a.tags || []).indexOf(t) !== -1; }
+  function tagChips(asks){
+    var tags = [];
+    asks.forEach(function(a){
+      (a.tags || []).forEach(function(t){ if (tags.indexOf(t) === -1) tags.push(t); });
+    });
+    tags.sort();
+    if (tags.indexOf(tagOn) === -1) tagOn = '';
+    tagRow.textContent = '';
+    tagRow.hidden = !tags.length;
+    [''].concat(tags).forEach(function(t){
+      var b = mk('button', 'hub-tag', t || 'All');
+      b.type = 'button';
+      b.setAttribute('aria-pressed', String(t === tagOn));
+      b.addEventListener('click', function(){
+        tagOn = t;
+        render(lastAsks);
+      });
+      tagRow.appendChild(b);
+    });
+  }
+  function render(all){
+    lastAsks = all;
+    tagChips(all);
+    var asks = tagOn ? all.filter(function(a){ return hasTag(a, tagOn); }) : all;
     var mine = asks.filter(function(a){ return a.mine; });
     var open = asks.filter(function(a){ return !a.mine; });
     var sent = mine.filter(function(a){ return a.mine.status === 'submitted'; }).length;
+    var okd = mine.filter(function(a){ return a.mine.status === 'approved'; }).length;
     say('');
     fill(mineGrid, mine);
-    mineCount.textContent = mine.length ? mine.length + ' claimed' + (sent ? ', ' + sent + ' submitted' : '') : '';
+    mineCount.textContent = mine.length ? mine.length + ' claimed' + (sent ? ', ' + sent + ' submitted' : '')
+                                        + (okd ? ', ' + okd + ' approved' : '') : '';
     mineSec.hidden = !mine.length;
     fill(grid, open);
     count.textContent = open.length ? open.length + ' open' : '';
-    empty.textContent = mine.length ? 'You have claimed everything that is open. Check back soon.'
+    empty.textContent = tagOn ? 'No open asks with that tag right now.'
+                      : mine.length ? 'You have claimed everything that is open. Check back soon.'
                                     : 'No open asks right now. Check back soon.';
     empty.hidden = !!open.length;
     openSec.hidden = false;
@@ -430,6 +488,13 @@ HUB_JS = r"""
   function failed(e){
     mineSec.hidden = true;
     openSec.hidden = true;
+    tagRow.hidden = true;
+    if (e && e.status === 403){
+      // signed in, but not a NIL TV athlete with a signed agreement (yet)
+      var why = (e.detail || 'The Content Hub is for NIL TV athletes').replace(/\.?$/, '.');
+      say(why + ' Once your athlete agreement is signed, it opens here.');
+      return;
+    }
     if (e && e.status === 401){
       say('Your sign-in expired. Sign in again, then try again.', true);
       if (N.openAuth) N.openAuth();
@@ -444,6 +509,7 @@ HUB_JS = r"""
   function load(){
     mineSec.hidden = true;
     openSec.hidden = true;
+    tagRow.hidden = true;
     note.hidden = !demo;
     say('Loading open asks.');
     refresh();

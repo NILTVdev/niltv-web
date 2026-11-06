@@ -3,6 +3,11 @@
     {
       "id": "sample-training-table-trivia",
       "category": "Trivia",
+      "format": "Reel",
+      "tags": [
+        "team",
+        "food"
+      ],
       "title": "Training Table Trivia",
       "summary": "Quiz a teammate on food, fuel, and team traditions while you eat. Short, fun, and easy to film at the dining hall.",
       "steps": [
@@ -18,6 +23,10 @@
     {
       "id": "sample-podcast-submission",
       "category": "Podcast",
+      "format": "Voice or video pitch",
+      "tags": [
+        "podcast"
+      ],
       "title": "Podcast Guest Submission",
       "summary": "Tell us a story from your season in your own words. We pick guests for the next round of episodes from these.",
       "steps": [
@@ -33,6 +42,11 @@
     {
       "id": "sample-game-day-grwm",
       "category": "Game Day",
+      "format": "Reel",
+      "tags": [
+        "game day",
+        "lifestyle"
+      ],
       "title": "Game Day Get Ready With Me",
       "summary": "Take us from your room to warmups on a home game day.",
       "steps": [
@@ -48,6 +62,10 @@
     {
       "id": "sample-day-in-the-life",
       "category": "Lifestyle",
+      "format": "Reel",
+      "tags": [
+        "lifestyle"
+      ],
       "title": "Day in the Life",
       "summary": "Class, practice, meals, and everything in between. One full day, start to finish.",
       "steps": [
@@ -63,6 +81,11 @@
     {
       "id": "sample-what-i-eat",
       "category": "Lifestyle",
+      "format": "Reel",
+      "tags": [
+        "food",
+        "lifestyle"
+      ],
       "title": "What I Eat in a Day",
       "summary": "Show what fuels a training day, from breakfast to the late snack.",
       "steps": [
@@ -78,6 +101,10 @@
     {
       "id": "sample-senior-spotlight",
       "category": "Feature",
+      "format": "Photo set",
+      "tags": [
+        "feature"
+      ],
       "title": "Senior Season Spotlight",
       "summary": "One senior per campus channel sits down for a short interview about their last season.",
       "steps": [

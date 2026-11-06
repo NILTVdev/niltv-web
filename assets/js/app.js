@@ -723,6 +723,7 @@ window.NILTV = (function () {
         sel.hidden = true; // until the index brings options
         sel.addEventListener("change", function () {
           searchFilters[k.key] = sel.value;
+          sel.classList.toggle("on", !!sel.value); // an active filter stands out
           runSearch(input.value);
         });
         filters.appendChild(sel);
@@ -761,6 +762,7 @@ window.NILTV = (function () {
       if (!sel || sel.options.length > 1) return; // filled on an earlier open
       idx.options[k.options].forEach(function (o) { sel.appendChild(new Option(o.label, o.value)); });
       sel.value = searchFilters[k.key];
+      sel.classList.toggle("on", !!sel.value);
       sel.hidden = idx.options[k.options].length < 2;
     });
   }
@@ -795,13 +797,28 @@ window.NILTV = (function () {
     });
   }
 
+  // One result row: optional thumbnail, then the title over a kicker line.
+  function searchRow(tag, thumb, title, kickerParts) {
+    var row = el(tag, "search-row");
+    if (thumb) row.appendChild(thumb);
+    var txt = el("span", "search-text");
+    txt.appendChild(el("span", "search-title", title));
+    var kicker = kickerParts.filter(Boolean).join(" · ");
+    if (kicker) txt.appendChild(el("span", "search-kicker", kicker));
+    row.appendChild(txt);
+    return row;
+  }
+
   function renderSearchResults(out, hits, filtered) {
     var chanHits = hits.channels;
     var itemHits = hits.items.map(function (r) { return r.item; });
     var base = athletesBase();
+    // a heading per non-empty group stands in for a per-row type label
+    var group = function (label, list) {
+      if (list.length) out.appendChild(el("h2", "search-group", label));
+    };
+    group("Athletes", hits.athletes);
     hits.athletes.forEach(function (a) {
-      var row = el("a", "search-row");
-      row.href = base + encodeURIComponent(a.slug) + "/";
       var th = el("span", "search-thumb");
       if (a.portrait) {
         var img = document.createElement("img");
@@ -811,40 +828,31 @@ window.NILTV = (function () {
         img.onerror = function () { img.remove(); };
         th.appendChild(img);
       }
-      row.appendChild(th);
-      var txt = el("span", "search-text");
-      txt.appendChild(el("span", "search-title", a.name));
-      txt.appendChild(el("span", "search-kicker", ["Athlete", a.school, a.sport].filter(Boolean).join(" · ")));
-      row.appendChild(txt);
+      var row = searchRow("a", th, a.name, [a.school, a.sport]);
+      row.href = base + encodeURIComponent(a.slug) + "/";
       out.appendChild(row);
     });
+    group("Schools", hits.schools);
     hits.schools.forEach(function (s) {
-      var row = el("a", "search-row");
+      var row = searchRow("a", null, s.name, [s.athletes + (s.athletes === 1 ? " athlete" : " athletes")]);
       // the athletes page filters its roster by ?school=
       row.href = base + "?school=" + encodeURIComponent(s.name);
-      row.appendChild(el("span", "search-kicker", "School · " + s.athletes + (s.athletes === 1 ? " athlete" : " athletes")));
-      row.appendChild(el("span", "search-title", s.name));
       out.appendChild(row);
     });
+    group("Channels", chanHits);
     chanHits.forEach(function (c) {
-      var row = el("a", "search-row");
+      var row = searchRow("a", null, c.name, [c.school]);
       row.href = "/channels/" + channelSlug(c.id) + "/";
-      row.appendChild(el("span", "search-kicker", "Channel" + (c.school ? " · " + c.school : "")));
-      row.appendChild(el("span", "search-title", c.name));
       out.appendChild(row);
     });
+    group("Videos", itemHits);
     hits.items.forEach(function (r, i) {
       var it = r.item;
-      var row = el("button", "search-row");
       var th = el("span", "search-thumb");
       th.appendChild(thumbNode(it));
-      row.appendChild(th);
-      var txt = el("span", "search-text");
-      txt.appendChild(el("span", "search-title", it.title));
       // school shown so a school search explains its own matches
-      var kicker = [it.channelName, r.school, it.duration != null ? fmtDuration(it.duration) : ""];
-      txt.appendChild(el("span", "search-kicker", kicker.filter(Boolean).join(" · ")));
-      row.appendChild(txt);
+      var row = searchRow("button", th, it.title,
+        [it.channelName, r.school, it.duration != null ? fmtDuration(it.duration) : ""]);
       row.addEventListener("click", function () {
         closeSearch();
         openPlayer(itemHits, i);

@@ -315,11 +315,12 @@ window.NILTV = (function () {
 
   /* ══ Site chrome (nav / footer / overlays) ═══════════════ */
 
-  // mirrors the cinema template nav: Channels, Competitions, Featured, About
+  // mirrors the cinema template nav: Channels, Competitions, Featured, Athletes, About
   var NAV_LINKS = [
     ["Channels", "/channels/"],
     ["Competitions", "/competitions/"],
     ["Featured", "/featured/"],
+    ["Athletes", "/athletes/"],
     ["About", "/about/"],
   ];
 

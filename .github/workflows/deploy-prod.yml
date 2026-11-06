@@ -105,6 +105,28 @@ jobs:
           python "$GITHUB_WORKSPACE/scripts/poster-audit.py" --stage prod --fix
           # dev shares the same clips; keep its posters honest too
           python "$GITHUB_WORKSPACE/scripts/poster-audit.py" --stage dev --fix
+      # Athlete pages: records and photos never enter this public repo. The
+      # published set lives in private S3 storage (secrets.ATHLETE_DATA_S3, a
+      # secret so the location stays out of the public run logs; read with the
+      # role above); deploy.ps1 builds the pages from it. No secret, no access
+      # or a failed sync = athletes stay off prod for this deploy (no pages, no
+      # nav link) and the rest of the site still ships.
+      # Updating the stored set alone does not trigger a deploy: dispatch this
+      # workflow with force=true to publish a change to the athlete set.
+      - name: Fetch the athlete publish set
+        continue-on-error: true
+        working-directory: ${{ runner.temp }}
+        env:
+          ATHLETE_DATA_S3: ${{ secrets.ATHLETE_DATA_S3 }}
+        run: |
+          if [ -z "$ATHLETE_DATA_S3" ]; then echo "no athlete publish set configured; athletes stay off prod"; exit 0; fi
+          pip install --quiet pillow
+          dest="$RUNNER_TEMP/private-data/niltv-web"
+          if aws s3 sync "$ATHLETE_DATA_S3" "$dest" --only-show-errors; then
+            echo "NILTV_PRIVATE_DATA=$dest" >> "$GITHUB_ENV"
+          else
+            echo "::warning::athlete publish set could not be fetched; athletes stay off prod for this deploy"
+          fi
       - name: Deploy release to prod (${{ needs.changes.outputs.reason }})
         shell: pwsh
         run: ./deploy.ps1 -Env prod -Yes -ProdFills

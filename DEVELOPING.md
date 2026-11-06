@@ -48,6 +48,7 @@ used to have in the tree:
 
 ```
 <private>/athletes/_data/athletes.json      athlete records (build-athletes.py)
+<private>/athletes/_data/onboarding.json    who is cleared to publish (sync-athlete-status.py)
 <private>/athletes/_photos/<slug>/          source photos referenced by the records
 <private>/athletes/<slug>/                  hand-built athlete pages (mirrored as-is)
 <private>/fixtures/api/                     API snapshots (capture-fixtures.py writes here)
@@ -65,6 +66,12 @@ its directory block empty; `build-athletes.py` fills it at build time and the
 generated `athletes/<slug>/` pages and `athletes/index.json` are gitignored.
 `deploy.ps1` (dev) runs the athlete build with `--require`, so a dev deploy
 fails clearly when the folder is missing.
+
+An athlete page is published only when the athlete is `accepted` in the
+dashboard (agreement signed, Stripe payouts set up) and the record is complete
+(class year, three facts, description, a social handle, About copy, a hero
+photo). Refresh the status with `sync-athlete-status.py`, then run
+`build-athletes.py --report` to see who is held back and why.
 
 ## Making changes
 
@@ -127,6 +134,21 @@ appear on dev without ever touching niltv.com until it is promoted.
 - Reverting a release is a `revert-*` PR into `release`. Bring the fix back to
   `main` as a fresh commit (`git cherry-pick`), never by merging the original
   branch again.
+
+### Community Star voting
+
+Three settings have to change together before voting opens on prod. The page
+shows voting as paused if the API has a secret and the page has no site key,
+and the API answers 503 if it has no secret at all.
+
+1. Add `challenges.cloudflare.com` to `script-src` and `frame-src` in the
+   CSP header on the site. `connect-src` does not change.
+2. Put the Turnstile site key in `communityStarTurnstileSiteKey` in the prod
+   config template in `deploy.ps1`, and ship it in a release.
+3. Set the Turnstile secret on the prod API last, once that release is live.
+
+Then confirm the dashboard readiness list is green and that the page shows the
+Vote button, not "Voting is paused", on the first poll after the vote opens.
 
 ## Drafts and retired pages
 

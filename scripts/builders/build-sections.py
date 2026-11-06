@@ -970,9 +970,9 @@ phase_cells = ["""    <div class="phase-card">
 about_hero = """<section class="hero hero-sm" id="hero">
   <div class="hero-slide vslide v-wide on">
     <div class="hglow" style="background-image:url('%s/assets/img/sizzle-poster-wide.jpg')"></div>
-    <video class="hero-echo" muted loop playsinline preload="none" data-src="%s/video/sizzle/niltv-wide-720a.mp4"></video>
+    <video class="hero-echo" muted loop playsinline preload="none" data-src="%s/video/sizzle/niltv-wide-720b.mp4"></video>
     <video class="hero-video vw-desk" muted loop playsinline preload="none"
-      poster="%s/assets/img/sizzle-poster-wide.jpg" data-src="%s/video/sizzle/niltv-wide-720a.mp4"></video>
+      poster="%s/assets/img/sizzle-poster-wide.jpg" data-src="%s/video/sizzle/niltv-wide-720b.mp4"></video>
     <div class="hero-copy">
       <h1 class="hero-title ht-sm">The Media Network<br>for the NIL Era</h1>
       <p class="hero-dek">Real Name. Real Game. Real TV.</p>
@@ -989,11 +989,8 @@ about_hero = """<section class="hero hero-sm" id="hero">
 
 ADVISORY = [
  ("Sion James","NBA Player &middot; Charlotte Hornets","/assets/img/advisory/sion-james.webp","Duke Men&rsquo;s Basketball alumnus and Charlotte Hornets guard, selected 33rd overall in the 2025 NBA Draft after Duke&rsquo;s ACC title run.","2025 NBA Draft &middot; Pick 33"),
- ("Julia Cole","Recording Artist","/assets/img/advisory/julia-cole2.webp","Nashville recording artist and Vanderbilt Volleyball alumna writing &ldquo;Sisterhood Country&rdquo; to empower women, with 700M+ streams.","IG 600k &middot; TikTok 1.1M"),
  ("Clifford Taylor IV","Content Creator &middot; Podcast Host","/assets/img/advisory/clifford-taylor-iv.webp","Viral sports content creator, mental health advocate, and former Florida walk-on football player. Hosts The Clifford Show podcast.","IG 251k &middot; TikTok 1.3M"),
  ("Alyssa Ustby","Professional Basketball Player","/assets/img/advisory/alyssa-ustby.webp","UNC Women&rsquo;s Basketball all-time rebound record holder now playing pro overseas, with a degree in Advertising &amp; PR and Business.","IG 70k &middot; TikTok 130k"),
- ("Jen Munoz","Founder &middot; Sporty Spice Collective","/assets/img/advisory/jen-munoz.webp","New Mexico Soccer alumna and former pro player whose 2026 World Cup promo partners include Audi USA, Coke, Adidas, and Google.","IG 234k &middot; TikTok 240k"),
- ("Jessica Gardner","Student Anesthesiologist Asst. &middot; UNMC","/assets/img/advisory/jessica-gardner.webp","Nebraska track alumna and sports &amp; lifestyle content creator, now training as a Student Anesthesiologist Assistant at UNMC.","IG 128k &middot; TikTok 209k"),
  ("Olivia Fabry","AI Specialist &middot; Franklin Templeton","/assets/img/advisory/olivia-fabry.webp","Notre Dame pole vault alumna building The Table, a growing community that helps female college athletes launch careers in finance.","IG 70k &middot; TikTok 110.3k"),
 ]
 advisory_cells = ["""    <div class="adv-card">

@@ -1149,6 +1149,7 @@ br.mbr{display:none}
     <a href="/channels/">Channels</a>
     <a href="/competitions/" class="active">Competitions</a>
     <a href="/featured/">Featured</a>
+    <a href="/athletes/">Athletes</a>
     <a href="/about/">About</a>
   </div>
   <div class="nav-right"></div>
@@ -1160,11 +1161,57 @@ br.mbr{display:none}
   <a href="/channels/">Channels</a>
   <a href="/competitions/">Competitions</a>
   <a href="/featured/">Featured</a>
+  <a href="/athletes/">Athletes</a>
   <a href="/about/">About</a>
 </div>
 
-<section class="hero hero-sm hero-bleed" id="hero">
-  <div class="hero-slide vslide bleed on">
+<section class="hero" id="hero">
+  <style>
+  /* Community Star slide: the NIL Star slide's layout (the launch reel as a
+     card over a blurred echo of itself), campaign gold for the title and
+     button. The script after the hero moves it to the front, keeps the dot
+     row in step and follows the campaign stages. */
+  .cs-slide{--cs-gold:#E8BD6E}
+  .cs-slide .hero-title .g{color:var(--cs-gold)}
+  .hl-stack{height:clamp(150px,15vw,216px)}
+  @media (max-width:700px){.hl-stack{height:112px}}
+  .cs-slide .btn-gold{background:var(--cs-gold)}
+  .cs-slide .btn-gold:hover{background:#f0cd88}
+  .cs-slide .hero-ctas{flex-wrap:wrap;align-items:center}
+  .cs-when{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:15px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--dim);white-space:nowrap}
+  .cs-when b{color:var(--cs-gold);font-weight:700}
+  @media (max-width:700px){
+    .cs-slide .hero-kicker{font-size:14px;letter-spacing:.14em}
+    .cs-slide .hero-title br{display:none}
+    .cs-when{flex-basis:100%;font-size:13px;letter-spacing:.14em}
+  }
+  </style>
+  <div class="hero-slide vslide bleed cs-slide on">
+    <div class="hglow" style="background-image:url('https://d1nm1d2txb83wa.cloudfront.net/video/cs-launch-reel/poster.jpg')"></div>
+    <video class="hero-echo" muted loop playsinline preload="none" data-src="https://d1nm1d2txb83wa.cloudfront.net/video/cs-launch-reel/master.mp4"></video>
+    <div class="hero-scrim"></div>
+    <div class="hreel"><video class="hero-video" muted loop playsinline preload="none"
+      poster="https://d1nm1d2txb83wa.cloudfront.net/video/cs-launch-reel/poster.jpg" data-src="https://d1nm1d2txb83wa.cloudfront.net/video/cs-launch-reel/master.mp4"></video></div>
+    <div class="hero-copy">
+      <div class="hero-kicker" data-cs-k>$10,000 in grants for college athletes</div>
+      <h1 class="hero-title logo-title"><img class="hero-logo hl-stack" src="/assets/img/nil-community-star-logo.webp" width="595" height="640" alt="NIL Community Star"></h1>
+      <p class="hero-dek">Two college athletes will each receive $5,000 to support the community work they're already doing.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-gold" href="/communitystar/#apply" data-cs-btn>Apply now</a>
+        <a class="btn btn-ghost theater-open" href="#"
+           data-mp4="https://d1nm1d2txb83wa.cloudfront.net/video/cs-launch-reel/master.mp4"
+           data-poster="https://d1nm1d2txb83wa.cloudfront.net/video/cs-launch-reel/poster.jpg"
+           data-kicker="NIL Community Star" data-title="Hosted by Sion James and Anthony Egbo">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          Watch
+        </a>
+        <span class="cs-when" data-cs-when></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-slide vslide bleed">
     <div class="hglow" style="background-image:url('https://d1nm1d2txb83wa.cloudfront.net/video/ig-18106275875112509/poster.jpg')"></div>
     <video class="hero-echo" muted loop playsinline preload="none" data-src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18106275875112509/master.mp4"></video>
     <div class="hero-scrim"></div>
@@ -1172,7 +1219,7 @@ br.mbr{display:none}
       poster="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18106275875112509/poster.jpg" data-src="https://d1nm1d2txb83wa.cloudfront.net/video/ig-18106275875112509/master.mp4"></video></div>
     <div class="hero-copy">
       <div class="hero-kicker">Season 1 Champion Crowned</div>
-      <h1 class="hero-title logo-title"><img class="hero-logo hl-nilstar" src="/assets/img/nilstar-logo-wide.webp" alt="NIL Star"></h1>
+      <h1 class="hero-title logo-title"><img class="hero-logo hl-stack" src="/assets/img/nil-singing-star-logo.webp" width="595" height="640" alt="NIL Singing Star"></h1>
       <p class="hero-dek dek-2line"><span class="nw">Bella Calvanese is our first ever NIL STAR, taking home $10,000.</span><br>Season 2 arrives in 2027.</p>
       <div class="hero-ctas">
         <a class="btn btn-gold theater-open" href="/watch/ig-18106275875112509/"
@@ -1185,12 +1232,154 @@ br.mbr{display:none}
       </div>
     </div>
   </div>
+  <button class="hero-arrow prev" aria-label="Previous slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>  <button class="hero-arrow next" aria-label="Next slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+  </button>
   <div class="hero-progress" id="heroDots">
     <button class="hero-dot on" data-i="0" aria-label="Slide 1"><span></span></button>
+    <button class="hero-dot" data-i="1" aria-label="Slide 2"><span></span></button>
   </div>
 </section>
 
+<script src="/assets/js/cs-stage.js"></script>
+<script>
+/* Community Star slide: leads the carousel and follows the campaign through
+   the shared feed (assets/js/cs-stage.js), so it says what the page says and
+   announces nothing staff have not published. ?stage= previews a state off
+   production, and the button carries it through to the page. */
+(function(){
+  var hero = document.getElementById('hero');
+  var cs = hero && hero.querySelector('.cs-slide');
+  if (!cs) return;
+  hero.querySelectorAll('.hero-slide.on').forEach(function(s){ s.classList.remove('on'); });
+  cs.classList.add('on');
+  var row = document.getElementById('heroDots');
+  if (row){
+    row.innerHTML = '';
+    hero.querySelectorAll('.hero-slide').forEach(function(s, n){
+      var b = document.createElement('button');
+      b.className = 'hero-dot' + (n ? '' : ' on');
+      b.setAttribute('data-i', n);
+      b.setAttribute('aria-label', 'Slide ' + (n + 1));
+      b.appendChild(document.createElement('span'));
+      row.appendChild(b);
+    });
+  }
+  var CS = window.NILTV_CS;
+  if (!CS) return;
+  var GRANTS = '$10,000 in grants for college athletes';
+  var S = {
+    coming:   {k:GRANTS, btn:'Get notified', hash:'#apply', to:'opens', lbl:'Opens in'},
+    open:     {k:GRANTS, btn:'Apply now', hash:'#apply', to:'closes', lbl:'Closes in'},
+    closed:   {k:GRANTS, btn:'Learn more', hash:''},
+    hold:     {k:GRANTS, btn:'Learn more', hash:''},
+    finalists:{k:'Top 25 finalists announced', btn:'Meet the finalists', hash:'#finalists', note:'Voting opens Dec 11'},
+    voting:   {k:'Fan voting is open', btn:'Vote now', hash:'#finalists', to:'voteCloses', lbl:'Voting ends in'},
+    top5hold: {k:'Voting is closed', btn:'Learn more', hash:''},
+    top5:     {k:'Top 5 announced', btn:'See the top 5', hash:'#finalists'},
+    winners:  {k:'Winners announced', btn:'Meet the winners', hash:'#winners'}
+  };
+  var pv = CS.preview(), feed = null, shift = pv ? pv.at - Date.now() : 0;
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+  function left(ms){
+    var m = Math.max(0, Math.floor(ms / 6e4)), d = Math.floor(m / 1440), h = Math.floor(m % 1440 / 60);
+    return d ? d + 'd ' + pad(h) + 'h' : h + 'h ' + pad(m % 60) + 'm';
+  }
+  var kEl = cs.querySelector('[data-cs-k]'), btn = cs.querySelector('[data-cs-btn]'), when = cs.querySelector('[data-cs-when]');
+  var cur = null;
+  function render(){
+    var t = Date.now() + shift, st = pv ? pv.view : CS.view(feed, t), c = S[st], note = c.note || CS.announce(st, t, feed);
+    if (st !== cur){
+      cur = st;
+      kEl.textContent = c.k;
+      btn.textContent = c.btn;
+      btn.href = '/communitystar/' + (pv ? '?stage=' + pv.key : '') + c.hash;
+    }
+    if (c.to) when.innerHTML = c.lbl + ' <b>' + left(CS.times(feed)[c.to] - t) + '</b>';
+    else when.textContent = note;
+    when.hidden = !(c.to || note);
+  }
+  render();
+  setInterval(render, 30000);
+  if (!pv) CS.watch(function(f){ if (f){ feed = f; shift = f.offset; } render(); }, 3e5);
+})();
+</script>
+
 <main class="shelves">
+
+<style>
+/* NIL Star rail: one card per competition, each with its stacked logo. */
+.ev-tile.ev-cs{--cs-gold:#E8BD6E;border-color:rgba(232,189,110,.4);
+  background:radial-gradient(70% 90% at 85% -4%,rgba(232,189,110,.22),rgba(232,189,110,0) 62%),linear-gradient(180deg,#121216,#08080a)}
+.ev-cs .ev-logo-box,.ev-cs .ev-foot{position:relative;z-index:1}
+.ev-cs.live .ev-state,.ev-cs .ev-meta b{color:var(--cs-gold)}
+/* phones: the 2:1 card is too short for a stacked logo plus the headline, so
+   it grows to fit them, the logo clearing the state pill */
+@media (max-width:700px){
+  .ev-tile{aspect-ratio:auto}
+  .ev-tile .ev-logo-box{padding:46px 16px 10px}
+  .ev-tile .ev-logo-stack{max-height:100px}
+}
+</style>
+<section class="shelf">
+  <div class="shelf-head">
+    <h2 class="shelf-title gold">NIL Star</h2>
+  </div>
+  <div class="rail">
+    <a class="card ev-tile ev-cs" href="/communitystar/" aria-label="NIL Community Star" data-cs-tile>
+      <span class="ev-state" data-cs-state>Coming Soon</span>
+      <span class="ev-logo-box"><img class="ev-logo ev-logo-stack" src="/assets/img/nil-community-star-logo.webp" width="595" height="640" alt="NIL Community Star" loading="lazy" decoding="async"></span>
+      <span class="ev-foot">
+        <span class="ev-line">Two $5,000 grants for college athletes</span>
+        <span class="ev-meta"><span data-cs-when>Applications open Nov 2</span><b data-cs-cta>Get Notified</b></span>
+      </span>
+    </a>
+    <a class="card ev-tile" href="/nilstar/season-1/" aria-label="NIL Singing Star Season 1, Completed">
+      <span class="ev-state">Completed</span>
+      <span class="ev-logo-box"><img class="ev-logo ev-logo-stack" src="/assets/img/nil-singing-star-logo.webp" width="595" height="640" alt="NIL Singing Star Season 1" loading="lazy" decoding="async"></span>
+      <span class="ev-foot">
+        <span class="ev-line">Champion crowned Jul 22. 20 finalists, 1M+ votes.</span>
+        <span class="ev-meta">Season 1 &middot; Jul 7 to Jul 22, 2026<b>Watch the Recap</b></span>
+      </span>
+    </a>
+  </div>
+</section>
+<script>
+/* Community Star tile: state, dates and call to action follow the shared
+   feed (assets/js/cs-stage.js). ?stage= previews a state off production. */
+(function(){
+  var tile = document.querySelector('[data-cs-tile]'), CS = window.NILTV_CS;
+  if (!tile || !CS) return;
+  // [state pill, date line, call to action, live]. An empty date line takes
+  // the next announcement. The card always opens the top of /communitystar/;
+  // the page's own button leads on from there.
+  var S = {
+    coming:   ['Coming Soon', 'Applications open Nov 2', 'Get Notified'],
+    open:     ['Applications Open', 'Apply by Nov 23', 'Apply Now', 1],
+    closed:   ['Applications Closed', '', 'Learn More'],
+    hold:     ['Applications Closed', '', 'Learn More'],
+    finalists:['Finalists', 'Voting opens Dec 11', 'Meet the Finalists'],
+    voting:   ['Voting Live', 'Voting closes Dec 13', 'Vote Now', 1],
+    top5hold: ['Voting Closed', '', 'Learn More'],
+    top5:     ['Top 5', '', 'See the Top 5'],
+    winners:  ['Winners', 'Two winners, $5,000 each', 'Meet the Winners']
+  };
+  var pv = CS.preview(), feed = null;
+  function render(){
+    var t = pv ? pv.at : Date.now() + (feed ? feed.offset : 0), st = pv ? pv.view : CS.view(feed, t), c = S[st];
+    tile.querySelector('[data-cs-state]').textContent = c[0];
+    tile.querySelector('[data-cs-when]').textContent = c[1] || CS.announce(st, t, feed);
+    tile.querySelector('[data-cs-cta]').textContent = c[2];
+    tile.href = '/communitystar/' + (pv ? '?stage=' + pv.key : '');
+    tile.setAttribute('aria-label', 'NIL Community Star, ' + c[0]);
+    tile.classList.toggle('live', !!c[3]);
+  }
+  render();
+  if (!pv) CS.watch(function(f){ if (f) feed = f; render(); }, 3e5);
+})();
+</script>
 
 <section class="shelf">
   <div class="shelf-head">

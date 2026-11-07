@@ -11,6 +11,8 @@ Generators for the cinema-look pages. Run them from the repo root.
   ones up under `_legacy/`, ignored, never deployed).
 - `build-athletes.py`, `network_brands.py`, `build-payments.py` - see
   DEVELOPING.md for the private data folder they read from.
+- `build-hub.py` - builds `/hub/` (the Athlete Content Hub, dev-only) from the
+  contact page's chrome. Run it after a chrome change.
 - `make-chmq-assets.py`, `make-poster-fills.py`, `make-dupe-registry.py` -
   asset helpers; `durations.json`, `poster-fills.json`, `poster-dupes.json`
   are their committed outputs.

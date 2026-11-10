@@ -83,7 +83,7 @@ if (Test-Path $zip) { Remove-Item $zip -Force }
 # concepts/ is an ignored scratch dir: dev ships it only when present.
 $pages = @("index.html","not-found.html","sitemap.xml","robots.txt","llms.txt","build.json","assets",
            "channels","featured","about","watch","legal","nilstar","competitions",
-           "payouts","contact","favicon.ico","athlete-signup","payments","communitystar")
+           "payouts","contact","favicon.ico","athlete-signup","payments")
 
 if ($Env -eq "prod") {
   # ---- guards: a prod artifact must be reproducible from the RELEASE branch.
@@ -219,9 +219,10 @@ window.NILTV_CONFIG = {
   Write-Host "Building athlete pages from private data (review mode: $env:NILTV_ATHLETES_REVIEW)..."
   python (Join-Path $src "scripts/builders/build-athletes.py") --require
   if ($LASTEXITCODE -ne 0) { Write-Error "dev deploy refused: athlete pages could not be built. The private data folder is missing - set NILTV_PRIVATE_DATA or create ../private-data/niltv-web beside the repo (see DEVELOPING.md)."; exit 1 }
-  # athlete-signup, payments and communitystar ship to prod too (they are in
-  # $pages); the dev tree just adds the dev-only pages here.
-  $items = $pages + @("config.js","vote","athletes","partners")
+  # athlete-signup and payments ship to prod too (they are in $pages); the
+  # dev tree adds the dev-only pages here. communitystar is paused until 2027,
+  # so it stays on dev and niltv.com answers 404 for it.
+  $items = $pages + @("config.js","vote","athletes","partners","communitystar")
   if (Test-Path (Join-Path $src "concepts")) { $items += "concepts" }   # drafts copied in from the private folder, never committed
   New-Zip $zip $src $items
   Write-Host "Zipped $((Get-Item $zip).Length) bytes for 'dev' (commit $sha)"

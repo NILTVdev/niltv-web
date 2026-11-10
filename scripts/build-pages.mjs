@@ -346,12 +346,12 @@ async function main() {
     }
   } catch (e) { console.warn(`  home recovery skipped: ${e.message}`); }
   const urls = [
-    "", "competitions/", "communitystar/", "nilstar/season-1/", "channels/", "featured/", "about/",
+    "", "competitions/", "nilstar/season-1/", "channels/", "featured/", "about/",
     "contact/", "legal/privacy/", "legal/terms/", "legal/contest-notice/",
   ];
   // vote is dev-only; prod excludes the page entirely, so it never enters its
   // sitemap. Athletes are listed below, only when athlete pages were built.
-  if (ENV !== "prod") urls.push("vote/");
+  if (ENV !== "prod") urls.push("vote/", "communitystar/");
   let watchCount = 0;
 
   const HIDDEN = new Set(["ch-esports"]); // hidden from the web

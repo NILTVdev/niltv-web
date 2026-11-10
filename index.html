@@ -1189,53 +1189,9 @@ br.mbr{display:none}
 <section class="hero" id="hero">
 
   <style>
-  /* Community Star slide: the NIL Star slide's layout (the launch reel as a
-     card over a blurred echo of itself), campaign gold for the title and
-     button. The script after the hero moves it to the front, keeps the dot
-     row in step and follows the campaign stages. */
-  .cs-slide{--cs-gold:#E8BD6E}
-  .cs-slide .hero-title .g{color:var(--cs-gold)}
   .hl-stack{height:clamp(150px,15vw,216px)}
   @media (max-width:700px){.hl-stack{height:112px}}
-  .cs-slide .btn-gold{background:var(--cs-gold)}
-  .cs-slide .btn-gold:hover{background:#f0cd88}
-  .cs-slide .hero-ctas{flex-wrap:wrap;align-items:center}
-  .cs-when{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:15px;letter-spacing:.18em;
-    text-transform:uppercase;color:var(--dim);white-space:nowrap}
-  .cs-when b{color:var(--cs-gold);font-weight:700}
-  @media (max-width:700px){
-    .cs-slide .hero-kicker{font-size:14px;letter-spacing:.14em}
-    .cs-slide .hero-title br{display:none}
-    .cs-when{flex-basis:100%;font-size:13px;letter-spacing:.14em}
-  }
   </style>
-  <div class="hero-slide vslide bleed cs-slide">
-    <div class="hglow" style="background-image:url('https://d1nm1d2txb83wa.cloudfront.net/video/cs-launch-reel/poster.jpg')"></div>
-    <video class="hero-echo" muted loop playsinline preload="none" data-src="https://d1nm1d2txb83wa.cloudfront.net/video/cs-launch-reel/master.mp4"></video>
-    <div class="hero-scrim"></div>
-    <div class="hreel"><video class="hero-video" muted loop playsinline preload="none"
-      poster="https://d1nm1d2txb83wa.cloudfront.net/video/cs-launch-reel/poster.jpg" data-src="https://d1nm1d2txb83wa.cloudfront.net/video/cs-launch-reel/master.mp4"></video></div>
-    <div class="hero-copy">
-      <div class="hero-kicker" data-cs-k>$10,000 in grants for college athletes</div>
-      <h1 class="hero-title logo-title"><img class="hero-logo hl-stack" src="/assets/img/nil-community-star-logo.webp" width="595" height="640" alt="NIL Community Star"></h1>
-      <p class="hero-dek">Two college athletes will each receive $5,000 to support the community work they're already doing.</p>
-      <div class="hero-ctas">
-        <a class="btn btn-gold" href="/communitystar/#apply" data-cs-btn>Apply now</a>
-        <a class="btn btn-ghost theater-open" href="#"
-           data-mp4="https://d1nm1d2txb83wa.cloudfront.net/video/cs-launch-reel/master.mp4"
-           data-poster="https://d1nm1d2txb83wa.cloudfront.net/video/cs-launch-reel/poster.jpg"
-           data-kicker="NIL Community Star" data-title="Hosted by Sion James and Anthony Egbo">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-          Watch
-        </a>
-        <span class="cs-when" data-cs-when></span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Sweat It Out - horizontal billboard, leads the carousel.
-       master-fs.mp4 = the 720p faststart hero cut (moov at the head, so
-       playback starts before the whole file loads). -->
   <div class="hero-slide vslide bleed hz on">
     <div class="hglow" style="background-image:url('https://d1nm1d2txb83wa.cloudfront.net/video/hz-sweat-it-out/poster.jpg')"></div>
     <video class="hero-echo" muted loop playsinline preload="none" data-src="https://d1nm1d2txb83wa.cloudfront.net/video/hz-sweat-it-out/hero-loop.mp4"></video>
@@ -1342,74 +1298,6 @@ br.mbr{display:none}
   </div>
 </section>
 
-<script>
-/* Community Star slide: leads the carousel and follows the campaign on the
-   same UTC clock as /communitystar/. ?stage= previews a stage anywhere but
-   niltv.com, and the button carries it through to the page. */
-(function(){
-  var hero = document.getElementById('hero');
-  var cs = hero && hero.querySelector('.cs-slide');
-  if (!cs) return;
-  hero.querySelectorAll('.hero-slide.on').forEach(function(s){ s.classList.remove('on'); });
-  cs.classList.add('on');
-  var row = document.getElementById('heroDots');
-  if (row){
-    row.innerHTML = '';
-    hero.querySelectorAll('.hero-slide').forEach(function(s, n){
-      var b = document.createElement('button');
-      b.className = 'hero-dot' + (n ? '' : ' on');
-      b.setAttribute('data-i', n);
-      b.setAttribute('aria-label', 'Slide ' + (n + 1));
-      b.appendChild(document.createElement('span'));
-      row.appendChild(b);
-    });
-  }
-  var D = 864e5;
-  var T = {opens:Date.parse('2026-11-02T14:00:00Z'), closes:Date.parse('2026-11-24T08:00:00Z'),
-    finalists:Date.parse('2026-11-25T23:00:00Z'), voteOpens:Date.parse('2026-12-11T14:00:00Z'),
-    voteCloses:Date.parse('2026-12-14T08:00:00Z'), winners:Date.parse('2026-12-18T14:00:00Z')};
-  var GRANTS = '$10,000 in grants for college athletes';
-  var S = {
-    coming:   {start:T.opens - 13*D, k:GRANTS, btn:'Get notified', hash:'#apply', to:T.opens, lbl:'Opens in'},
-    open:     {start:T.opens, k:GRANTS, btn:'Apply now', hash:'#apply', to:T.closes, lbl:'Closes in'},
-    closed:   {start:T.closes, k:GRANTS, btn:'Learn more', hash:'', note:'Finalists announced Nov 25'},
-    finalists:{start:T.finalists, k:'Top 25 finalists announced', btn:'Meet the finalists', hash:'#finalists', note:'Voting opens Dec 11'},
-    voting:   {start:T.voteOpens, k:'Fan voting is open', btn:'Vote now', hash:'#finalists', to:T.voteCloses, lbl:'Voting ends in'},
-    top5:     {start:T.voteCloses, k:'Top 5 announced', btn:'See the top 5', hash:'#finalists', note:'Winners announced Dec 18'},
-    winners:  {start:T.winners, k:'Winners announced', btn:'Meet the winners', hash:'#winners'}
-  };
-  var forced = null, shift = 0;
-  if (!/^(www\.)?niltv\.com$/.test(location.hostname)){
-    var q = (location.search.match(/[?&]stage=([a-z0-9]+)/) || [])[1];
-    if (q && S[q]){ forced = q; shift = S[q].start + 1.5*D - Date.now(); }
-  }
-  function stageAt(t){
-    return t < T.opens ? 'coming' : t < T.closes ? 'open' : t < T.finalists ? 'closed' :
-      t < T.voteOpens ? 'finalists' : t < T.voteCloses ? 'voting' : t < T.winners ? 'top5' : 'winners';
-  }
-  function pad(n){ return (n < 10 ? '0' : '') + n; }
-  function left(ms){
-    var m = Math.max(0, Math.floor(ms / 6e4)), d = Math.floor(m / 1440), h = Math.floor(m % 1440 / 60);
-    return d ? d + 'd ' + pad(h) + 'h' : h + 'h ' + pad(m % 60) + 'm';
-  }
-  var kEl = cs.querySelector('[data-cs-k]'), btn = cs.querySelector('[data-cs-btn]'), when = cs.querySelector('[data-cs-when]');
-  var cur = null;
-  function render(){
-    var t = Date.now() + shift, st = forced || stageAt(t), c = S[st];
-    if (st !== cur){
-      cur = st;
-      kEl.textContent = c.k;
-      btn.textContent = c.btn;
-      btn.href = '/communitystar/' + (forced ? '?stage=' + forced : '') + c.hash;
-    }
-    if (c.to) when.innerHTML = c.lbl + ' <b>' + left(c.to - t) + '</b>';
-    else when.textContent = c.note || '';
-    when.hidden = !(c.to || c.note);
-  }
-  render();
-  setInterval(render, 30000);
-})();
-</script>
 
 <main class="shelves" id="main">
 

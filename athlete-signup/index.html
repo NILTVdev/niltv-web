@@ -1945,15 +1945,19 @@ document.querySelectorAll('.shelf').forEach(function(sh){
     body.userAgent = navigator.userAgent;
 
     btn.disabled = true;
-    function finish(mode, created){
+    function finish(mode, created, reply){
       form.hidden = true;
       var intro = document.getElementById('applyIntro');
       if (intro) intro.hidden = true;
       done.hidden = false;
       var updated = created === false;
+      // An approved application stays as staff reviewed it; the server says so.
+      var locked = updated && reply && reply.updated === false;
       done.innerHTML =
-        (updated ? '<h3>Application updated</h3>' : '<h3>Application received</h3>') +
-        (updated
+        (locked ? '<h3>Application on file</h3>' : updated ? '<h3>Application updated</h3>' : '<h3>Application received</h3>') +
+        (locked
+          ? '<p>Thanks, ' + esc(body.firstName) + '. ' + esc(reply.message || 'Your application is already approved, so we did not change it. To update your details, reach us through the contact page.') + '</p>'
+          : updated
           ? '<p>Thanks, ' + esc(body.firstName) + '. You already had an application on file for <b>' + esc(body.email) + '</b>, so we updated it with these answers. Every update goes to that address.</p>'
           : '<p>Thanks, ' + esc(body.firstName) + '. We sent a confirmation to <b>' + esc(body.email) + '</b>. Every update goes to that address, so keep an eye on it.</p>') +
         '<ol><li>NIL TV reviews your application.</li><li>If you are accepted, you get the NIL TV Ambassador Agreement to sign electronically.</li><li>After you sign, you get a link to set up payouts with Stripe.</li></ol>' +
@@ -1971,8 +1975,13 @@ document.querySelectorAll('.shelf').forEach(function(sh){
       return fetch(cfg.applicationsApi, {method:'POST', headers: headers, body: JSON.stringify(body)});
     }).then(function(r){
       if (r.status === 401) { btn.disabled = false; say('Your sign-in expired. Sign in again and resubmit.'); if (N.openAuth) N.openAuth(); return; }
+      if (r.status === 403) {
+        var confirmFirst = 'Confirm your email first, then send the application again.';
+        return r.json().then(function(d){ btn.disabled = false; say((d && d.detail) || confirmFirst); },
+                             function(){ btn.disabled = false; say(confirmFirst); });
+      }
       if (!r.ok) throw new Error('http ' + r.status);
-      return r.json().then(function(d){ finish('live', d && d.created); }, function(){ finish('live'); });
+      return r.json().then(function(d){ finish('live', d && d.created, d); }, function(){ finish('live'); });
     }).catch(function(){ btn.disabled = false; say('Could not send. Check your connection and try again.'); });
   });
 })();

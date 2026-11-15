@@ -319,6 +319,10 @@ import os as _os
 _tns = {}
 exec(io.open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "themed_rails.py"), encoding="utf-8").read(), _tns)
 THEMED, HOME_THEMED, FEAT_THEMED = _tns["THEMED"], _tns["HOME_CATEGORIES"], _tns["FEAT_THEMED"]
+# Trending, Sponsored and The Auditions are hand-picked lists in
+# pinned-lists.json (see pinned_lists.py).
+import pinned_lists as _pinned
+_PINNED = _pinned.load()
 RAIL_FLOOR = 8   # an editorial carousel never shows with fewer cells
 def themed_shelf(key, gold=False, exclude=None, floor=0):
     # exclude: canonical ids already claimed by earlier rails on the same
@@ -458,14 +462,14 @@ def refresh_home():
     # Trending rail claims next, and The Feed backfills around all of them -
     # a homepage scroller never sees the same video twice.
     used = set(SERIES_IDS)
-    used |= {_canon(v) for v, _, _ in _tns["SPONSORED"]}
+    used |= {_canon(v) for v, _, _ in _PINNED["sponsored"]}
     for _k in HOME_THEMED:
         used |= {_canon(v) for v, _, _ in THEMED[_k][2]}
     # Trending on NIL TV is PINNED: the fixed most-viewed lineup
-    # from themed_rails.TRENDING_PINNED renders verbatim, in order. Empty the
+    # from pinned-lists.json (trending) renders verbatim, in order. Empty the
     # list to fall back to the live recency feed. The pinned ids join `used`
     # so no later rail can dupe them.
-    pinned = _tns.get("TRENDING_PINNED", [])
+    pinned = _PINNED["trending"]
     if pinned:
         used |= {_canon(v) for v, _, _ in pinned}
         reel_html = "\n".join(reel_cell(v, c, tt) for v, c, tt in pinned)
@@ -486,7 +490,7 @@ def refresh_home():
     _fin_html = shelf("NIL Singing Star Season 1", "", list(sing_cells), see="/competitions/")
     t = _re.sub(r"<!-- AUTORAIL:finalists -->.*?<!-- /AUTORAIL:finalists -->",
                 (lambda h2: lambda m: "<!-- AUTORAIL:finalists -->\n" + h2 + "\n<!-- /AUTORAIL:finalists -->")(_fin_html), t, flags=_re.S)
-    _sp_cells = [reel_cell(v, br, tt, label=br) for v, br, tt in _tns["SPONSORED"]]
+    _sp_cells = [reel_cell(v, br, tt, label=br) for v, br, tt in _PINNED["sponsored"]]
     _sp_html = shelf("Sponsored Content", "", _sp_cells)
     t = _re.sub(r"<!-- AUTORAIL:sponsored -->.*?<!-- /AUTORAIL:sponsored -->",
                 (lambda h2: lambda m: "<!-- AUTORAIL:sponsored -->\n" + h2 + "\n<!-- /AUTORAIL:sponsored -->")(_sp_html), t, flags=_re.S)
@@ -568,40 +572,9 @@ EVENT_LD = "\n".join(
 
 
 
-# Entry-window AUDITIONS: the athletes' original collab-post auditions,
-# newest first. Every NIL Star repost is a distinct edit of different
-# footage, so an original here is never a dupe of a Season 1 shelf card.
-AUDITION_IDS = [
-    ("ig-18539419810078105", "College Athletes: post your next carpool karaoke to win $10,000"),
-    ("ig-17919562527182213", "Caden Redmond - Defiance College Football"),
-    ("ig-17897946027496513", "Madison Walcott - Assumption Field Hockey"),
-    ("ig-18180934726405773", "Abby Cunningham - Fight For Me (Heathers)"),
-    ("ig-18094567163165109", "Robin Kucler - Cups (Wake Forest XC)"),
-    ("ig-18113933899902354", "Noah Sentnor - Colorado Ultimate Frisbee"),
-    ("ig-17884755516665461", "Teddy Tolbert - Die on This Hill"),
-    ("ig-17918818842181668", "Tatyana Green - Eastern Michigan Track"),
-    ("ig-18085619087451279", "I Miss the Mountains - Next to Normal"),
-    ("ig-18158019676419817", "An Original Song For Every Athlete"),
-    ("ig-17884869510414822", "Savannah Breitwiser - Audition Cover"),
-    ("ig-18066609356375167", "Violet Hewett - Duke Track"),
-    ("ig-17959556736138023", "Jersey Giant - Sam Barber Cover"),
-    # ---- finalist ORIGINALS: the athletes' own full auditions,
-    # appended at the back because the finalists are already featured in the
-    # Season 1 shelf above (their NIL Star edits - different footage). Top 20
-    # announcement order, trimmed to keep the rail at the 24-card cap.
-    # Originals with no playable media are left out.
-    ("ig-18166221412439513", "Taylee Chirrick, Montana State Basketball"),
-    ("ig-18025761827840117", "Anna and Tom Lardner, Middlebury and Bowdoin"),
-    ("ig-18085637768097206", "Charlie Moore, Colby Ice Hockey"),
-    ("ig-18112296895940804", "Kayliah Love, DePaul Track and Field"),
-    ("ig-17959643186965122", "Jasmine Connor, American University Lacrosse"),
-    ("ig-18120209332665246", "Aleithia Wilson, Wheeling Volleyball"),
-    ("ig-18114673171680811", "Keagan Cunningham, TCU Football"),
-    ("ig-18132846328607840", "Zander Vasquez, UC San Diego Fencing"),
-    ("ig-17863728654632876", "Keely Eslinger, Liberty Soccer"),
-    ("ig-17851262943695464", "Eliana Geva, Temple Fencing"),
-    ("ig-18594161446025211", "Jaylin Lott, Thomas Jefferson Volleyball"),
-]
+# Entry-window AUDITIONS, then the finalists' original auditions: both
+# hand-picked lists in pinned-lists.json (its "_notes" say why the order).
+AUDITION_IDS = _PINNED["auditions"] + _PINNED["finalist_originals"]
 audition_cells = [reel_cell(v, "NIL Star", t) for v, t in AUDITION_IDS]
 
 # Nav label + slug: "Competitions"; /nilstar/ 301s here.

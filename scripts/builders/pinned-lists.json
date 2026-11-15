@@ -1,0 +1,271 @@
+{
+  "_about": "Hand-picked video lists, kept in order on purpose. build-sections.py reads this file through pinned_lists.py. Copy an id exactly as the API has it; the title is what the card shows.",
+  "trending": {
+    "_notes": "Homepage 'Trending on NIL TV', shown exactly in this order: the network's most viewed (top 5 all time, then recent heat, then each channel's best). NIL Star clips are left out. The TrueBlue pick is by hand because the archive has no Instagram metrics. Empty the list to fall back to the live newest-first feed.",
+    "videos": [
+      {
+        "id": "ig-17948129441858800",
+        "channel": "Chapel Hill TV",
+        "title": "Practice highlight goes to Sydney Barker"
+      },
+      {
+        "id": "ig-17915293035233356",
+        "channel": "NIL TV",
+        "title": "Challenge accepted"
+      },
+      {
+        "id": "ig-17880741309441315",
+        "channel": "Starkville TV",
+        "title": "Embrassinggggg"
+      },
+      {
+        "id": "ig-18123726289567721",
+        "channel": "Red Pack TV",
+        "title": "What we do while waiting to race"
+      },
+      {
+        "id": "ig-18106682875737198",
+        "channel": "Starkville TV",
+        "title": "Good luck to everyone racing this weekend"
+      },
+      {
+        "id": "ig-18004445420977388",
+        "channel": "NIL TV",
+        "title": "Because what else would we do in preseason"
+      },
+      {
+        "id": "ig-18095012111564166",
+        "channel": "Starkville TV",
+        "title": "A friendly reminder to my runner girlies"
+      },
+      {
+        "id": "ig-18094851788545268",
+        "channel": "NIL TV",
+        "title": "Making herstory with Husker volleyball"
+      },
+      {
+        "id": "ig-18164823031466741",
+        "channel": "Starkville TV",
+        "title": "The way running makes me feel"
+      },
+      {
+        "id": "ig-17954224887012117",
+        "channel": "NIL TV",
+        "title": "Duke women's lacrosse fall gear"
+      },
+      {
+        "id": "ig-17928150768394197",
+        "channel": "Dore City TV",
+        "title": "Asking my team their relationship status"
+      },
+      {
+        "id": "ig-18109119643888008",
+        "channel": "College Station TV",
+        "title": "Get ready with Salt and Peppa"
+      },
+      {
+        "id": "ig-18381573850178344",
+        "channel": "Dore City TV",
+        "title": "Inside the Vanderbilt volleyball locker room"
+      },
+      {
+        "id": "ig-18199424152373205",
+        "channel": "Salt City TV",
+        "title": "It's a joke guysss calm down"
+      },
+      {
+        "id": "tbtv-DR937zsjp8_",
+        "channel": "TrueBlue TV",
+        "title": "DUKE WINS THE ACC"
+      },
+      {
+        "id": "ig-18355569250166543",
+        "channel": "Red Pack TV",
+        "title": "Always getting clipped by Emily"
+      }
+    ]
+  },
+  "sponsored": {
+    "_notes": "Homepage 'Sponsored Content' rail: brand deals, with the brand as the card's top-left label. Only reels whose caption names the brand are listed.",
+    "videos": [
+      {
+        "id": "tbtv-DSV9A9xDlrt",
+        "brand": "BRUCE BOLT",
+        "title": "Christmas cheer with Duke Baseball"
+      },
+      {
+        "id": "ig-18010154306639333",
+        "brand": "Rawlings",
+        "title": "Fresh leather from Rawlings"
+      },
+      {
+        "id": "tbtv-DVe5KNVE31I",
+        "brand": "Kokada",
+        "title": "D1 days run on Kokada"
+      },
+      {
+        "id": "tbtv-DRiWySPDsbe",
+        "brand": "Tonik",
+        "title": "Duke Baseball can't get enough of Tonik"
+      },
+      {
+        "id": "ig-17976044280116001",
+        "brand": "Glowbeast",
+        "title": "Skincare made specifically for athletes"
+      },
+      {
+        "id": "ig-17974580748064915",
+        "brand": "Kokada",
+        "title": "Class, kicks, and a sauna session"
+      },
+      {
+        "id": "tbtv-DUbRfCcCX1S",
+        "brand": "Sideline Bags",
+        "title": "Pack my gameday bag with me"
+      },
+      {
+        "id": "ig-17897387250181235",
+        "brand": "BRUCE BOLT",
+        "title": "Batting gloves: home, away, alternate"
+      },
+      {
+        "id": "ig-17912446026264428",
+        "brand": "DripDrop",
+        "title": "Staying hydrated off the track with DripDrop"
+      },
+      {
+        "id": "ig-18091748873389340",
+        "brand": "Jumpman",
+        "title": "UNC women's basketball Jumpman gear drop"
+      },
+      {
+        "id": "tbtv-DXxxF97zEZZ",
+        "brand": "Kokada",
+        "title": "Kokada comes in clutch for soccer season"
+      },
+      {
+        "id": "tbtv-DVTw9rPjoNe",
+        "brand": "Kokada",
+        "title": "Fueled by Kokada on the volleyball court"
+      },
+      {
+        "id": "tbtv-DVCLBgUksk6",
+        "brand": "Kokada",
+        "title": "Signature moves require signature snacks from Kokada"
+      },
+      {
+        "id": "tbtv-DUq3zPiEm8Z",
+        "brand": "BRUCE BOLT",
+        "title": "Duke Baseball opens the season in BRUCE BOLT gloves"
+      },
+      {
+        "id": "ig-18106477720644121",
+        "brand": "BRUCE BOLT",
+        "title": "BRUCE BOLT brings holiday cheer to Duke Baseball"
+      }
+    ]
+  },
+  "auditions": {
+    "_notes": "Competitions page 'The Auditions' rail: the athletes' original collab-post auditions, newest first. Every NIL Star repost is a different edit, so an original here never duplicates a Season 1 card. 'finalistOriginals' follow 'entries': the finalists' own full auditions, at the back because the finalists are already in the Season 1 shelf. Top 20 announcement order, trimmed to keep the rail at 24 cards; originals with no playable media are left out.",
+    "entries": [
+      {
+        "id": "ig-18539419810078105",
+        "title": "College Athletes: post your next carpool karaoke to win $10,000"
+      },
+      {
+        "id": "ig-17919562527182213",
+        "title": "Caden Redmond - Defiance College Football"
+      },
+      {
+        "id": "ig-17897946027496513",
+        "title": "Madison Walcott - Assumption Field Hockey"
+      },
+      {
+        "id": "ig-18180934726405773",
+        "title": "Abby Cunningham - Fight For Me (Heathers)"
+      },
+      {
+        "id": "ig-18094567163165109",
+        "title": "Robin Kucler - Cups (Wake Forest XC)"
+      },
+      {
+        "id": "ig-18113933899902354",
+        "title": "Noah Sentnor - Colorado Ultimate Frisbee"
+      },
+      {
+        "id": "ig-17884755516665461",
+        "title": "Teddy Tolbert - Die on This Hill"
+      },
+      {
+        "id": "ig-17918818842181668",
+        "title": "Tatyana Green - Eastern Michigan Track"
+      },
+      {
+        "id": "ig-18085619087451279",
+        "title": "I Miss the Mountains - Next to Normal"
+      },
+      {
+        "id": "ig-18158019676419817",
+        "title": "An Original Song For Every Athlete"
+      },
+      {
+        "id": "ig-17884869510414822",
+        "title": "Savannah Breitwiser - Audition Cover"
+      },
+      {
+        "id": "ig-18066609356375167",
+        "title": "Violet Hewett - Duke Track"
+      },
+      {
+        "id": "ig-17959556736138023",
+        "title": "Jersey Giant - Sam Barber Cover"
+      }
+    ],
+    "finalistOriginals": [
+      {
+        "id": "ig-18166221412439513",
+        "title": "Taylee Chirrick, Montana State Basketball"
+      },
+      {
+        "id": "ig-18025761827840117",
+        "title": "Anna and Tom Lardner, Middlebury and Bowdoin"
+      },
+      {
+        "id": "ig-18085637768097206",
+        "title": "Charlie Moore, Colby Ice Hockey"
+      },
+      {
+        "id": "ig-18112296895940804",
+        "title": "Kayliah Love, DePaul Track and Field"
+      },
+      {
+        "id": "ig-17959643186965122",
+        "title": "Jasmine Connor, American University Lacrosse"
+      },
+      {
+        "id": "ig-18120209332665246",
+        "title": "Aleithia Wilson, Wheeling Volleyball"
+      },
+      {
+        "id": "ig-18114673171680811",
+        "title": "Keagan Cunningham, TCU Football"
+      },
+      {
+        "id": "ig-18132846328607840",
+        "title": "Zander Vasquez, UC San Diego Fencing"
+      },
+      {
+        "id": "ig-17863728654632876",
+        "title": "Keely Eslinger, Liberty Soccer"
+      },
+      {
+        "id": "ig-17851262943695464",
+        "title": "Eliana Geva, Temple Fencing"
+      },
+      {
+        "id": "ig-18594161446025211",
+        "title": "Jaylin Lott, Thomas Jefferson Volleyball"
+      }
+    ]
+  }
+}

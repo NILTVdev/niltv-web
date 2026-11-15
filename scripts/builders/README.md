@@ -11,6 +11,10 @@ Generators for the cinema-look pages. Run them from the repo root.
   ones up under `_legacy/`, ignored, never deployed).
 - `build-athletes.py`, `network_brands.py`, `build-payments.py` - see
   DEVELOPING.md for the private data folder they read from.
+- `pinned-lists.json` - the hand-picked, fixed-order video lists: homepage
+  Trending and Sponsored Content, and the competitions page's Auditions. Read
+  by `pinned_lists.py`; each list's `_notes` say how it is picked. Tests:
+  `python -m unittest scripts/builders/pinned_lists_test.py`.
 - `make-chmq-assets.py`, `make-poster-fills.py`, `make-dupe-registry.py` -
   asset helpers; `durations.json`, `poster-fills.json`, `poster-dupes.json`
   are their committed outputs.

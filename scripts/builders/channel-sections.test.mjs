@@ -80,6 +80,48 @@ test("a typo in the config fails loudly", () => {
   assert.doesNotThrow(() => checkConfig({ sections: [ok] }));
 });
 
+// videos with a creator, as build-pages.mjs merges in from the detail payload
+const who = (id, sport, school, days = 1) => ({ id, publishedAt: ago(days), creator: { sport, school } });
+const team = [
+  who("b1", "Baseball", "Duke"), who("b2", "baseball", "Duke"), who("b3", "Baseball", "Vanderbilt", 60),
+  who("t1", "Track & Field", "Duke"), who("t2", "Track and Field", "Vanderbilt"),
+  who("g1", "Golf", "Duke"),
+  who("x1", "", ""), { id: "x2", publishedAt: ago(2) }, // no sport, and no creator at all
+];
+
+test("filters by sport and school, ignoring case and & vs and", () => {
+  assert.deepEqual(ids(pickItems(team, { sort: "newest", filter: { sport: "BASEBALL" } }, NOW)), ["b1", "b2", "b3"]);
+  assert.deepEqual(ids(pickItems(team, { sort: "newest", filter: { sport: "track and field" } }, NOW)), ["t1", "t2"]);
+  assert.deepEqual(ids(pickItems(team, { sort: "newest", filter: { sport: ["Golf", "Baseball"], school: "Duke" } }, NOW)),
+    ["b1", "b2", "g1"]);
+});
+
+test("groupBy makes one shelf per sport, biggest first, skipping small and blank groups", () => {
+  const s = [{ id: "by", title: "{group} on {channel}", layout: "rail", sort: "newest", groupBy: "sport", minPerGroup: 2 }];
+  assert.deepEqual(renderSections(team, s, { channelName: "NIL TV", now: NOW }, r), [
+    "Baseball on NIL TV||false|false|reel:b1,reel:b2,reel:b3",
+    "Track &amp; Field on NIL TV||false|false|reel:t1,reel:t2", // escaped for HTML
+  ]);
+});
+
+test("groupBy counts only videos that pass the section's own filter", () => {
+  const s = [{ id: "by", title: "{group}", layout: "rail", sort: "newest", groupBy: "school", minPerGroup: 2, filter: { maxDays: 30 } }];
+  // Vanderbilt has 2 videos, but one is 60 days old, so it is left out
+  assert.deepEqual(renderSections(team, s, { channelName: "X", now: NOW }, r), ["Duke||false|false|reel:b1,reel:b2,reel:t1,reel:g1"]);
+});
+
+test("groupBy defaults to at least 8 videos per group", () => {
+  const s = [{ id: "by", title: "{group}", layout: "rail", sort: "newest", groupBy: "sport" }];
+  assert.deepEqual(renderSections(team, s, { channelName: "X", now: NOW }, r), []);
+});
+
+test("bad groupBy or sport filter fails loudly", () => {
+  const ok = { id: "x", title: "X", layout: "grid", sort: "newest" };
+  assert.throws(() => checkConfig({ sections: [{ ...ok, groupBy: "team" }] }), /groupBy must be one of/);
+  assert.throws(() => checkConfig({ sections: [{ ...ok, filter: { sport: 5 } }] }), /filter.sport/);
+  assert.doesNotThrow(() => checkConfig({ sections: [{ ...ok, groupBy: "school", filter: { sport: ["Golf"] } }] }));
+});
+
 test("the real channel-sections.json is valid", async () => {
   const file = new URL("./channel-sections.json", import.meta.url);
   const config = JSON.parse(await readFile(file, "utf8"));

@@ -10,11 +10,18 @@
 //   sub      line under the heading ("" for none)
 //   layout   "rail" (one sideways row), "grid" (wraps), "wide" (wide cards)
 //   gold     gold heading
-//   filter   { maxDays, minSeconds, maxSeconds } - all optional
+//   filter   { maxDays, minSeconds, maxSeconds, sport, school } - all
+//            optional. sport and school match the video creator's, ignoring
+//            case and "&" vs "and"; give one name or a list of names.
 //   sort     a key of SORTS
 //   limit    most videos to show (optional)
 //   newTag   { days } - tag the first video "New Episode" when it is at most
 //            this many days old (optional)
+//   groupBy  "sport" or "school" (optional): one shelf per sport or school
+//            instead of one shelf. "{group}" in the title becomes the name.
+//            Groups with fewer than minPerGroup videos (default 8) are left
+//            out, and the biggest group comes first. Videos whose creator has
+//            no sport or school are not in any group.
 //
 // "channels": { "<slug>": { ... } } changes one channel: phoneColumns: 3
 // gives its grid three columns on phones, and "sections" replaces the list.
@@ -32,8 +39,16 @@ export const SORTS = {
   shortest: (a, b) => secs(a) - secs(b),
 };
 export const LAYOUTS = ["rail", "grid", "wide"];
+export const GROUPS = ["sport", "school"];
 
 export const daysOld = (d, now) => (now - time(d)) / DAY;
+
+// The creator's sport or school. The list payload has no creator; the
+// detail payload build-pages.mjs merges in does.
+export const groupOf = (d, key) => String((d.creator && d.creator[key]) || "").trim();
+// "Track & Field" and "track and field" are the same sport.
+export const sameName = (s) => s.toLowerCase().replace(/&/g, " and ").replace(/\s+/g, " ").trim();
+const names = (v) => (Array.isArray(v) ? v : [v]).map(sameName);
 
 // Check the file once so a typo fails the build instead of quietly
 // dropping a shelf.
@@ -52,6 +67,15 @@ export function checkConfig(config) {
       if (!s.id || typeof s.title !== "string") throw new Error(`${at}: needs an id and a title`);
       if (!LAYOUTS.includes(s.layout)) throw new Error(`${at}: layout must be one of ${LAYOUTS.join(", ")}`);
       if (!(s.sort in SORTS)) throw new Error(`${at}: sort must be one of ${Object.keys(SORTS).join(", ")}`);
+      if (s.groupBy != null && !GROUPS.includes(s.groupBy)) {
+        throw new Error(`${at}: groupBy must be one of ${GROUPS.join(", ")}`);
+      }
+      for (const key of GROUPS) {
+        const v = s.filter && s.filter[key];
+        if (v != null && !(typeof v === "string" || (Array.isArray(v) && v.every((x) => typeof x === "string")))) {
+          throw new Error(`${at}: filter.${key} must be a name or a list of names`);
+        }
+      }
     }
   }
   return config;
@@ -77,16 +101,39 @@ export function pickItems(items, section, now) {
   const out = items.filter((d) =>
     (f.maxDays == null || daysOld(d, now) <= f.maxDays) &&
     (f.minSeconds == null || secs(d) >= f.minSeconds) &&
-    (f.maxSeconds == null || secs(d) <= f.maxSeconds));
+    (f.maxSeconds == null || secs(d) <= f.maxSeconds) &&
+    GROUPS.every((key) => f[key] == null || names(f[key]).includes(sameName(groupOf(d, key)))));
   out.sort(SORTS[section.sort]);
   return section.limit ? out.slice(0, section.limit) : out;
+}
+
+// A groupBy section becomes one plain section per sport or school. Each one
+// keeps the parent's settings, with a filter for that group. Groups are
+// counted among the videos that pass the parent's own filter, so "last 40
+// days, by sport" only makes shelves for sports with recent videos. The name
+// shown is the first spelling met in the list.
+export function expandGroups(items, section, now) {
+  if (!section.groupBy) return [section];
+  const { groupBy: key, minPerGroup, ...rest } = section;
+  const min = minPerGroup ?? 8;
+  const groups = new Map(); // same name -> { name, count }
+  for (const d of pickItems(items, { ...rest, limit: 0 }, now)) {
+    const name = groupOf(d, key);
+    if (!name) continue;
+    if (!groups.has(sameName(name))) groups.set(sameName(name), { name, count: 0 });
+    groups.get(sameName(name)).count++;
+  }
+  return [...groups.values()]
+    .filter((g) => g.count >= min)
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+    .map((g) => ({ ...rest, group: g.name, filter: { ...(rest.filter || {}), [key]: g.name } }));
 }
 
 // HTML for every shelf that has videos. `r` is { reelCell, wideCard,
 // shelfHtml, esc } from build-pages.mjs.
 export function renderSections(items, sections, { channelName, now }, r) {
   const shelves = [];
-  for (const s of sections) {
+  for (const s of sections.flatMap((s) => expandGroups(items, s, now))) {
     const picked = pickItems(items, s, now);
     if (!picked.length) continue;
     const cells = picked.map((d, i) => {
@@ -94,7 +141,7 @@ export function renderSections(items, sections, { channelName, now }, r) {
       const tag = s.newTag && i === 0 && daysOld(d, now) <= s.newTag.days ? "New Episode" : null;
       return r.reelCell(d, channelName, tag);
     });
-    const title = s.title.replace("{channel}", r.esc(channelName));
+    const title = s.title.replace("{channel}", r.esc(channelName)).replace("{group}", r.esc(s.group || ""));
     shelves.push(r.shelfHtml(title, s.sub || "", cells, { gold: !!s.gold, wrapped: s.layout === "grid" }));
   }
   return shelves;

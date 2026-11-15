@@ -11,6 +11,10 @@ Generators for the cinema-look pages. Run them from the repo root.
   ones up under `_legacy/`, ignored, never deployed).
 - `build-athletes.py`, `network_brands.py`, `build-payments.py` - see
   DEVELOPING.md for the private data folder they read from.
+- `channels-hub.json` - the order and logos of the channel rails on
+  `/channels/`; names and schools come from the API, so a new campus channel
+  gets a rail by itself once it has enough videos. Read by `channels_hub.py`.
+  Tests: `python -m unittest scripts/builders/channels_hub_test.py`.
 - `make-chmq-assets.py`, `make-poster-fills.py`, `make-dupe-registry.py` -
   asset helpers; `durations.json`, `poster-fills.json`, `poster-dupes.json`
   are their committed outputs.

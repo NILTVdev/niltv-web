@@ -1156,12 +1156,30 @@ os.makedirs(OUT + "partners", exist_ok=True)
 # figure turns up anyway.
 p_brands = _nb.block(_NB)   # brand slider, names only
 MAILTO = "mailto:partnerships@niltv.com"
-P_LOGOS = ["ale8one.png","big12.png","brucebolt-dark.png","champssports.png","cheribundi.png",
- "claiborne.png","dicks.png","directv.png","drpepper.png","easton.png","elias.png","espn.png",
- "familydollar.png","garmin.png","grandslam.png","hellmanns.jpg","hrblock.png","invesco.png",
- "linktree.png","lmnt-mark.png","malones.jpg","nilstore.png","nobull.png","oofos.png",
- "sidelinebags.png","smartcups.png","therabody.png","trickplay.png"]
-p_wall = "\n".join('    <div class="p-tile"><img src="%s/assets/img/partners2/%s" loading="lazy" decoding="async" alt=""></div>' % (DEV, f.rsplit(".", 1)[0] + ".png") for f in P_LOGOS)
+# Logo wall: partner-logos.json lists the files in assets/img/partners2/ with
+# a permission status. Only "approved" logos (permission confirmed with the
+# brand) go public. Pending ones are fenced as unreleased, so dev shows them
+# with a Pending tag and deploy-sweep.py cuts them from prod; with nothing
+# approved the whole wall is fenced, so prod never shows an empty section.
+from html import escape as _esc
+_PL = _pjson.load(io.open(W + "scripts/builders/partner-logos.json", encoding="utf-8"))["logos"]
+
+def _logo_tile(l):
+    if not _pos.path.exists(W + "assets/img/partners2/" + l["file"]):
+        raise SystemExit("partner-logos.json: no such logo file %s" % l["file"])
+    approved = l.get("status") == "approved"
+    if approved and not (l.get("confirmedBy") and l.get("confirmedOn")):
+        raise SystemExit("partner-logos.json: %s is approved without confirmedBy/confirmedOn" % l["file"])
+    tile = '    <div class="p-tile%s"><img src="%s/assets/img/partners2/%s" loading="lazy" decoding="async" alt="%s">%s</div>' % (
+        "" if approved else " p-pending", DEV, _esc(l["file"], quote=True), _esc(l["brand"], quote=True),
+        "" if approved else '<span class="p-tag">Pending</span>')
+    if approved:
+        return tile
+    fence = "partner-logo-" + _re.sub(r"[^\w-]", "-", l["file"].rsplit(".", 1)[0])
+    return "    <!-- unreleased:%s -->\n%s\n    <!-- /unreleased:%s -->" % (fence, tile, fence)
+
+p_wall = "\n".join(_logo_tile(l) for l in _PL)
+_p_wall_live = any(l.get("status") == "approved" for l in _PL)
 
 p_hero = hero_sm("Partner With NIL TV",
     '<h1 class="hero-title ht-sm">Put Your Brand<br>On Air</h1>',
@@ -1179,6 +1197,11 @@ p_why = shelf("Why Brands Partner With NIL TV",
 ]))
 
 p_wall_sec = """<section class="shelf">
+  <style>
+  .p-pending{position:relative;outline:1px dashed rgba(240,201,107,.35);outline-offset:-4px}
+  .p-tag{position:absolute;top:6px;right:6px;padding:3px 5px;border-radius:3px;background:rgba(6,6,8,.8);
+    font:700 9px/1 'Inter',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-bright)}
+  </style>
   <div class="shelf-head">
     <h2 class="shelf-title">The Founding Five Brand Network</h2>
     <span class="shelf-sub">A selection of brands our founding athletes have worked with across their careers. LMNT and Therabody are founder athlete brands from this network.</span>
@@ -1187,6 +1210,8 @@ p_wall_sec = """<section class="shelf">
 """ + p_wall + """
   </div>
 </section>"""
+if not _p_wall_live:
+    p_wall_sec = "<!-- unreleased:partner-logo-wall -->\n" + p_wall_sec + "\n<!-- /unreleased:partner-logo-wall -->"
 
 p_how = shelf("How Partnering Works", "Three steps from first call to on-air.", phase_cards([
     ("Step 1","Partner","Tell us your goals and audience. We map you to the pillar and schools that fit."),

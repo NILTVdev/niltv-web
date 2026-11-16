@@ -1,0 +1,33 @@
+{
+ "_about": "Logos on the /partners/ logo wall (files in assets/img/partners2/). A logo renders publicly only once its status is \"approved\": set status, confirmedBy (who confirmed permission with the brand) and confirmedOn (YYYY-MM-DD). Pending logos show on dev with a Pending tag and are cut from prod builds by deploy-sweep.py. build-sections.py reads this file; order here is the order on the page.",
+ "logos": [
+  {"file": "ale8one.png", "brand": "Ale-8-One", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "big12.png", "brand": "Big 12 Conference", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "brucebolt-dark.png", "brand": "Bruce Bolt", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "champssports.png", "brand": "Champs Sports", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "cheribundi.png", "brand": "CheriBundi", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "claiborne.png", "brand": "Claiborne", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "dicks.png", "brand": "DICK'S Sporting Goods", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "directv.png", "brand": "DIRECTV", "status": "pending", "confirmedBy": "", "confirmedOn": "", "note": "Only the AT&T globe shows; the wordmark is white on an opaque light box and disappears. Replace with a transparent version before approving."},
+  {"file": "drpepper.png", "brand": "Dr Pepper", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "easton.png", "brand": "Easton", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "elias.png", "brand": "Duke", "status": "pending", "confirmedBy": "", "confirmedOn": "", "note": "File is named elias.png but the image is Duke's D logo, a university trademark. Confirm with Duke, and rename the file, before approving."},
+  {"file": "espn.png", "brand": "ESPN", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "familydollar.png", "brand": "Family Dollar", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "garmin.png", "brand": "Garmin", "status": "pending", "confirmedBy": "", "confirmedOn": "", "note": "The logo is white on an opaque light box, so it renders as a blank box on the page. Replace with a transparent version before approving."},
+  {"file": "grandslam.png", "brand": "Grand Slam Collectibles", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "hellmanns.png", "brand": "Hellmann's", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "hrblock.png", "brand": "H&R Block", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "invesco.png", "brand": "Invesco", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "linktree.png", "brand": "Linktree", "status": "pending", "confirmedBy": "", "confirmedOn": "", "note": "Only the asterisk shows; the wordmark is white on an opaque light box and disappears. Replace with a transparent version before approving."},
+  {"file": "lmnt-mark.png", "brand": "LMNT", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "malones.png", "brand": "Malone's", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "nilstore.png", "brand": "NIL Store", "status": "pending", "confirmedBy": "", "confirmedOn": "", "note": "File is named nilstore.png but the image is the University of Illinois block I, a university trademark. Find the real NIL Store logo (or confirm with Illinois), and rename the file, before approving."},
+  {"file": "nobull.png", "brand": "NOBULL", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "oofos.png", "brand": "OOFOS", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "sidelinebags.png", "brand": "Sideline Bags", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "smartcups.png", "brand": "SmartCups", "status": "pending", "confirmedBy": "", "confirmedOn": ""},
+  {"file": "therabody.png", "brand": "Therabody", "status": "pending", "confirmedBy": "", "confirmedOn": "", "note": "The logo is white on an opaque light box, so it renders as a blank box on the page. Replace with a transparent version before approving."},
+  {"file": "trickplay.png", "brand": "TrickPlay", "status": "pending", "confirmedBy": "", "confirmedOn": "", "note": "The image shows no visible logo (a plain grey shape). Replace the file before approving."}
+ ]
+}

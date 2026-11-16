@@ -14,7 +14,7 @@ DEV = ""
 
 # Brand slider data (network-brands.json in the private data folder; rendered
 # by network_brands.py, which renders empty when the private data is missing).
-# Used on /partners/ (with stat tiles) and /about/ (title + slider).
+# Used on /partners/ and the homepage (title + slider; names only, no totals).
 import network_brands as _nb
 _NB = _nb.load()
 HOST = CDN + "/video/ig-18080096294690324"
@@ -1150,12 +1150,12 @@ page("vote", "Vote", vote_head, [vote_main], nav_label="Competitions", nav_slug=
 
 # ================= PARTNERS PAGE =================
 os.makedirs(OUT + "partners", exist_ok=True)
-p_brands = _nb.block(_NB)   # brand slider + stat tiles (no chip list)
+# This page is public: no deal terms, amounts, impressions or totals. The
+# campaign figures (partners/campaigns.json in the private data folder) and
+# the roster totals stay out of it, and promote.py fails the build if a
+# figure turns up anyway.
+p_brands = _nb.block(_NB)   # brand slider, names only
 MAILTO = "mailto:partnerships@niltv.com"
-# Campaign figures are private build data (partners/campaigns.json in the
-# private data folder); without it the page builds with no campaign shelf.
-_pc_file = private_file("partners", "campaigns.json")
-_pc = _pjson.load(io.open(_pc_file, encoding="utf-8")) if _pc_file else {}
 P_LOGOS = ["ale8one.png","big12.png","brucebolt-dark.png","champssports.png","cheribundi.png",
  "claiborne.png","dicks.png","directv.png","drpepper.png","easton.png","elias.png","espn.png",
  "familydollar.png","garmin.png","grandslam.png","hellmanns.jpg","hrblock.png","invesco.png",
@@ -1165,8 +1165,7 @@ p_wall = "\n".join('    <div class="p-tile"><img src="%s/assets/img/partners2/%s
 
 p_hero = hero_sm("Partner With NIL TV",
     '<h1 class="hero-title ht-sm">Put Your Brand<br>On Air</h1>',
-    meta_row(None, *[x for x in (_pc.get("impressions"), "%s Network Brands" % _nb.headline(_NB),
-                                 _pc.get("campaignCount")) if x]),
+    meta_row(None, "Athlete Led", "Campus Targeting", "Compliance Handled"),
     "Brands reach a fully engaged, fan voting audience through athlete led campaigns across the NIL TV network.",
     ('        <a class="btn btn-gold" href="' + MAILTO + '">Email Partnerships</a>'),
     CDN + "/video/tbtv-DXxxF97zEZZ/poster.jpg", reel="tbtv-DXxxF97zEZZ")
@@ -1174,14 +1173,10 @@ p_hero = hero_sm("Partner With NIL TV",
 p_why = shelf("Why Brands Partner With NIL TV",
     "Every channel is hosted, produced, and shared by the athletes themselves.", phase_cards([
     ("01","Athlete Led Reach","Sponsorship shows up inside content their audience already follows. Native, not bolted on."),
-    ("02","Real Campaign Proof","Live campaigns with NIL TV Athletes, with the numbers to show for it."),
+    ("02","Proven Campaign Work","Live campaigns with NIL TV Athletes, with results shared directly with partners."),
     ("03","Campus-Level Precision","Target one school, or run the full network."),
     ("04","Built-In Compliance","Disclosure and contracting handled for you."),
 ]))
-
-p_deals = shelf("Campaign Work - TrueBlue TV",
-    "Real branded campaigns produced with NIL TV Athletes.",
-    phase_cards([tuple(c) for c in _pc["campaigns"]]), gold=True) if _pc.get("campaigns") else ""
 
 p_wall_sec = """<section class="shelf">
   <div class="shelf-head">
@@ -1207,7 +1202,7 @@ p_faq = """<section class="shelf">
     <details><summary>What does a NIL TV sponsorship actually include?</summary><p>Placement inside NIL Star competition episodes, weekly series drops, or a school's campus channel, plus campaign reporting and disclosure handled by the network.</p></details>
     <details><summary>Can we target a single school instead of the whole network?</summary><p>Yes. Campus packages run on one school's channel. National packages run across the network and every live campus channel.</p></details>
     <details><summary>How is NIL compliance handled?</summary><p>Every athlete integration is contracted and disclosed under NIL TV's compliance process before it airs.</p></details>
-    <details><summary>Where do I see past campaign results?</summary><p>The campaign rail above shows live work with NIL TV Athletes, including plays and reach on the posts we can measure.</p></details>
+    <details><summary>Where do I see past campaign results?</summary><p>Campaign results are shared directly with partners. Email the partnerships team and we will walk you through work that fits your goals.</p></details>
   </div>
 </section>"""
 
@@ -1219,7 +1214,7 @@ p_band = ('''<div class="cta-band">
     <a class="btn btn-gold" href="''' + MAILTO + '''">Email Partnerships</a>
   </div>''')
 
-page("partners", "Partners", p_hero, [x for x in (p_why, p_deals, p_wall_sec, p_brands, p_how, p_faq, p_band) if x])
+page("partners", "Partners", p_hero, [x for x in (p_why, p_wall_sec, p_brands, p_how, p_faq, p_band) if x])
 
 
 # ================= CONTACT PAGE =================

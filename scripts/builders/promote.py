@@ -1,7 +1,7 @@
 # Promote the built cinema pages to the site itself: root homepage (from the
 # chrome template) + the vertical pages. Old pages are backed up to _legacy/
 # (ignored, never deployed).
-import io, os, shutil
+import io, os, re, shutil
 
 W = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")).replace("\\", "/") + "/"
 ORIGIN = "https://dev.dkdfgvugisb3v.amplifyapp.com"
@@ -31,12 +31,28 @@ SEO = {
     "athletes/": ("NIL TV Athletes | NIL TV",
          "The NIL TV roster: the athletes creating across the network. Search any name to watch their videos."),
     "partners/": ("Partner With NIL TV | Brand Campaigns",
-         "Put your brand on air: athlete led campaigns across NIL TV, NIL Star, and the campus channels. 30M+ impressions, 280+ network brands, real campaign proof with NIL TV Athletes."),
+         "Put your brand on air: athlete led campaigns across NIL TV, NIL Star, and the campus channels, targeted by school, with NIL compliance handled."),
     "contact/": ("Contact NIL TV | Get In Touch",
          "Reach the NIL TV team: partnerships, general questions, and legal."),
     "featured/": ("Featured | NIL TV",
          "Our Athletes: vertical, unfiltered, athlete first. The most watched cuts across the NIL TV network."),
 }
+
+# The partners page is public: no deal terms, amounts or totals. Catch the
+# shapes those take ($5,000 / 30M+ / 280+ / 1.2M / 12,500 / 4.5%) in the
+# visible text and the meta tags, and stop the build rather than ship one.
+# A brand whose name is a number with K/M/B (say "3M") would trip it too;
+# loosen this deliberately if that ever happens.
+FIGURE_RE = re.compile(r"\$\s?\d[\d,.]*[KMB]?|\b\d[\d,.]*\s?[KMB]?\+|\b\d+(?:\.\d+)?\s?[KMB]\b"
+                       r"|\b\d{1,3}(?:,\d{3})+\b|\b\d+(?:\.\d+)?\s?%")
+def assert_no_figures(p, out_rel):
+    page = re.sub(r"<(script|style)\b.*?</\1>", " ", p, flags=re.S | re.I)
+    metas = " ".join(re.findall(r'<meta[^>]+content="([^"]*)"', page))
+    visible = re.sub(r"<[^>]+>", " ", page)
+    hits = sorted({m.group(0) for m in FIGURE_RE.finditer(visible + " " + metas)})
+    if hits:
+        raise SystemExit("promote: %s shows figures (%s); the public partners page must not "
+                         "carry deal terms, amounts or totals" % (out_rel, ", ".join(hits)))
 
 CARD_RE = None
 def watchify(p):
@@ -100,6 +116,8 @@ def promote(src_path, out_rel):
         '<meta name="theme-color" content="#060608">', p, count=1)
     if out_rel == "channels/":
         p = graft_chmq(p)
+    if out_rel == "partners/":
+        assert_no_figures(p, out_rel)
     # footer legal text becomes real links
     p = p.replace("&copy; 2026 NIL TV. All rights reserved. Terms - Privacy - Contact",
         '&copy; 2026 NIL TV. All rights reserved. <a href="/legal/terms/">Terms</a> - <a href="/legal/privacy/">Privacy</a> - <a href="/legal/contest-notice/">Contest Notice</a>')

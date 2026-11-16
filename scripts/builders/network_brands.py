@@ -204,13 +204,6 @@ def block(d, **kw):
     return "<!-- BRANDSLIDER -->\n<style>" + CSS + "</style>\n" + marquee_section(d, **kw) + "\n<!-- /BRANDSLIDER -->"
 
 
-def headline(d):
-    """Hero stat: brands in the roster plus the Founding Five network, rounded
-    down to a clean tens figure, e.g. 288 -> '280+'."""
-    total = d["totals"].get("network_brands") or d["totals"]["brands"]
-    return "%d+" % (total // 10 * 10)
-
-
 if __name__ == "__main__":
     d = load()
     print(section_html(d))

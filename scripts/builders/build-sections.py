@@ -789,19 +789,23 @@ channels_head = '''<section class="hero hero-sm" id="hero" style="min-height:0">
 # channel list (names and schools); see channels_hub.py.
 import channels_hub as _hub
 _HUB = _hub.load()
+# A failed or empty channel list stops the build rather than writing a
+# /channels/ page with no rails; nothing downstream would catch that.
 try:
     _api_chans = _json.load(_rq.urlopen(CDN + "/v1/channels", timeout=20))["channels"]
 except Exception as e:
-    print("channels hub: /v1/channels failed (%s), no channel rails" % e)
-    _api_chans = []
-page("channels", "Channels",
-    channels_head,
-    [shelf("Local Channels", "", [wall_cells], rail_cls=" rail-tight rail-chlocal", title_cls=" shelf-title--local")] +
-    [shelf(nm, "", cells, gold=(i == 0), see="/channels/" + cid[3:] + "/", logo=slug)
+    raise SystemExit("channels hub: /v1/channels failed (%s); not writing /channels/ without rails" % e)
+_hub_rails = [shelf(nm, "", cells, gold=(i == 0), see="/channels/" + cid[3:] + "/", logo=slug)
      for i, (cid, nm, slug, cells) in enumerate(
          (cid, nm, slug, channel_cells(cid, _HUB["count"], nm))
          for cid, nm, slug in _hub.hub_channels(_api_chans, _HUB))
-     if len(cells) >= _HUB["minVideos"]])
+     if len(cells) >= _HUB["minVideos"]]
+if not _hub_rails:
+    raise SystemExit("channels hub: no channel has %d or more videos; not writing /channels/ without rails" % _HUB["minVideos"])
+page("channels", "Channels",
+    channels_head,
+    [shelf("Local Channels", "", [wall_cells], rail_cls=" rail-tight rail-chlocal", title_cls=" shelf-title--local")] +
+    _hub_rails)
 
 # ================= FEATURED =================
 trend = [

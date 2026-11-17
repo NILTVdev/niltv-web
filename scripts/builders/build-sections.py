@@ -1155,7 +1155,9 @@ os.makedirs(OUT + "partners", exist_ok=True)
 # the roster totals stay out of it, and promote.py fails the build if a
 # figure turns up anyway.
 p_brands = _nb.block(_NB)   # brand slider, names only
-MAILTO = "mailto:partnerships@niltv.com"
+# One inbox for sponsor inquiries, the same one the contact and about pages
+# list; the subject line lets the team spot them.
+MAILTO = "mailto:partners@niltv.com?subject=Partnership%20inquiry"
 # Logo wall: partner-logos.json lists the files in assets/img/partners2/ with
 # a permission status. Only "approved" logos (permission confirmed with the
 # brand) go public. Pending ones are fenced as unreleased, so dev shows them
@@ -1258,7 +1260,8 @@ contact_body = ('<div class=\"work-band\" style=\"margin-top:0\">'
 
  '<div class=\"wb-grid\">'
  '<div class=\"wb-card\"><div class=\"t\">General</div><p>Press, questions, and everything else.</p><p style=\"margin-top:10px\"><a href=\"mailto:contact@niltv.com\">contact@niltv.com</a></p></div>'
- '<div class=\"wb-card\"><div class=\"t\">Brands &amp; Partners</div><p>Campaigns, sponsorships, and organization channels.</p><p style=\"margin-top:10px\"><a href=\"mailto:partners@niltv.com\">partners@niltv.com</a></p></div>'
+ # the /partners/ link is fenced until that page ships to prod
+ '<div class=\"wb-card\"><div class=\"t\">Brands &amp; Partners</div><p>Campaigns, sponsorships, and organization channels.</p><p style=\"margin-top:10px\"><a href=\"mailto:partners@niltv.com?subject=Partnership%20inquiry\">partners@niltv.com</a></p><!-- unreleased:partners-page-link --><p style=\"margin-top:6px\"><a href=\"/partners/\">See how partnering works</a></p><!-- /unreleased:partners-page-link --></div>'
  '<div class=\"wb-card\"><div class=\"t\">Athletes</div><p>Join the network as an athlete creator.</p><p style=\"margin-top:10px\"><a href=\"/athlete-signup/\">NIL TV College Athlete Application</a></p></div>'
  '</div>'
  

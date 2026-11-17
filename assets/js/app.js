@@ -404,7 +404,7 @@ window.NILTV = (function () {
       '<div class="foot-col"><h4>Legal</h4>' +
       '<a href="/legal/privacy/">Privacy Policy</a>' +
       '<a href="/legal/terms/">Terms of Use</a>' +
-      '<a href="/legal/contest-notice/">Contest Notice</a><a href="/payments/">Athlete Portal</a></div>' +
+      '<a href="/legal/contest-notice/">Contest Notice</a><a href="/payments/">Athlete Payments</a><a href="https://portal.niltv.com/">Athlete Portal</a></div>' +
       '</div>' +
       '<div class="foot-news"><h4>Get NIL TV Updates</h4>' +
       '<form id="news-form" novalidate>' +

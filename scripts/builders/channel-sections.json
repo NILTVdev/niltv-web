@@ -1,0 +1,36 @@
+{
+  "_about": "Sections on every channel page (/channels/<slug>/), top to bottom. build-pages.mjs reads this file; see channel-sections.mjs for what each field does. Turn a section on or off with \"on\". Add an entry under \"channels\" to change one channel only.",
+  "sections": [
+    {
+      "id": "new-this-week",
+      "on": false,
+      "title": "New This Week",
+      "sub": "The newest drops from campus.",
+      "layout": "rail",
+      "gold": true,
+      "filter": { "maxDays": 40 },
+      "sort": "newest",
+      "newTag": { "days": 14 }
+    },
+    {
+      "id": "episodes",
+      "on": false,
+      "title": "Episodes",
+      "sub": "The longform cuts.",
+      "layout": "wide",
+      "filter": { "minSeconds": 120 },
+      "sort": "newest"
+    },
+    {
+      "id": "everything",
+      "on": true,
+      "title": "Everything on {channel}",
+      "sub": "",
+      "layout": "grid",
+      "sort": "newest"
+    }
+  ],
+  "channels": {
+    "truebluetv": { "phoneColumns": 3 }
+  }
+}

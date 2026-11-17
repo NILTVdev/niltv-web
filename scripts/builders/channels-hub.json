@@ -1,0 +1,29 @@
+{
+  "_about": "The channel rails on /channels/ (built by build-sections.py through channels_hub.py). Names and schools come from the API's /v1/channels; every channel there with a school gets a rail. 'order' puts these channels first, top to bottom; any other channel with a school follows, A-Z. A rail only shows when the channel has at least minVideos videos, and shows up to count of them. 'logos' maps a channel to its logo file under assets/img (leave a channel out for no logo). 'hidden' keeps a channel off the hub entirely.",
+  "count": 12,
+  "minVideos": 7,
+  "order": [
+    "ch-truebluetv",
+    "ch-dorecitytv",
+    "ch-chapelhilltv",
+    "ch-starkvilletv",
+    "ch-collegestationtv",
+    "ch-brazostv",
+    "ch-goldendometv",
+    "ch-redpacktv",
+    "ch-saltcitytv",
+    "ch-goldsalemtv"
+  ],
+  "logos": {
+    "ch-truebluetv": "trueblue",
+    "ch-dorecitytv": "dorecity",
+    "ch-chapelhilltv": "chapelhill",
+    "ch-starkvilletv": "starkville",
+    "ch-collegestationtv": "collegestation",
+    "ch-brazostv": "brazos",
+    "ch-goldendometv": "goldendome",
+    "ch-redpacktv": "redpack",
+    "ch-saltcitytv": "saltcity"
+  },
+  "hidden": []
+}

@@ -7,6 +7,10 @@ Generators for the cinema-look pages. Run them from the repo root.
 - `build-sections.py` - rebuilds the vertical pages (competitions / channels /
   featured / nilstar / vote / athletes / partners / contact) into
   `concepts/cinema/` (ignored scratch) from the template plus live API rails.
+- `channels-hub.json` - the order and logos of the channel rails on
+  `/channels/`; names and schools come from the API, so a new campus channel
+  gets a rail by itself once it has enough videos. Read by `channels_hub.py`.
+  Tests: `python -m unittest scripts/builders/channels_hub_test.py`.
 - `promote.py` - promotes the built pages over the site pages (backs the old
   ones up under `_legacy/`, ignored, never deployed).
 - `build-athletes.py`, `network_brands.py`, `build-payments.py` - see

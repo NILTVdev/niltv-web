@@ -785,23 +785,23 @@ channels_head = '''<section class="hero hero-sm" id="hero" style="min-height:0">
 .chmq-slide .hero-copy{order:2;padding-top:10px}
 }
 </style></section>'''
+# Channel rails come from channels-hub.json (order and logos) plus the API's
+# channel list (names and schools); see channels_hub.py.
+import channels_hub as _hub
+_HUB = _hub.load()
+try:
+    _api_chans = _json.load(_rq.urlopen(CDN + "/v1/channels", timeout=20))["channels"]
+except Exception as e:
+    print("channels hub: /v1/channels failed (%s), no channel rails" % e)
+    _api_chans = []
 page("channels", "Channels",
     channels_head,
     [shelf("Local Channels", "", [wall_cells], rail_cls=" rail-tight rail-chlocal", title_cls=" shelf-title--local")] +
     [shelf(nm, "", cells, gold=(i == 0), see="/channels/" + cid[3:] + "/", logo=slug)
-     for i, (cid, nm, sub, slug, cells) in enumerate(
-         (cid, nm, sub, slug, channel_cells(cid, n, nm)) for cid, nm, sub, slug, n in [
-             ("ch-truebluetv", "TrueBlue TV", "Duke&rsquo;s NIL Student Athletes", "trueblue", 12),
-             ("ch-dorecitytv", "Dore City TV", "Vanderbilt&rsquo;s NIL Student Athletes", "dorecity", 12),
-             ("ch-chapelhilltv", "Chapel Hill TV", "North Carolina&rsquo;s NIL Student Athletes", "chapelhill", 12),
-             ("ch-starkvilletv", "Starkville TV", "Mississippi State&rsquo;s NIL Student Athletes", "starkville", 12),
-             ("ch-collegestationtv", "College Station TV", "Texas A&amp;M&rsquo;s NIL Student Athletes", "collegestation", 12),
-             ("ch-brazostv", "Brazos TV", "Baylor&rsquo;s NIL Student Athletes", "brazos", 12),
-             ("ch-goldendometv", "Golden Dome TV", "Notre Dame&rsquo;s NIL Student Athletes", "goldendome", 12),
-             ("ch-redpacktv", "Red Pack TV", "NC State&rsquo;s NIL Student Athletes", "redpack", 12),
-             ("ch-saltcitytv", "Salt City TV", "Syracuse&rsquo;s NIL Student Athletes", "saltcity", 12),
-             ("ch-goldsalemtv", "Gold Salem TV", "Wake Forest&rsquo;s NIL Student Athletes", None, 12),
-         ]) if len(cells) >= 7])
+     for i, (cid, nm, slug, cells) in enumerate(
+         (cid, nm, slug, channel_cells(cid, _HUB["count"], nm))
+         for cid, nm, slug in _hub.hub_channels(_api_chans, _HUB))
+     if len(cells) >= _HUB["minVideos"]])
 
 # ================= FEATURED =================
 trend = [

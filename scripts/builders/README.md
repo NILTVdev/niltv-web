@@ -13,6 +13,10 @@ Generators for the cinema-look pages. Run them from the repo root.
   DEVELOPING.md for the private data folder they read from.
 - `build-hub.py` - builds `/hub/` (the Athlete Content Hub, dev-only) from the
   contact page's chrome. Run it after a chrome change.
+- `channel-sections.json` - which shelves every channel page shows, what goes
+  in each and how it is sorted. `../build-pages.mjs` reads it through
+  `channel-sections.mjs`; to bring back or add a shelf, edit the JSON, not the
+  code. Tests: `node --test scripts/builders/channel-sections.test.mjs`.
 - `make-chmq-assets.py`, `make-poster-fills.py`, `make-dupe-registry.py` -
   asset helpers; `durations.json`, `poster-fills.json`, `poster-dupes.json`
   are their committed outputs.

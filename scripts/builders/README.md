@@ -18,6 +18,10 @@ Generators for the cinema-look pages. Run them from the repo root.
 - `make-chmq-assets.py`, `make-poster-fills.py`, `make-dupe-registry.py` -
   asset helpers; `durations.json`, `poster-fills.json`, `poster-dupes.json`
   are their committed outputs.
+- `pinned-lists.json` - the hand-picked, fixed-order video lists: homepage
+  Trending and Sponsored Content, and the competitions page's Auditions. Read
+  by `pinned_lists.py`; each list's `_notes` say how it is picked. Tests:
+  `python -m unittest scripts/builders/pinned_lists_test.py`.
 
 Rules:
 

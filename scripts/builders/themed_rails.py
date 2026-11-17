@@ -306,50 +306,8 @@ THEMED = {
     ("tbtv-DU07KilAJ6r", "TrueBlue TV", "That feeling after a good bullpen"),
   ]),
 }
-# Homepage "Trending on NIL TV" - PINNED lineup: the network's most
-# viewed, in a fixed order - top 5 all time, then recent heat, then each
-# channel's best. NIL Star clips are left out. The TrueBlue pick is by hand
-# because the archive has no IG metrics. Empty this list to fall back to
-# the live recency feed.
-TRENDING_PINNED = [
-  ("ig-17948129441858800", "Chapel Hill TV", "Practice highlight goes to Sydney Barker"),
-  ("ig-17915293035233356", "NIL TV", "Challenge accepted"),
-  ("ig-17880741309441315", "Starkville TV", "Embrassinggggg"),
-  ("ig-18123726289567721", "Red Pack TV", "What we do while waiting to race"),
-  ("ig-18106682875737198", "Starkville TV", "Good luck to everyone racing this weekend"),
-  ("ig-18004445420977388", "NIL TV", "Because what else would we do in preseason"),
-  ("ig-18095012111564166", "Starkville TV", "A friendly reminder to my runner girlies"),
-  ("ig-18094851788545268", "NIL TV", "Making herstory with Husker volleyball"),
-  ("ig-18164823031466741", "Starkville TV", "The way running makes me feel"),
-  ("ig-17954224887012117", "NIL TV", "Duke women's lacrosse fall gear"),
-  ("ig-17928150768394197", "Dore City TV", "Asking my team their relationship status"),
-  ("ig-18109119643888008", "College Station TV", "Get ready with Salt and Peppa"),
-  ("ig-18381573850178344", "Dore City TV", "Inside the Vanderbilt volleyball locker room"),
-  ("ig-18199424152373205", "Salt City TV", "It's a joke guysss calm down"),
-  ("tbtv-DR937zsjp8_", "TrueBlue TV", "DUKE WINS THE ACC"),                                    # hand pick
-  ("ig-18355569250166543", "Red Pack TV", "Always getting clipped by Emily"),
-]
-
-# Sponsored Content homepage rail: brand deals with the BRAND as the
-# card's top-left label (chan-tag), wide cards like Trending. Only reels
-# whose caption names the brand are listed.
-SPONSORED = [
-  ('tbtv-DSV9A9xDlrt', 'BRUCE BOLT', 'Christmas cheer with Duke Baseball'),
-  ('ig-18010154306639333', 'Rawlings', 'Fresh leather from Rawlings'),
-  ('tbtv-DVe5KNVE31I', 'Kokada', 'D1 days run on Kokada'),
-  ('tbtv-DRiWySPDsbe', 'Tonik', 'Duke Baseball can\'t get enough of Tonik'),
-  ('ig-17976044280116001', 'Glowbeast', 'Skincare made specifically for athletes'),
-  ('ig-17974580748064915', 'Kokada', 'Class, kicks, and a sauna session'),
-  ('tbtv-DUbRfCcCX1S', 'Sideline Bags', 'Pack my gameday bag with me'),
-  ('ig-17897387250181235', 'BRUCE BOLT', 'Batting gloves: home, away, alternate'),
-  ("ig-17912446026264428", "DripDrop", "Staying hydrated off the track with DripDrop"),
-  ("ig-18091748873389340", "Jumpman", "UNC women's basketball Jumpman gear drop"),
-  ("tbtv-DXxxF97zEZZ", "Kokada", "Kokada comes in clutch for soccer season"),
-  ("tbtv-DVTw9rPjoNe", "Kokada", "Fueled by Kokada on the volleyball court"),
-  ("tbtv-DVCLBgUksk6", "Kokada", "Signature moves require signature snacks from Kokada"),
-  ("tbtv-DUq3zPiEm8Z", "BRUCE BOLT", "Duke Baseball opens the season in BRUCE BOLT gloves"),
-  ("ig-18106477720644121", "BRUCE BOLT", "BRUCE BOLT brings holiday cheer to Duke Baseball"),
-]
+# Trending on NIL TV and Sponsored Content are hand-picked lists in
+# pinned-lists.json (read by pinned_lists.py).
 
 # ---- CATEGORY RAILS (generated) ----
 # Timeless Categories: one rail per category, rendered in this order on the

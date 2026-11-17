@@ -18,6 +18,7 @@
 import { mkdir, writeFile, readFile, readdir, stat } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { loadConfig, renderSections, sectionsFor } from "./builders/channel-sections.mjs";
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 // Environment: deploy.ps1 sets these per branch.
@@ -83,6 +84,9 @@ async function api(p) {
 }
 
 /* ---- cinema chrome, lifted from the template at build time ---- */
+// which shelves each channel page shows: see builders/channel-sections.json
+const SECTIONS = await loadConfig(path.join(ROOT, "scripts", "builders", "channel-sections.json"));
+
 const TPL = await readFile(path.join(ROOT, "scripts", "builders", "cinema-template.html"), "utf8");
 const HERO_MARK = "<!-- HERO BILLBOARD";
 const FOOT_MARK = "<!-- FOOTER : credits roll -->";
@@ -179,7 +183,6 @@ const cleanTitle = (t) => {
   return t.length > 64 ? t.slice(0, 63).trimEnd() + "..." : (t || "Watch on NIL TV");
 };
 const fmtDur = (sec) => (sec == null ? null : `${Math.floor(sec / 60)}:${String(Math.round(sec % 60)).padStart(2, "0")}`);
-const daysOld = (d) => (Date.now() - Date.parse(d.publishedAt || 0)) / 86400000;
 
 // posters cropped from letterboxed originals (see builders/make-poster-fills.py)
 let POSTER_FILLS = new Set();
@@ -275,24 +278,13 @@ function channelPage(ch, slug, details) {
   </div>
   <div class="hero-progress" id="heroDots"><button class="hero-dot on" data-i="0" aria-label="Slide 1"><span></span></button></div>
 </section>`;
-    const shelves = [];
-    // New This Week + Episodes shelves are PARKED: the channel page
-    // shows only the full grid for now. Restore by uncommenting:
-    // const recent = details.filter((d) => daysOld(d) <= 40);
-    // if (recent.length) {
-    //   shelves.push(shelfHtml("New This Week", "The newest drops from campus.",
-    //     recent.map((d, i) => reelCell(d, ch.name, i === 0 && daysOld(d) <= 14 ? "New Episode" : null)), { gold: true }));
-    // }
-    // const episodes = details.filter((d) => (d.duration || 0) >= 120);
-    // if (episodes.length) {
-    //   shelves.push(shelfHtml("Episodes", "The longform cuts.", episodes.map((d) => wideCard(d, ch.name))));
-    // }
-    shelves.push(shelfHtml(`Everything on ${esc(ch.name)}`, "", details.map((d) => reelCell(d, ch.name)), { wrapped: true }));
+    const { sections, phoneColumns } = sectionsFor(SECTIONS, slug);
+    const shelves = renderSections(details, sections, { channelName: ch.name, now: Date.now() },
+      { reelCell, wideCard, shelfHtml, esc });
     body = hero + '\n\n<main class="shelves">\n' + shelves.join("\n\n") + "\n</main>";
-    if (slug === "truebluetv") {
-      // EXPERIMENT: 3-column content grid on phones, IG-profile
-      // density - truebluetv only while we judge it. Roll out by moving the
-      // grid3m class + style to every channel page; kill by deleting this.
+    if (phoneColumns === 3) {
+      // 3-column content grid on phones, IG-profile density. Turned on per
+      // channel with "phoneColumns": 3 in channel-sections.json.
       body = body.replace('class="rail wrapped"', 'class="rail wrapped grid3m"') + `
 <style>
 @media (max-width:900px){

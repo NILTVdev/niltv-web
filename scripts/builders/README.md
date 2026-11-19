@@ -22,6 +22,14 @@ Generators for the cinema-look pages. Run them from the repo root.
 - `make-chmq-assets.py`, `make-poster-fills.py`, `make-dupe-registry.py` -
   asset helpers; `durations.json`, `poster-fills.json`, `poster-dupes.json`
   are their committed outputs.
+- `refresh_rails.py` - run by `deploy.ps1` on every deploy (dev and prod).
+  Rewrites only the cards inside the live rails of the committed pages:
+  Featured "New This Week" and each channel rail on `/channels/`, from the
+  API the deploy targets. Everything else on those pages stays as committed,
+  so it never has to rerun `build-sections.py`. An unreadable API or a thin
+  channel keeps the committed cards. A channel rail must already exist on
+  `/channels/` to be refreshed; a new channel still needs a page rebuild.
+  Tests: `python -m unittest scripts/builders/refresh_rails_test.py`.
 - `pinned-lists.json` - the hand-picked, fixed-order video lists: homepage
   Trending and Sponsored Content, and the competitions page's Auditions. Read
   by `pinned_lists.py`; each list's `_notes` say how it is picked. Tests:

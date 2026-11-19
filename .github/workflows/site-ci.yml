@@ -24,6 +24,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Builder unit tests
+        run: |
+          python -m unittest scripts/builders/channels_hub_test.py scripts/builders/pinned_lists_test.py scripts/builders/refresh_rails_test.py
+          node --test scripts/builders/channel-sections.test.mjs
       - name: Prod check (stage, generate, sweep, guards, no upload)
         shell: pwsh
         run: ./deploy.ps1 -Env prod -Check

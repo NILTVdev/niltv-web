@@ -116,6 +116,13 @@ if ($Env -eq "prod") {
   # the generator needs the scripts (chrome template included) beside the pages
   Copy-Tree (Join-Path $src "scripts") (Join-Path $stage "scripts")
 
+  # ---- live rails: Featured "New This Week" and the /channels/ channel
+  # rails follow the PROD library. Only the cards inside those rails change;
+  # an unreadable API leaves them as committed. Exit 1 = a rail is missing
+  # from its page.
+  python (Join-Path $stage "scripts/builders/refresh_rails.py") $stage --api $prodCdn
+  if ($LASTEXITCODE -ne 0) { Write-Error "prod rail refresh failed: a live rail is missing from its page"; exit 1 }
+
   # ---- athlete pages: the published set only ----
   # Athlete records and photos never enter this repo. The Deploy Prod workflow
   # syncs the publish set (published athletes only) from a private S3 folder
@@ -209,7 +216,16 @@ window.NILTV_CONFIG = {
   if ($gen -ne 0) { Write-Error "page generation failed"; exit 1 }
   $chmq = (Select-String -Path (Join-Path $src "channels/index.html") -Pattern 'class="chmq-card"' -AllMatches).Matches.Count
   if ($chmq -ne 63) { Write-Error "channels/index.html has $chmq chmq-card imgs (expected 63) - stale copy, aborting"; exit 1 }
-  if ($Check) { Write-Host "dev check passed (commit $sha): pages generated, 63 marquee cards. Athlete build skipped (private data)."; exit 0 }
+  # ---- live rails (see the prod step): refreshed in the tree for the zip,
+  # then the committed bytes are put back so a deploy never leaves the
+  # tracked pages modified.
+  $railPages = @("featured/index.html", "channels/index.html")
+  $railSaved = @{}
+  foreach ($p in $railPages) { $railSaved[$p] = [IO.File]::ReadAllBytes((Join-Path $src $p)) }
+  function Restore-RailPages { foreach ($p in $railSaved.Keys) { [IO.File]::WriteAllBytes((Join-Path $src $p), $railSaved[$p]) } }
+  python (Join-Path $src "scripts/builders/refresh_rails.py") $src
+  if ($LASTEXITCODE -ne 0) { Restore-RailPages; Write-Error "dev rail refresh failed: a live rail is missing from its page"; exit 1 }
+  if ($Check) { Restore-RailPages; Write-Host "dev check passed (commit $sha): pages generated, rails refreshed, 63 marquee cards. Athlete build skipped (private data)."; exit 0 }
   # athlete pages are generated from the PRIVATE data folder (never in git):
   # regenerate them so the dev artifact carries the current records + photos.
   # --require makes a missing private folder a hard failure.
@@ -218,13 +234,14 @@ window.NILTV_CONFIG = {
   if (-not $env:NILTV_ATHLETES_REVIEW) { $env:NILTV_ATHLETES_REVIEW = "1" }
   Write-Host "Building athlete pages from private data (review mode: $env:NILTV_ATHLETES_REVIEW)..."
   python (Join-Path $src "scripts/builders/build-athletes.py") --require
-  if ($LASTEXITCODE -ne 0) { Write-Error "dev deploy refused: athlete pages could not be built. The private data folder is missing - set NILTV_PRIVATE_DATA or create ../private-data/niltv-web beside the repo (see DEVELOPING.md)."; exit 1 }
+  if ($LASTEXITCODE -ne 0) { Restore-RailPages; Write-Error "dev deploy refused: athlete pages could not be built. The private data folder is missing - set NILTV_PRIVATE_DATA or create ../private-data/niltv-web beside the repo (see DEVELOPING.md)."; exit 1 }
   # athlete-signup and payments ship to prod too (they are in $pages); the
   # dev tree adds the dev-only pages here. communitystar is paused until 2027,
   # so it stays on dev and niltv.com answers 404 for it.
   $items = $pages + @("config.js","vote","athletes","partners","communitystar")
   if (Test-Path (Join-Path $src "concepts")) { $items += "concepts" }   # drafts copied in from the private folder, never committed
   New-Zip $zip $src $items
+  Restore-RailPages
   Write-Host "Zipped $((Get-Item $zip).Length) bytes for 'dev' (commit $sha)"
 }
 

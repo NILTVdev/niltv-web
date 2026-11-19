@@ -989,7 +989,7 @@ ADVISORY = [
  ("Sion James","Duke &middot; Basketball","/assets/img/advisory/sion-james.webp","Duke Men&rsquo;s Basketball alumnus and Charlotte Hornets guard, selected 33rd overall in the 2025 NBA Draft after Duke&rsquo;s ACC title run.","2025 NBA Draft &middot; Pick 33"),
  ("Clifford Taylor IV","Florida &middot; Football","/assets/img/advisory/clifford-taylor-iv.webp","Viral sports content creator, mental health advocate, and former Florida walk-on football player. Hosts The Clifford Show podcast.","IG 251k &middot; TikTok 1.3M"),
  ("Alyssa Ustby","North Carolina &middot; Basketball","/assets/img/advisory/alyssa-ustby.webp","UNC Women&rsquo;s Basketball all-time rebound record holder now playing pro overseas, with a degree in Advertising &amp; PR and Business.","IG 70k &middot; TikTok 130k"),
- ("Olivia Fabry","Notre Dame &middot; Pole Vault","/assets/img/advisory/olivia-fabry.webp","Notre Dame pole vault alumna building The Table, a growing community that helps female college athletes launch careers in finance.","IG 70k &middot; TikTok 110.3k"),
+ ("Olivia Fabry","Notre Dame &middot; Track &amp; Field","/assets/img/advisory/olivia-fabry.webp","Notre Dame pole vault alumna building The Table, a growing community that helps female college athletes launch careers in finance.","IG 70k &middot; TikTok 110.3k"),
 ]
 advisory_cells = ["""    <div class="adv-card">
       <img class="fh" src="%s" loading="lazy" decoding="async" alt="%s">

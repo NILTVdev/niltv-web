@@ -843,21 +843,24 @@ br.mbr{display:none}
   color:var(--gold-bright);border:1px solid rgba(217,178,91,.4);padding:3px 9px;border-radius:999px;white-space:nowrap}
 .shelves.centered [data-grid="advisory"] .rail{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;
   overflow:visible;scroll-snap-type:none;max-width:1360px;margin:0 auto;padding:14px var(--gutter) 22px}
-/* every card spans two half-columns so a short last row sits centered (10/13) */
-@media (min-width:1100px){
+/* Founding Board of Advisors + Advisory Board (11/19): equal cards, four across from
+   900px, two across below. Every card spans two half-columns so a short last
+   row sits centered (10/13) */
+.shelves.centered [data-grid="advisory"] .adv-card{max-width:none;min-width:0}
+@media (min-width:900px){
   .shelves.centered [data-grid="advisory"] .rail{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:14px}
   .shelves.centered [data-grid="advisory"] .adv-card{grid-column:span 2}
   .shelves.centered [data-grid="advisory"] .adv-card:nth-child(4n+1):nth-last-child(3){grid-column:2 / span 2}
   .shelves.centered [data-grid="advisory"] .adv-card:nth-child(4n+1):nth-last-child(2){grid-column:3 / span 2}
   .shelves.centered [data-grid="advisory"] .adv-card:nth-child(4n+1):last-child{grid-column:4 / span 2}
 }
-@media (max-width:700px){
+@media (max-width:899px){
   .shelves.centered [data-grid="advisory"] .rail{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;overflow:visible;padding:10px var(--gutter) 16px}
   .shelves.centered [data-grid="advisory"] .adv-card{grid-column:span 2}
   .shelves.centered [data-grid="advisory"] .adv-card:nth-child(odd):last-child{grid-column:2 / span 2}
-  .adv-card{max-width:none}
   .adv-card .nm{font-size:19px}
   .adv-card .bio{font-size:11.5px}
+  .adv-card .role{min-height:2.6em}
 }
 /* work band contact info in the cards (9/2), no button */
 .work-open .phase-card .wb-mail{flex:none;font-size:13px}
@@ -1227,52 +1230,43 @@ br.mbr{display:none}
     <p><b>NIL TV is where college athlete creator culture lives, and where the next generation of athletes becomes the next generation of media stars.</b></p>
   </div>
 
-<section class="shelf" data-grid="founders">
+<section class="shelf" data-grid="advisory">
   <div class="shelf-head">
-    <h2 class="shelf-title gold">NIL TV Co-Founders</h2>
+    <h2 class="shelf-title gold">Founding Board of Advisors</h2>
   </div>
   <div class="rail">
-    <div class="founder-card">
-      <img class="fh" src="/assets/img/team/emily-cole.jpg" loading="lazy" decoding="async" alt="Emily Cole">
-      <div class="inner">
-        <span class="nm">Emily Cole</span>
-        <span class="sch">Duke University &middot; Track &amp; XC</span>
-        <p class="bio">First NCAA athlete to publish a book with NIL. A leading voice in NIL equity for female athletes.</p>
-        <span class="fw">700K+ followers</span>
-      </div>
-    </div>
-    <div class="founder-card">
+    <div class="adv-card">
       <img class="fh" src="/assets/img/team/chloe-mitchell.jpg" loading="lazy" decoding="async" alt="Chloe Mitchell">
       <div class="inner">
         <span class="nm">Chloe Mitchell</span>
-        <span class="sch">Aquinas College &middot; Volleyball</span>
+        <span class="role">Aquinas College &middot; Volleyball</span>
         <p class="bio">First college athlete to monetize their NIL. Built one of the first NIL marketplaces.</p>
         <span class="fw">4M+ followers</span>
       </div>
     </div>
-    <div class="founder-card">
+    <div class="adv-card">
       <img class="fh" src="/assets/img/team/will-levis-2.jpg" loading="lazy" decoding="async" alt="Will Levis">
       <div class="inner">
         <span class="nm">Will Levis</span>
-        <span class="sch">Kentucky &middot; Football</span>
+        <span class="role">Kentucky &middot; Football</span>
         <p class="bio">Signed first ever NIL deal between a student athlete and a Thoroughbred stallion.</p>
         <span class="fw">500K+ followers</span>
       </div>
     </div>
-    <div class="founder-card">
+    <div class="adv-card">
       <img class="fh" src="/assets/img/team/neal-begovich.jpg" loading="lazy" decoding="async" alt="Neal Begovich">
       <div class="inner">
         <span class="nm">Neal Begovich</span>
-        <span class="sch">Stanford &middot; Duke Basketball</span>
+        <span class="role">Stanford &middot; Duke Basketball</span>
         <p class="bio">Used his NIL to earn a Duke/Fuqua MBA, then land a job in sports Venture Capital.</p>
         <span class="fw">5K+ followers</span>
       </div>
     </div>
-    <div class="founder-card">
+    <div class="adv-card">
       <img class="fh" src="/assets/img/team/anthony-egbo.jpg" loading="lazy" decoding="async" alt="Anthony Egbo">
       <div class="inner">
         <span class="nm">Anthony Egbo</span>
-        <span class="sch">Abilene Christian &middot; Football</span>
+        <span class="role">Abilene Christian &middot; Football</span>
         <p class="bio">First WAC/AUC Athlete to do an NIL deal. Testified to Congress on the value and needs for NIL.</p>
         <span class="fw">25K+ followers</span>
       </div>

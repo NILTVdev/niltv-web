@@ -1014,7 +1014,8 @@ about_sections = [
     <p>Examples include NIL Star, NIL TV&rsquo;s flagship student athlete competition platform, NIL Collaborations, our home for viral, everyday moments, and NIL Local, our growing network of student athlete run affiliate channels. NIL TV is creating a place where athletes don&rsquo;t just play the game, they own their platform, their audience, and their future.</p>
     <p><b>NIL TV is where college athlete creator culture lives, and where the next generation of athletes becomes the next generation of media stars.</b></p>
   </div>""",
-    shelf("Founding Board of Advisors", "", founder_cells + advisory_cells, gold=True, anchor=' data-grid="advisory"'),
+    shelf("NIL TV Co-Founders", "", founder_cells, gold=True, anchor=' data-grid="advisory"'),
+    shelf("Founding Board of Advisors", "", advisory_cells, gold=True, anchor=' data-grid="advisory"'),
     shelf('Three Content Pillars,<br class="mbr"> One Media Network', "", phase_cells, anchor=' data-grid="roadmap"'),
     """<div class="work-band work-open" id="work-with-niltv">
     <h2>Work With NIL TV</h2>

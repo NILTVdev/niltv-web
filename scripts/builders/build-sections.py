@@ -908,8 +908,6 @@ page("featured", "Featured",
 
 # ================= ABOUT PAGE =================
 FOUNDERS = [
- ("Chief Marketing Officer","Emily Cole","Duke University &middot; Track &amp; XC",
-  "First NCAA athlete to publish a book with NIL. A leading voice in NIL equity for female athletes.","700K+ followers"),
  ("Chief Content Officer","Chloe Mitchell","Aquinas College &middot; Volleyball",
   "First college athlete to monetize their NIL. Built one of the first NIL marketplaces.","4M+ followers"),
  ("Business Development","Will Levis","Kentucky &middot; Football",
@@ -919,13 +917,13 @@ FOUNDERS = [
  ("NIL Compliance","Anthony Egbo","Abilene Christian &middot; Football",
   "First WAC/AUC Athlete to do an NIL deal. Testified to Congress on the value and needs for NIL.","25K+ followers"),
 ]
-HEADSHOT = {"Emily Cole":"emily-cole.jpg","Chloe Mitchell":"chloe-mitchell.jpg","Will Levis":"will-levis-2.jpg",
+HEADSHOT = {"Chloe Mitchell":"chloe-mitchell.jpg","Will Levis":"will-levis-2.jpg",
             "Neal Begovich":"neal-begovich.jpg","Anthony Egbo":"anthony-egbo.jpg"}
-founder_cells = ["""    <div class="founder-card">
+founder_cells = ["""    <div class="adv-card">
       <img class="fh" src=""" + '"' + DEV + """/assets/img/team/%s" loading="lazy" decoding="async" alt="%s">
       <div class="inner">
         <span class="nm">%s</span>
-        <span class="sch">%s</span>
+        <span class="role">%s</span>
         <p class="bio">%s</p>
         <span class="fw">%s</span>
       </div>
@@ -965,10 +963,10 @@ about_hero = """<section class="hero hero-sm" id="hero">
 </section>""" % (DEV, CDN, DEV, CDN)
 
 ADVISORY = [
- ("Sion James","NBA Player &middot; Charlotte Hornets","/assets/img/advisory/sion-james.webp","Duke Men&rsquo;s Basketball alumnus and Charlotte Hornets guard, selected 33rd overall in the 2025 NBA Draft after Duke&rsquo;s ACC title run.","2025 NBA Draft &middot; Pick 33"),
- ("Clifford Taylor IV","Content Creator &middot; Podcast Host","/assets/img/advisory/clifford-taylor-iv.webp","Viral sports content creator, mental health advocate, and former Florida walk-on football player. Hosts The Clifford Show podcast.","IG 251k &middot; TikTok 1.3M"),
- ("Alyssa Ustby","Professional Basketball Player","/assets/img/advisory/alyssa-ustby.webp","UNC Women&rsquo;s Basketball all-time rebound record holder now playing pro overseas, with a degree in Advertising &amp; PR and Business.","IG 70k &middot; TikTok 130k"),
- ("Olivia Fabry","AI Specialist &middot; Franklin Templeton","/assets/img/advisory/olivia-fabry.webp","Notre Dame pole vault alumna building The Table, a growing community that helps female college athletes launch careers in finance.","IG 70k &middot; TikTok 110.3k"),
+ ("Sion James","Duke &middot; Basketball","/assets/img/advisory/sion-james.webp","Duke Men&rsquo;s Basketball alumnus and Charlotte Hornets guard, selected 33rd overall in the 2025 NBA Draft after Duke&rsquo;s ACC title run.","2025 NBA Draft &middot; Pick 33"),
+ ("Clifford Taylor IV","Florida &middot; Football","/assets/img/advisory/clifford-taylor-iv.webp","Viral sports content creator, mental health advocate, and former Florida walk-on football player. Hosts The Clifford Show podcast.","IG 251k &middot; TikTok 1.3M"),
+ ("Alyssa Ustby","North Carolina &middot; Basketball","/assets/img/advisory/alyssa-ustby.webp","UNC Women&rsquo;s Basketball all-time rebound record holder now playing pro overseas, with a degree in Advertising &amp; PR and Business.","IG 70k &middot; TikTok 130k"),
+ ("Olivia Fabry","Notre Dame &middot; Track &amp; Field","/assets/img/advisory/olivia-fabry.webp","Notre Dame pole vault alumna building The Table, a growing community that helps female college athletes launch careers in finance.","IG 70k &middot; TikTok 110.3k"),
 ]
 advisory_cells = ["""    <div class="adv-card">
       <img class="fh" src="%s" loading="lazy" decoding="async" alt="%s">
@@ -993,8 +991,7 @@ about_sections = [
     <p>Examples include NIL Star, NIL TV&rsquo;s flagship student athlete competition platform, NIL Collaborations, our home for viral, everyday moments, and NIL Local, our growing network of student athlete run affiliate channels. NIL TV is creating a place where athletes don&rsquo;t just play the game, they own their platform, their audience, and their future.</p>
     <p><b>NIL TV is where college athlete creator culture lives, and where the next generation of athletes becomes the next generation of media stars.</b></p>
   </div>""",
-    shelf("NIL TV Co-Founders", "", founder_cells, gold=True, anchor=' data-grid="founders"'),
-    shelf("NIL TV Advisory Board", "", advisory_cells, gold=True, anchor=' data-grid="advisory"'),
+    shelf("Founding Board of Advisors", "", founder_cells + advisory_cells, gold=True, anchor=' data-grid="advisory"'),
     shelf('Three Content Pillars,<br class="mbr"> One Media Network', "", phase_cells, anchor=' data-grid="roadmap"'),
     """<div class="work-band work-open" id="work-with-niltv">
     <h2>Work With NIL TV</h2>

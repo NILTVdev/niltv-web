@@ -404,7 +404,7 @@ window.NILTV = (function () {
       '<div class="foot-col"><h4>Legal</h4>' +
       '<a href="/legal/privacy/">Privacy Policy</a>' +
       '<a href="/legal/terms/">Terms of Use</a>' +
-      '<a href="/legal/contest-notice/">Contest Notice</a><a href="/payments/">Athlete Portal</a></div>' +
+      '<a href="/legal/contest-notice/">Contest Notice</a><a href="/payments/">Athlete Payments</a><a href="https://portal.niltv.com/">Athlete Portal</a></div>' +
       '</div>' +
       '<div class="foot-news"><h4>Get NIL TV Updates</h4>' +
       '<form id="news-form" novalidate>' +
@@ -462,6 +462,7 @@ window.NILTV = (function () {
     wireNewsletter();
     renderAvatar();
     if (cfg.cognito && hasStoredSession()) loadMe();
+    openFromLink();
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") {
         closeSearch(); closeAuth();
@@ -487,6 +488,7 @@ window.NILTV = (function () {
     // Only pull the Cognito SDK when a session already exists - guests never
     // pay for it until they choose to sign in.
     if (cfg.cognito && hasStoredSession()) loadMe();
+    openFromLink();
 
     // transparent-over-hero nav goes solid on scroll (network-site behavior)
     if (opts.overHero) {
@@ -611,7 +613,9 @@ window.NILTV = (function () {
     return wrap;
   }
 
-  function openAuth() {
+  // opts: { signup: true } opens on Create your account; { email } fills the address.
+  function openAuth(opts) {
+    opts = opts && opts.nodeType === undefined && !opts.type ? opts : {};
     closeAuth();
     authEl = el("div", "auth-overlay");
     var box = el("div", "auth-box");
@@ -697,6 +701,23 @@ window.NILTV = (function () {
         }).catch(function (e2) { err.textContent = friendlyAuthError(e2); }).then(done);
       }
     });
+    if (opts.email) document.getElementById("auth-email").value = opts.email;
+    if (opts.signup) toggle.click();
+  }
+
+  // ?account=create[&email=...] opens Create your account. The NIL TV Portal
+  // and athlete invites link here: the portal has no sign-up of its own.
+  function openFromLink() {
+    if (!cfg.cognito) return;
+    var params;
+    try { params = new URLSearchParams(window.location.search); } catch (e) { return; }
+    if (params.get("account") !== "create") return;
+    var email = (params.get("email") || "").trim().slice(0, 254);
+    params.delete("account"); params.delete("email");
+    var rest = params.toString();
+    try { window.history.replaceState(null, "", window.location.pathname + (rest ? "?" + rest : "") + window.location.hash); } catch (e) {}
+    var open = function () { if (!me) openAuth({ signup: true, email: email }); };
+    if (hasStoredSession()) loadMe().then(open); else open();
   }
 
   function openConfirm(email, pass) {

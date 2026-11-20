@@ -257,7 +257,47 @@ window.NILTV = (function () {
       if (u) u.signOut();
       me = null;
     }
-    return { getIdToken: getIdToken, getSession: getSession, signIn: signIn, signUp: signUp, confirm: confirm, forgot: forgot, confirmForgot: confirmForgot, signOut: signOut };
+    // Account settings run on the signed-in user. getCurrentUser() hands back
+    // a fresh object each call, so the session is loaded onto the same object
+    // the change is made on.
+    function withUser(fn) {
+      return loadCognito().then(function () {
+        return new Promise(function (resolve, reject) {
+          var u = currentUser();
+          if (!u) return reject(new Error("not signed in"));
+          u.getSession(function (err, session) {
+            if (err || !session || !session.isValid()) return reject(err || new Error("not signed in"));
+            fn(u, session, resolve, reject);
+          });
+        });
+      });
+    }
+    function changePassword(oldPassword, newPassword) {
+      return withUser(function (u, s, resolve, reject) {
+        u.changePassword(oldPassword, newPassword, function (err) { if (err) reject(err); else resolve(); });
+      });
+    }
+    // The pool keeps the old address until the new one is verified
+    // (keepOriginal), so a mistyped address never locks anyone out.
+    function changeEmail(email) {
+      return withUser(function (u, s, resolve, reject) {
+        var C = window.AmazonCognitoIdentity;
+        u.updateAttributes([new C.CognitoUserAttribute({ Name: "email", Value: email })],
+          function (err) { if (err) reject(err); else resolve(); });
+      });
+    }
+    // Verify the new address, then refresh the session so the next API call
+    // carries a token with the new email.
+    function verifyEmail(code) {
+      return withUser(function (u, s, resolve, reject) {
+        u.verifyAttribute("email", code, {
+          onSuccess: function () { u.refreshSession(s.getRefreshToken(), function () { resolve(); }); },
+          onFailure: reject,
+        });
+      });
+    }
+    return { getIdToken: getIdToken, getSession: getSession, signIn: signIn, signUp: signUp, confirm: confirm, forgot: forgot, confirmForgot: confirmForgot, signOut: signOut,
+             changePassword: changePassword, changeEmail: changeEmail, verifyEmail: verifyEmail };
   })();
 
   // Mirrors the pool's password policy (foundation-stack.ts) and the mobile
@@ -294,6 +334,10 @@ window.NILTV = (function () {
       return m;
     }).catch(function () { me = null; renderAvatar(); return null; });
   }
+  // the name the account shows: the edited display name, else the sign-up name
+  function displayName() {
+    return me ? (me.displayName || me.name || me.email || "") : "";
+  }
   function initials(name) {
     var parts = String(name || "").trim().split(/\s+/).filter(Boolean);
     if (!parts.length) return "?";
@@ -303,9 +347,9 @@ window.NILTV = (function () {
     var av = document.getElementById("nav-avatar");
     if (!av) return;
     if (me) {
-      av.textContent = initials(me.name || me.email);
+      av.textContent = initials(displayName());
       av.classList.add("signed");
-      av.title = me.name || me.email;
+      av.title = displayName();
     } else {
       av.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>';
       av.classList.remove("signed");
@@ -707,16 +751,24 @@ window.NILTV = (function () {
 
   // ?account=create[&email=...] opens Create your account. The NIL TV Portal
   // and athlete invites link here: the portal has no sign-up of its own.
+  // ?account=settings opens the account panel, after sign-in if needed.
   function openFromLink() {
     if (!cfg.cognito) return;
     var params;
     try { params = new URLSearchParams(window.location.search); } catch (e) { return; }
-    if (params.get("account") !== "create") return;
+    var which = params.get("account");
+    if (which !== "create" && which !== "settings") return;
     var email = (params.get("email") || "").trim().slice(0, 254);
     params.delete("account"); params.delete("email");
     var rest = params.toString();
     try { window.history.replaceState(null, "", window.location.pathname + (rest ? "?" + rest : "") + window.location.hash); } catch (e) {}
-    var open = function () { if (!me) openAuth({ signup: true, email: email }); };
+    var open = which === "create"
+      ? function () { if (!me) openAuth({ signup: true, email: email }); }
+      : function () {
+          if (me) { openAccount(); return; }
+          onAuthed.push(function () { openAccount(); });
+          openAuth();
+        };
     if (hasStoredSession()) loadMe().then(open); else open();
   }
 
@@ -804,25 +856,330 @@ window.NILTV = (function () {
     });
   }
 
+  /* ══ Account and settings ════════════════════════════════ */
+  /* Mirrors the app's Profile screen (#7): display name, following and likes,
+     then the account itself. Email and password changes go straight to
+     Cognito; everything else is the same /v1/me API the app uses. */
+
   function openAccount() {
+    if (!me) { openAuth(); return; }
     closeAuth();
     authEl = el("div", "auth-overlay");
-    var box = el("div", "auth-box");
-    box.appendChild(el("h3", null, me.name || me.email));
-    box.appendChild(el("p", "auth-sub", me.email + " · " + (me.likes || []).length + " likes · " + (me.follows || []).length + " follows"));
-    var btn = el("button", "btn btn-ghost auth-submit", "Sign Out");
-    btn.addEventListener("click", function () {
-      auth.signOut();
-      renderAvatar();
-      closeAuth();
-    });
-    box.appendChild(btn);
+    var box = el("div", "auth-box account-box");
+    box.setAttribute("role", "dialog");
+    box.setAttribute("aria-label", "Your account");
+    var title = el("h3", null, displayName());
+    var sub = el("p", "auth-sub", me.email);
+    box.appendChild(title);
+    box.appendChild(sub);
+    box.appendChild(accountNameSection(function () { title.textContent = displayName(); }));
+    box.appendChild(accountFollowingSection());
+    box.appendChild(accountLikesSection());
+    box.appendChild(accountEmailSection(sub));
+    box.appendChild(accountPasswordSection());
+    box.appendChild(accountEndSection());
     authEl.appendChild(box);
     var close = el("button", "player-close", "✕");
+    close.setAttribute("aria-label", "Close");
     close.addEventListener("click", closeAuth);
     authEl.appendChild(close);
     authEl.addEventListener("click", function (e) { if (e.target === authEl) closeAuth(); });
     document.body.appendChild(authEl);
+  }
+
+  function accountSection(heading) {
+    var sec = el("section", "account-sec");
+    sec.appendChild(el("h4", null, heading));
+    return sec;
+  }
+  function accountOk() {
+    var p = el("p", "account-ok");
+    p.setAttribute("role", "status");
+    return p;
+  }
+  function accountInput(field) { return field.querySelector("input"); }
+  function onEnter(input, fn) {
+    input.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); fn(); } });
+  }
+
+  // Plain wording for the errors these forms can hit.
+  function accountError(e, what) {
+    var code = e && e.code;
+    if (code === "NotAuthorizedException" && what === "password") return "Your current password is incorrect.";
+    if (code === "LimitExceededException" || code === "TooManyRequestsException") return "Too many attempts. Wait a few minutes and try again.";
+    if (code === "AliasExistsException") return "Another account already uses that email.";
+    if (code === "CodeMismatchException") return "That code doesn't match. Check the email and try again.";
+    if (code === "ExpiredCodeException") return "That code has expired. Send a new one.";
+    if (code === "InvalidParameterException" && what === "email") return "Enter a valid email address.";
+    if (code === "InvalidPasswordException") return PASSWORD_RULES;
+    if (code === "NotAuthorizedException" || (e && (e.status === 401 || e.status === 403)) ||
+        (e && e.message === "not signed in")) return "Your session has expired. Sign in again.";
+    return "Something went wrong. Please try again.";
+  }
+
+  // Runs work() with the button disabled; resolves true on success, false on
+  // a shown error.
+  function accountRun(btn, work, okEl, okText, errEl, what) {
+    errEl.textContent = "";
+    if (okEl) okEl.textContent = "";
+    btn.disabled = true;
+    return work().then(function () {
+      if (okEl) okEl.textContent = okText;
+      return true;
+    }, function (e) {
+      errEl.textContent = accountError(e, what);
+      return false;
+    }).then(function (ok) { btn.disabled = false; return ok; });
+  }
+
+  function accountNameSection(onSaved) {
+    var sec = accountSection("Display name");
+    var field = authField("Display name", "text", "acct-name");
+    field.classList.add("label-hidden");
+    var input = accountInput(field);
+    input.maxLength = 80;
+    input.autocomplete = "nickname";
+    input.value = displayName();
+    var btn = el("button", "btn btn-play auth-submit", "Save");
+    var ok = accountOk(), err = el("div", "auth-error");
+    var sync = function () {
+      var v = input.value.trim();
+      btn.disabled = !v || v === displayName();
+    };
+    var save = function () {
+      var v = input.value.trim();
+      if (!v || v === displayName()) return;
+      accountRun(btn, function () {
+        return api("/v1/me", { method: "PATCH", auth: true, body: { displayName: v } });
+      }, ok, "Saved.", err).then(function (done) {
+        if (done) { me.displayName = v; renderAvatar(); onSaved(); }
+        sync();
+      });
+    };
+    input.addEventListener("input", function () { ok.textContent = ""; sync(); });
+    onEnter(input, save);
+    btn.addEventListener("click", save);
+    sync();
+    sec.appendChild(field); sec.appendChild(btn); sec.appendChild(ok); sec.appendChild(err);
+    return sec;
+  }
+
+  // Follows are profile ids. A channel is followed through its p-{account}
+  // profile, so those rows read as the channel name and logo, like the app.
+  function accountFollowingSection() {
+    var sec = accountSection("Following");
+    var list = el("div", "follow-list");
+    var err = el("div", "auth-error");
+    sec.appendChild(list); sec.appendChild(err);
+    var empty = function () {
+      list.textContent = "";
+      list.appendChild(el("p", "auth-sub", "You aren't following anyone yet."));
+      var find = el("button", "auth-toggle", "Follow channels");
+      find.addEventListener("click", openFollows);
+      list.appendChild(find);
+    };
+    var ids = (me.follows || []).slice();
+    if (!ids.length) { empty(); return sec; }
+    list.appendChild(el("div", "search-hint", "Loading…"));
+    Promise.all([
+      api("/v1/channels").catch(function () { return {}; }),
+      api("/v1/profiles").catch(function () { return {}; }),
+    ]).then(function (res) {
+      var channelOf = {}, personOf = {};
+      (res[0].channels || []).forEach(function (c) { if (c.account) channelOf["p-" + c.account] = c; });
+      (res[1].profiles || []).forEach(function (p) { personOf[p.id] = p; });
+      list.textContent = "";
+      ids.forEach(function (id) {
+        var ch = channelOf[id], p = personOf[id];
+        var row = el("div", "follow-row");
+        if (ch && CHANNEL_LOGOS[ch.id]) {
+          var img = document.createElement("img");
+          img.src = CHANNEL_LOGOS[ch.id]; img.alt = "";
+          row.appendChild(img);
+        }
+        var name = ch ? ch.name : (p ? p.name : id);
+        var meta = !ch && p ? [p.sport, p.school].filter(Boolean).join(" · ") : "";
+        row.appendChild(el("span", "follow-name", meta ? name + " · " + meta : name));
+        var btn = el("button", "follow-btn following", "Unfollow");
+        btn.setAttribute("aria-label", "Unfollow " + name);
+        btn.addEventListener("click", function () {
+          btn.disabled = true;
+          err.textContent = "";
+          api("/v1/me/follows/" + encodeURIComponent(id), { method: "DELETE", auth: true }).then(function () {
+            me.follows = (me.follows || []).filter(function (x) { return x !== id; });
+            row.remove();
+            if (!list.children.length) empty();
+          }, function (e) {
+            btn.disabled = false;
+            err.textContent = accountError(e);
+          });
+        });
+        row.appendChild(btn);
+        list.appendChild(row);
+      });
+    });
+    return sec;
+  }
+
+  // Liked videos load on request: each one is a detail read.
+  function accountLikesSection() {
+    var sec = accountSection("Liked videos");
+    var ids = (me.likes || []).slice();
+    if (!ids.length) {
+      sec.appendChild(el("p", "auth-sub", "Videos you like show up here."));
+      return sec;
+    }
+    var show = el("button", "auth-toggle", "Show " + ids.length + (ids.length === 1 ? " liked video" : " liked videos"));
+    var list = el("div", "follow-list");
+    var err = el("div", "auth-error");
+    sec.appendChild(show); sec.appendChild(list); sec.appendChild(err);
+    show.addEventListener("click", function () {
+      show.remove();
+      list.appendChild(el("div", "search-hint", "Loading…"));
+      Promise.all(ids.map(function (id) {
+        return getDetail({ id: id }).then(function (d) { return { id: id, d: d }; },
+                                          function () { return { id: id, d: null }; });
+      })).then(function (rows) {
+        list.textContent = "";
+        rows.forEach(function (r) {
+          var row = el("div", "follow-row");
+          var label = r.d ? (String(r.d.title || "").split("\n")[0] || "Video") : "Video no longer available";
+          var name;
+          if (r.d) {
+            name = el("a", "follow-name", label);
+            name.href = "/watch/" + encodeURIComponent(r.id) + "/";
+          } else {
+            name = el("span", "follow-name", label);
+          }
+          row.appendChild(name);
+          var btn = el("button", "follow-btn following", "Unlike");
+          btn.setAttribute("aria-label", "Unlike " + label);
+          btn.addEventListener("click", function () {
+            btn.disabled = true;
+            err.textContent = "";
+            api("/v1/me/likes/" + encodeURIComponent(r.id), { method: "DELETE", auth: true }).then(function () {
+              me.likes = (me.likes || []).filter(function (x) { return x !== r.id; });
+              row.remove();
+              if (!list.children.length) list.appendChild(el("p", "auth-sub", "Videos you like show up here."));
+            }, function (e) {
+              btn.disabled = false;
+              err.textContent = accountError(e);
+            });
+          });
+          row.appendChild(btn);
+          list.appendChild(row);
+        });
+      });
+    });
+    return sec;
+  }
+
+  function accountEmailSection(subEl) {
+    var sec = accountSection("Email");
+    sec.appendChild(el("p", "auth-sub", "We'll send a code to the new address. Your current email keeps working until you enter it."));
+    var field = authField("New email", "email", "acct-email");
+    var input = accountInput(field);
+    input.autocomplete = "email";
+    var send = el("button", "btn btn-ghost auth-submit", "Send code");
+    var codeField = authField("Code from the email", "text", "acct-email-code", "123456");
+    var codeInput = accountInput(codeField);
+    codeInput.inputMode = "numeric";
+    codeInput.autocomplete = "one-time-code";
+    var verify = el("button", "btn btn-play auth-submit", "Verify email");
+    codeField.style.display = "none";
+    verify.style.display = "none";
+    var ok = accountOk(), err = el("div", "auth-error");
+    var sendCode = function () {
+      var v = input.value.trim().toLowerCase();
+      err.textContent = ""; ok.textContent = "";
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { err.textContent = "Enter a valid email address."; return; }
+      if (v === String(me.email || "").toLowerCase()) { err.textContent = "That's already your email."; return; }
+      accountRun(send, function () { return auth.changeEmail(v); }, ok, "We sent a code to " + v + ".", err, "email")
+        .then(function (done) {
+          if (!done) return;
+          codeField.style.display = "";
+          verify.style.display = "";
+          codeInput.focus();
+        });
+    };
+    var verifyCode = function () {
+      var code = codeInput.value.trim();
+      err.textContent = "";
+      if (!code) { err.textContent = "Enter the code from the email."; return; }
+      accountRun(verify, function () { return auth.verifyEmail(code); }, ok, "Your email is updated.", err, "code")
+        .then(function (done) {
+          if (!done) return;
+          codeField.style.display = "none";
+          verify.style.display = "none";
+          input.value = ""; codeInput.value = "";
+          loadMe().then(function () { if (me) subEl.textContent = me.email; });
+        });
+    };
+    onEnter(input, sendCode);
+    onEnter(codeInput, verifyCode);
+    send.addEventListener("click", sendCode);
+    verify.addEventListener("click", verifyCode);
+    [field, send, codeField, verify, ok, err].forEach(function (n) { sec.appendChild(n); });
+    return sec;
+  }
+
+  function accountPasswordSection() {
+    var sec = accountSection("Password");
+    var cur = authField("Current password", "password", "acct-pass-cur");
+    var next = authField("New password", "password", "acct-pass-new");
+    accountInput(cur).autocomplete = "current-password";
+    accountInput(next).autocomplete = "new-password";
+    var hint = el("p", "auth-sub auth-pw-hint", PASSWORD_RULES);
+    var btn = el("button", "btn btn-ghost auth-submit", "Change password");
+    var ok = accountOk(), err = el("div", "auth-error");
+    var change = function () {
+      var oldPw = accountInput(cur).value, newPw = accountInput(next).value;
+      err.textContent = ""; ok.textContent = "";
+      if (!oldPw) { err.textContent = "Enter your current password."; return; }
+      var issues = passwordIssues(newPw);
+      if (issues.length) { err.textContent = "Your new password needs " + issues.join(", ") + "."; return; }
+      accountRun(btn, function () { return auth.changePassword(oldPw, newPw); }, ok, "Your password is changed.", err, "password")
+        .then(function (done) {
+          if (done) { accountInput(cur).value = ""; accountInput(next).value = ""; }
+        });
+    };
+    onEnter(accountInput(next), change);
+    btn.addEventListener("click", change);
+    [cur, next, hint, btn, ok, err].forEach(function (n) { sec.appendChild(n); });
+    return sec;
+  }
+
+  // Sign out, and delete with the app's confirm wording (App Store 5.1.1(v)).
+  function accountEndSection() {
+    var sec = accountSection("Account");
+    var out = el("button", "btn btn-ghost auth-submit", "Sign Out");
+    out.addEventListener("click", function () {
+      auth.signOut();
+      renderAvatar();
+      closeAuth();
+    });
+    var del = el("button", "account-delete", "Delete account");
+    var err = el("div", "auth-error");
+    del.addEventListener("click", function () {
+      var yes = window.confirm("Delete your account?\n\nThis permanently removes your profile, follows and notification settings. " +
+        "Votes you've cast stay in contest tallies, anonymized, per the Official Rules.");
+      if (!yes) return;
+      err.textContent = "";
+      del.disabled = true;
+      api("/v1/me", { method: "DELETE", auth: true }).then(function () {
+        auth.signOut();
+        renderAvatar();
+        var box = sec.parentNode;
+        box.textContent = "";
+        box.appendChild(el("h3", null, "Account deleted"));
+        box.appendChild(el("p", "auth-sub", "Your NIL TV account has been deleted."));
+      }, function () {
+        del.disabled = false;
+        err.textContent = "Something went wrong. Your account was not deleted. Please try again.";
+      });
+    });
+    sec.appendChild(out); sec.appendChild(del); sec.appendChild(err);
+    return sec;
   }
 
   function closeAuth() {

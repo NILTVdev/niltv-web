@@ -10,6 +10,9 @@ window.NILTV_CONFIG = {
   // (niltv-dashboard, applications router; CORS allows this origin). Empty =
   // the /athlete-signup/ form runs in demo mode and shows the payload instead.
   applicationsApi: "https://api-dev.niltv.com/api/applications/",
+  // Athlete Content Hub API base, with a trailing slash. Empty = /hub/ runs
+  // on sample data (hub/sample-asks.json) and says so on the page.
+  hubApi: "",
   // Community Star intake: the dashboard API's public POST
   // /api/community-star/applications (one entry per email, 409 on a repeat,
   // 410 outside Nov 2 - Nov 23). Empty = the /communitystar/ form runs in

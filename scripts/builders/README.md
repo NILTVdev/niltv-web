@@ -15,6 +15,8 @@ Generators for the cinema-look pages. Run them from the repo root.
   ones up under `_legacy/`, ignored, never deployed).
 - `build-athletes.py`, `network_brands.py`, `build-payments.py` - see
   DEVELOPING.md for the private data folder they read from.
+- `build-hub.py` - builds `/hub/` (the Athlete Content Hub, dev-only) from the
+  contact page's chrome. Run it after a chrome change.
 - `channel-sections.json` - which shelves every channel page shows, what goes
   in each and how it is sorted. `../build-pages.mjs` reads it through
   `channel-sections.mjs`; to bring back or add a shelf, edit the JSON, not the

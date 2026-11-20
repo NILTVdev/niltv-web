@@ -20,7 +20,7 @@
 # PROD PIPELINE: the tree stays dev-flavored; prod deploys stage a copy,
 # regenerate watch/channel pages + sitemap/robots/llms against the PROD API,
 # sweep every baked dev reference to the prod CDN + niltv.com, swap in the
-# prod config.js, prune the dev-only pages (vote, partners), build the
+# prod config.js, prune the dev-only pages (vote, partners, hub), build the
 # published athlete pages when the publish set is available, and
 # guard that zero dev references ship.
 param(
@@ -78,7 +78,7 @@ $prodClient = "866nashv1brjs96apc17r1gfa"
 $zip = Join-Path $tmpDir "niltv-web-deploy-$Env-$PID.zip"
 if (Test-Path $zip) { Remove-Item $zip -Force }
 
-# Shared page set. Prod additionally excludes vote/partners (dev-only); athletes
+# Shared page set. Prod additionally excludes vote/partners/hub (dev-only); athletes
 # ship to prod only as the published set (see the athlete step below).
 # concepts/ is an ignored scratch dir: dev ships it only when present.
 $pages = @("index.html","not-found.html","sitemap.xml","robots.txt","llms.txt","build.json","assets",
@@ -238,7 +238,7 @@ window.NILTV_CONFIG = {
   # athlete-signup and payments ship to prod too (they are in $pages); the
   # dev tree adds the dev-only pages here. communitystar is paused until 2027,
   # so it stays on dev and niltv.com answers 404 for it.
-  $items = $pages + @("config.js","vote","athletes","partners","communitystar")
+  $items = $pages + @("config.js","vote","athletes","partners","communitystar","hub")
   if (Test-Path (Join-Path $src "concepts")) { $items += "concepts" }   # drafts copied in from the private folder, never committed
   New-Zip $zip $src $items
   Restore-RailPages

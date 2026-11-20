@@ -17,7 +17,6 @@ DEV = ""
 # Used on /partners/ (with stat tiles) and /about/ (title + slider).
 import network_brands as _nb
 _NB = _nb.load()
-HOST = CDN + "/video/ig-18080096294690324"
 BELLA = CDN + "/video/ig-18106275875112509"
 
 # head/tail split happens after refresh_home() below (live rails first)
@@ -195,7 +194,6 @@ def watch_btn(vid, kicker, title, gold=True, label="Watch"):
           %s
         </a>''' % (cls, vid, CDN, vid, CDN, vid, kicker, title, label)
 
-GOLD_BTN = '        <a class="btn btn-gold" href="%s">%s</a>'
 GHOST_BTN = '        <a class="btn btn-ghost" href="%s">%s</a>'
 
 def page(slug, name, hero, main_sections, nav_label=None, nav_slug=None, main_cls=""):
@@ -551,7 +549,6 @@ def event_tile(name, href, logo, lcls, dates, state, line, cta, live):
         <span class="ev-meta">%s<b>%s</b></span>
       </span>
     </a>''' % (" live" if live else "", href, name, state, state, lcls, logo, name, line, dates, cta)
-event_cells = [event_tile(*e) for e in EVENTS]
 print("events: " + ", ".join("%s=%s" % (e[0], e[5]) for e in EVENTS))
 
 # Event JSON-LD (SEO guidance): machine-readable dates for each EVENTS entry.
@@ -594,55 +591,6 @@ page("competitions", "Competitions",
      EVENT_LD])
 
 # ================= CHANNELS =================
-chan_tiles = "\n".join('''    <a class="chan-tile" href="#">
-      <img src="%s/assets/img/%s" alt="%s">
-    </a>''' % (DEV, f, a) for f, a in [
-    ("chan3/trueblue.webp","TrueBlue TV"),("chan3/dorecity.webp","Dore City TV"),
-    ("chan3/chapelhill.webp","Chapel Hill TV"),("chan3/starkville.webp","Starkville TV"),
-    ("chan3/collegestation.webp","College Station TV"),("chan3/brazos.webp","Brazos TV"),
-    ("chan3/goldendome.webp","Golden Dome TV"),("chan3/redpack.webp","Red Pack TV"),
-    ("chan3/saltcity.webp","Salt City TV"),("chan3/goldsalem2.webp","Gold Salem TV")])
-tb_cells = [reel_cell(v, "TrueBlue TV", t, tag=("New Episode" if n == 0 else None)) for n, (v, t) in enumerate([
-    ("tbtv-DYVOnP7Py68","Back like we never left on our home field"),
-    ("tbtv-DYP2awaucJT","Back at it in the hometown"),
-    ("tbtv-DYIsojsRHTH","Fired up"),
-    ("tbtv-DYC4tKNutMb","When life gives you sunglasses"),
-    ("tbtv-DXkTqkekUps","Nothing better than a rivalry win"),
-    ("tbtv-DXhqNZtk_eT","Ideal game conditions"),
-    ("tbtv-DY-qu5Ez4PC","Balancing classes, training and everything in between"),
-    ("tbtv-DYfPCxLCZf1","Swinging into championship week")])]
-more_campus = [
-    reel_cell("ig-18091748873389340", "Chapel Hill TV", "Shoutout to 30witdachalk &amp; jumpman23", "3:00", "New Episode"),
-    reel_cell("ig-18129644020643497", "Chapel Hill TV", "She touched the line gate in time lapse form", "0:29"),
-    reel_cell("ig-18004077713755504", "Chapel Hill TV", "Always in a silly goofy mood", "0:14"),
-    reel_cell("ig-18108576370921903", "Starkville TV", "Me literally googling: is it normal that my ankles..."),
-    reel_cell("ig-18106682875737198", "Starkville TV", "Good luck to everyone racing this weekend"),
-    reel_cell("ig-17880741309441315", "Starkville TV", "Embrassinggggg"),
-    reel_cell("ig-18109119643888008", "College Station TV", "Get ready w salt &amp; peppa", tag="New Channel"),
-]
-niltv_cells = [
-    reel_cell("ig-18138746563511713", "NIL TV", "Season opener baby"),
-    reel_cell("tbtv-DYkgWILp9ga", "TrueBlue TV", "Who doesn't love a good long toss?", "0:44"),
-    reel_cell("ig-18109119643888008", "College Station TV", "Get ready with Salt and Peppa", "0:23"),
-
-    reel_cell("ig-18090211613394406", "NIL TV", "Got told my room was boring - so I decorated", "0:15"),
-    reel_cell("ig-18106955224869294", "NIL TV", "I love my grass and this trend"),
-]
-nilstar_cells = [
-    reel_cell("ig-18106275875112509", "NIL Star", "Your first ever NIL Star: Bella Calvanese", "0:24", "Champion"),
-    reel_cell("ig-18032459951649287", "NIL Star", "Finalist - Taylee Chirrick", "0:32"),
-    reel_cell("ig-18105514307111514", "NIL Star", "Finalist - Kali Boychuk"),
-    reel_cell("ig-18148933864451059", "NIL Star", "Finalist - Kayliah Love"),
-    reel_cell("ig-17968578101935272", "NIL Star", "Finalist - Jasmine Connor"),
-    reel_cell("ig-17879255838614337", "NIL Star", "Finalist - Aleithia Wilson"),
-]
-dore_cells = [
-    reel_cell("ig-17908049181280440", "Dore City TV", "From our first episode with Grace Hasselbeck", "0:28", "New Episode"),
-    reel_cell("ig-18275620366295532", "Dore City TV", "Back up and at em in less than a month", "0:28"),
-    reel_cell("ig-17902243089530973", "Dore City TV", "We did it - first game coming soon", "0:29"),
-    reel_cell("ig-18121260613806693", "Dore City TV", "4 days till preseason", "2:14"),
-    reel_cell("ig-17909147277446918", "Dore City TV", "Seasons here", "0:07"),
-]
 # School per channel comes from the brand-account registry's `campus`
 # field, not guesses. Caption follows the "School NIL Student Athletes"
 # naming rule.
@@ -808,14 +756,6 @@ page("channels", "Channels",
     _hub_rails)
 
 # ================= FEATURED =================
-trend = [
-    wide_card(CDN+"/video/tbtv-DYkyFXvSDjT/poster.jpg", "TrueBlue TV", "Bringing the NIL conversation to the forefront", "New Episode", pos="50% 25%"),
-    wide_card(CDN+"/video/ig-18138746563511713/poster.jpg", "NIL TV", "Season opener baby"),
-    wide_card(CDN+"/video/tbtv-DY-qu5Ez4PC/poster.jpg", "TrueBlue TV", "Balancing classes, training and everything in between"),
-    wide_card(CDN+"/video/ig-18087898862367539/poster.jpg", "Dore City TV", "Vandy soccer is back", "New Episode"),
-    wide_card(CDN+"/video/ig-18129644020643497/poster.jpg", "Chapel Hill TV", "She touched the line gate in time lapse form"),
-    wide_card(CDN+"/video/tbtv-DYfPCxLCZf1/poster.jpg", "TrueBlue TV", "Swinging into championship week"),
-]
 reels = [
     reel_cell("ig-17961794499169577", "NIL TV", "Missing Zoey Zubich already", "0:05", "Just Added"),
 
@@ -829,53 +769,6 @@ reels = [
     reel_cell("ig-17902243089530973", "Dore City TV", "We did it - first game coming soon", "0:29"),
     reel_cell("ig-18090211613394406", "NIL TV", "Got told my room was boring - so I decorated", "0:15"),
 ]
-nilstar_cells = list(sing_cells)  # the complete Season 1 field
-campus = [
-    reel_cell("ig-18275620366295532", "Dore City TV", "Back up and at em in less than a month", "0:28"),
-    reel_cell("ig-17909147277446918", "Dore City TV", "Seasons here", "0:07"),
-    reel_cell("ig-18004077713755504", "Chapel Hill TV", "Always in a silly goofy mood", "0:14"),
-    reel_cell("ig-18129644020643497", "Chapel Hill TV", "She touched the line gate in time lapse form", "0:29"),
-    reel_cell("ig-18108576370921903", "Starkville TV", "Me literally googling: is it normal that my ankles..."),
-    reel_cell("ig-18106682875737198", "Starkville TV", "Good luck to everyone racing this weekend"),
-    reel_cell("ig-17880741309441315", "Starkville TV", "Embrassinggggg"),
-    reel_cell("ig-18121260613806693", "Dore City TV", "4 days till preseason", "2:14"),
-]
-# ---- Spotlight: Athlete Video of the Week + Featured Athlete of the Week.
-# VIDEO_OF_WEEK pins a content id; None = the newest
-# athlete reel on the network at build time. The featured athlete is a
-# profile-page athlete (consent on file).
-VIDEO_OF_WEEK = None
-_vow = next((it for it in network_latest(20) if it["id"] == VIDEO_OF_WEEK), None) if VIDEO_OF_WEEK else network_latest(1)[0]
-spotlight = """<section class="shelf" id="spotlight">
-  <div class="shelf-head">
-    <h2 class="shelf-title gold">This Week on NIL TV</h2>
-    <span class="shelf-sub">Athlete produced content. One video, one athlete, every week.</span>
-  </div>
-  <div class="spot-grid">
-    <div class="spot">
-""" + item_cell(_vow, chan=_vow.get("_chan")) + """
-      <div class="spot-tx">
-        <span class="spot-k">Athlete Video of the Week</span>
-        <h3>""" + clean_title(_vow.get("title")) + """</h3>
-        <p>""" + (_vow.get("_chan") or "NIL TV") + """. Produced by the athlete, streaming on the network.</p>
-        <a class="btn btn-gold" href="/watch/""" + _vow["id"] + """/">Watch</a>
-      </div>
-    </div>
-    <div class="spot">
-    <a class="athf-card" href="/athletes/emily-cole/">
-      <img src="/athletes/emily-cole/portrait.jpg" loading="lazy" decoding="async" alt="Emily Cole">
-      <span class="nm">Emily Cole</span>
-      <span class="sp">Track &amp; XC</span>
-    </a>
-      <div class="spot-tx">
-        <span class="spot-k">Featured Athlete of the Week</span>
-        <h3>Emily Cole</h3>
-        <p>NIL TV co-founder and track athlete. Her profile, her latest posts, and her story on the network.</p>
-        <a class="btn btn-gold" href="/athletes/emily-cole/">See Her Profile</a>
-      </div>
-    </div>
-  </div>
-</section>"""
 # featured page dedupe (sized for the 24-card rails): claim order
 # MATCHES render order - hero + Editor's Picks, then the live New This
 # Week and Trending get first pick of the fresh pool, and the big curated
